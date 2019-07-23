@@ -1,0 +1,184 @@
+
+<br/>
+
+		<div class="row">
+
+		<div class="col-xs-2">
+			<input type="text" id="sdate" name="fromdt" placeholder="From Date" class="form-control datepicker">
+		</div>
+		<div class="col-xs-2">
+			<input type="text" id="edate" name="enddt" placeholder="To Date" class="form-control datepicker">
+		</div>
+		<div class="col-xs-2">
+			<select id="opt_type" class="form-control">
+		    <option value=""  selected >Read Or Not</option>
+			<option value="0">Read</option>
+			<option value="1">Unread</option>
+		</select>
+		</div>
+		<div class="col-xs-3">
+			<input type="text" id="keyword" name="keyword" placeholder="Keyword" class="form-control">
+		</div>
+		<div class="col-xs-2">
+			<button class="btn btn-sm btn-primary btnsearch">
+				<i class="icon-search"></i>
+				Search
+			</button>
+			<br/>
+			<br/>
+		</div>
+	
+
+			<div class="col-xs-12">				
+		<input type="hidden" id="hidsortedCol" value="<%= sortedCol%>">
+		<input type="hidden" id="hidsortedDir" value="<%= sortedDir%>">
+		<input type="hidden" id="hidsearch" value="<%= search%>">
+		<input type="hidden" id="hiddisplay" value="<%= display%>">
+		<input type="hidden" id="hidstart" value="<%= start%>">
+				
+					<div class="table-responsive ">
+						<table id="inboxtable" class="table table-striped table-bordered table-hover " style="width:100%">
+							<thead>
+								<tr >	
+									<th>Report ID</th>
+									<th>Employee ID</th>													
+									<th>Login Name</th>													
+									<th>Name</th>													
+									<th class="hide">unread</th>													
+									<th>Subject</th>						
+									<th>Date</th>							
+									<th class="hide">type</th>						
+									<th class="hide">Anonymous</th>						
+								</tr>
+							</thead>
+							<tbody></tbody>
+						</table>
+					</div>
+				
+			
+		</div>
+		
+		
+	</div>
+<script>
+	jQuery(function($){
+		$('.datepicker').datepicker({ format: 'yyyy-mm-dd'});	
+	});
+	setInterval(function() {
+                  oTable1.fnReloadAjax('/admin/message/messagebyuserid?opt_type='+$('#opt_type').val()+'&sdate='+$('#sdate').val()+'&edate='+$('#edate').val()+'&keyword='+$('#keyword').val());
+                }, 10000);
+	
+	jQuery(function($){
+		
+		//refresh_link = '/admin/message/messagebyuserid?id='+$('#user').val();
+		oTable1="";
+		oTable1 = $('#inboxtable').dataTable( {
+		"bProcessing": true,
+		"bServerSide": true,
+		//"sDom"		 :'lrtip',	
+		"bPaginate"	 : true,	
+		"iDisplayLength": $("#hiddisplay").val(),
+		"iDisplayStart": $("#hidstart").val(),
+		"sAjaxSource": '/admin/message/messagebyuserid?opt_type='+$('#opt_type').val()+'&sdate='+$('#sdate').val()+'&edate='+$('#edate').val()+'&keyword='+$('#keyword').val(),
+		"aaSorting": [[ $('#hidsortedCol').val(), $('#hidsortedDir').val() ]],
+		"bFilter" : false,	
+		//"oSearch": {"sSearch": $("#hidsearch").val()},
+		 "bAutoWidth": false , 
+		"aoColumnDefs": [
+			
+			/*	{
+					"bSortable": false,
+					"aTargets": [-1],
+					"mData": null,
+					//"sClass":((inArray("MODIFY", permission)||inArray("DELETE", permission)!=false) ? "" : " hide" ),
+					"mRender": function (data, type, full) {								
+						var str = '<a href="/admin/message/messagedetailforconversation/'+full[0]+'">detail</a>';
+
+						return str;
+					}
+				},*/
+				
+				{
+					//"bSortable": false,
+					"aTargets": [5],
+					"sWidth": "25%",
+					"mData": null,
+					//"sClass":((inArray("MODIFY", permission)||inArray("DELETE", permission)!=false) ? "" : " hide" ),
+					"mRender": function (data, type, full) {
+						var str = full[5];
+						if(parseInt(full[4]) > 0)
+						{
+							str = '<strong >'+full[5]+'</strong>';
+						}
+						var icon ="";
+						if(full[7] != "freetext"){
+							icon = '&nbsp;&nbsp;&nbsp;<i class="icon-paperclip"></i>';
+						}
+						str = str + icon;
+						return str;
+					}
+				},{
+					//"bSortable": false,
+					"sWidth": "10%",
+					"aTargets": [1],
+					
+				},{
+					//"bSortable": false,
+					"sWidth": "15%",
+					"aTargets": [2],
+					
+				},{
+					//"bSortable": false,
+					"sWidth": "20%",
+					"aTargets": [3],
+					
+				},{
+					"bSearchable": false,
+					//"bVisible": false, 
+					"sClass": "hide",
+					"aTargets": [ 4 ]
+				},{
+					"bSearchable": false,
+					//"bVisible": false, 
+					"sClass": "hide",
+					"aTargets": [ 7 ]
+				},{
+					"bSearchable": false,
+					//"bVisible": false, 
+					"sClass": "hide",
+					"aTargets": [ 8 ]
+				}
+			],		
+			"fnDrawCallback": function () {
+					$('#inboxtable tbody tr').click(function () {
+
+						// get position of the selected row
+						var position = oTable1.fnGetPosition(this);
+
+						// value of the first column (can be hidden)
+						var id = oTable1.fnGetData(position)[0];
+						var sortedCol = $('#inboxtable').dataTable().fnSettings().aaSorting[0][0];
+						var sortedDir = $('#inboxtable').dataTable().fnSettings().aaSorting[0][1];
+						var page_length = $('#inboxtable').dataTable().fnSettings()._iDisplayLength;
+						var page_start = $('#inboxtable').dataTable().fnSettings()._iDisplayStart;
+						var page_search = $('.dataTables_filter input').val();
+						var qs = '?sortedCol='+sortedCol+'&sortedDir='+sortedDir+'&display='+page_length+'&start='+page_start+'&search='+page_search;
+						var current_url = location.href.substr(0,location.href.indexOf('?'));
+						history.pushState({}, "STC", current_url+qs);
+						location.href = "/admin/message/messagedetailforconversation/" + id;
+					  });
+					},	
+		});
+		 
+			$('.btnsearch').click(function(){
+			 oTable1.fnReloadAjax('/admin/message/messagebyuserid?opt_type='+$('#opt_type').val()+'&sdate='+$('#sdate').val()+'&edate='+$('#edate').val()+'&keyword='+$('#keyword').val());
+			});
+	});	
+
+</script>
+<style>
+b, strong {
+font-weight: 900;
+color: #438EB9;
+}
+</style>

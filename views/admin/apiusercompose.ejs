@@ -1,0 +1,72 @@
+<html>
+	<head>
+		<title>STC user compose</title>
+		 <style type="text/css">
+
+
+		</style>
+	</head>
+	<body>
+		
+		<div class="row">
+			<div class="">
+
+			Login Token:(login_token) <input type="text" id="login_token"><br>
+			Subject:(subject)  <input type="text" id="subject"><br>
+			</div>
+			Anonymous(anonymous)<input type='checkbox' name='anonymous' id="anonymous" /><br>
+			URL:/api/createReport<br/>
+			<button id="btnsubmit">Submit</button>
+				
+		</div>
+<br>
+			<div id="resultdata">	
+				
+			</div>	
+		
+	</body>
+	<script src="/assets/js/jquery.min.js"></script>
+	<script>
+	jQuery(function($){
+			function esc_chars(objdata)
+			{
+				var esc_data = objdata.replace(/[\\]/g, '\\\\')
+				.replace(/[\"]/g, '\\\"')
+			   // .replace(/[\']/g, '\\\'')
+				.replace(/[\/]/g, '\\/')
+				.replace(/[\b]/g, '\\b')
+				.replace(/[\f]/g, '\\f')
+				.replace(/[\n]/g, '\\n')
+				.replace(/[\r]/g, '\\r')
+				.replace(/[\t]/g, '\\t');
+				return esc_data;
+			}
+			
+		$("#btnsubmit").click(function() {
+			var anonymous = document.getElementById('anonymous').checked;
+			var data = {
+				login_token : $('#login_token').val(), 
+				subject : esc_chars($('#subject').val().trim()), 
+				anonymous :anonymous
+				
+			}
+			$.ajax({
+				url	 		: "/api/createReport",
+				type 		: "POST",
+				cache: false,
+				data		: data
+			}).done(function( data ) {
+					if(data.status == "1")
+					{
+						$('#resultdata').html("report_id:"+ data.report_id);
+					}
+					else
+					{
+						$('#resultdata').html(data.msg);
+					}
+				});
+
+		});
+	});
+	</script>
+</html>

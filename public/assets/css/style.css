@@ -1,0 +1,11 @@
+.fancybox-custom .fancybox-skin {
+	box-shadow: 0 0 50px #222;
+}
+
+.hrborder{
+	border-top: 1px solid #d0c5c5;
+}
+.div_warning,.ermsg
+{
+	color:red;
+}

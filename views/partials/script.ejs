@@ -1,0 +1,374 @@
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    
+    <!--  <script src="js/jquery.js"></script> -->
+    <script src="/assets/js/bootstrap.js"></script>
+    
+    <script src="/assets/js/gmap3.min.js"></script>
+    <script src="/assets/js/jquery.easing.js"></script>
+    <script src="/assets/js/jquery.jcarousel.min.js"></script>
+    <script src="/assets/js/imagesloaded.pkgd.min.js"></script>
+    <script src="/assets/js/masonry.pkgd.min.js"></script>
+    <script src="/assets/js/jquery.nicescroll.min.js"></script>
+    <script src="/assets/js/script.js"></script>
+	<script src="/assets/js/jquery.validate.min.js"></script>
+	<script src="/assets/js/jquery-ui-1.10.3.full.min.js"></script> 
+	<script src="/assets/js/jquery.tooltipster.min.js"></script> 
+	<script src="/assets/js/bootstrap-datepicker.min.js"></script>
+	<script src="/assets/js/jquery.watermark.js"></script>
+	<!-- <script src="https://maps.googleapis.com/maps/api/js?sensor=false&&libraries=geometry,places" ></script> -->
+	<script>
+	
+	var markers = [];
+	var geocoder;
+	var  var_map;
+	var station_html="<b>Stations:</b><br/>";
+	var school_html="<b>Schools:</b><br/>";
+	var nearest_school=[];
+	var nearest_station=[];
+	
+	function isNumber(evt) {
+		evt = (evt) ? evt : window.event;
+		var charCode = (evt.which) ? evt.which : evt.keyCode;
+		if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+			return false;
+		}
+		return true;
+	}
+	
+	function changedate(dt){
+		var mydt = new Date(dt);
+		return mydt.getFullYear()+"-"+("0" + (mydt.getMonth() + 1)).slice(-2)+"-"+("0" + mydt.getDate()).slice(-2);
+	}
+	function isInt(value) {
+  return !isNaN(value) && (function(x) { return (x | 0) === x; })(parseFloat(value))
+}
+	
+function deg2rad(deg) {
+  return deg * (Math.PI/180)
+}
+function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
+  var R = 6371; // Radius of the earth in km
+  var dLat = deg2rad(lat2-lat1);  // deg2rad below
+  var dLon = deg2rad(lon2-lon1); 
+  var a =  Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *  Math.sin(dLon/2) * Math.sin(dLon/2)    ; 
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  var d = R * c; // Distance in km
+  return Math.round(d * 100) / 100;
+}
+
+function getSortedKeys(obj) {
+    var keys = []; for(var key in obj) keys.push(key);
+    return keys.sort(function(a,b){return obj[a]-obj[b]});
+}
+function nearestcallback(results, status,item,mylat,mylon) {
+var mynearest=[];
+var first_results = results;
+  if (status === google.maps.places.PlacesServiceStatus.OK) {
+ // var from_loc = new google.maps.LatLng(parseFloat($('#property_lat').val()), parseFloat($('#property_lon').val()));
+  
+  var mystation_html="";
+  if(first_results.length >0)
+  {
+	for (var i = 0; i < first_results.length; i++) {
+	mynearest[first_results[i].name] = getDistanceFromLatLonInKm(parseFloat(mylat),parseFloat(mylon),first_results[i].geometry.location.lat(),first_results[i].geometry.location.lng());
+	}
+	var station_names = getSortedKeys(mynearest);
+	for(var j = 0;j<1;j++)
+	{
+		if($('#'+item).hasClass('propertylistview'))
+		{
+			mystation_html+= mynearest[station_names[j]]+" km"+"<br/>";//+station_names[j]
+		}
+		else
+		{
+			mystation_html+="Nearest MRT : "+mynearest[station_names[j]]+" km"+"<br/>";//+station_names[j]
+		}
+	}
+	$('#'+item).html(mystation_html);
+	//$("#nearest_station").html(station_html);
+  }
+  else
+  {
+	//$('#divstation').remove();
+  }
+   // 
+  }
+}
+	function callback(results, status) {
+var first_results = results;
+  if (status === google.maps.places.PlacesServiceStatus.OK) {
+ // var from_loc = new google.maps.LatLng(parseFloat($('#property_lat').val()), parseFloat($('#property_lon').val()));
+ 
+  
+  if(first_results.length >0)
+  {
+	for (var i = 0; i < first_results.length; i++) {
+	nearest_station[first_results[i].name] = getDistanceFromLatLonInKm(parseFloat($('#property_lat').val()),parseFloat($('#property_lon').val()),first_results[i].geometry.location.lat(),first_results[i].geometry.location.lng());
+	}
+	var station_names = getSortedKeys(nearest_station);
+	for(var j = 0;j<3;j++)
+	{
+		
+		station_html+="<i class='fa fa-train'></i>&nbsp;"+station_names[j]+"("+nearest_station[station_names[j]]+" km)"+"<br/>";
+	}
+	$("#nearest_station").html(station_html);
+  }
+  else
+  {
+	$('#divstation').remove();
+  }
+   // 
+  }
+}
+function callback2(results, status) {
+var first_results = results;
+  if (status === google.maps.places.PlacesServiceStatus.OK) {
+  if(first_results.length >0)
+  {
+	for (var i = 0; i < first_results.length; i++) {
+	nearest_school[first_results[i].name] = getDistanceFromLatLonInKm(parseFloat($('#property_lat').val()),parseFloat($('#property_lon').val()),first_results[i].geometry.location.lat(),first_results[i].geometry.location.lng());
+	}
+	var school_names = getSortedKeys(nearest_school);
+	for(var j = 0;j<3;j++)
+	{
+		school_html+="<i class='fa fa-book'></i>&nbsp;"+school_names[j]+"("+nearest_school[school_names[j]]+" km)"+"<br/>";
+	}
+	$("#nearest_school").html(school_html);
+  }
+  else
+  {
+	$('#divstation').remove();
+  }
+   // 
+  }
+}
+	function find_nearby()
+	{
+		//
+		//map = new google.maps.Map(document.getElementById('map')
+		
+		var map = new google.maps.Map(document.getElementById('map-property'), {
+		center: {lat:parseFloat($('#property_lat').val()) , lng: parseFloat($('#property_lon').val())},
+		zoom: 15
+	  });
+	  service = new google.maps.places.PlacesService(map);
+	  //matrix_service = new google.maps.DistanceMatrixService();
+	  service.nearbySearch({
+		location: {lat: parseFloat($('#property_lat').val()), lng: parseFloat($('#property_lon').val())},
+		radius: '3000',
+		types: ['subway_station'],
+		rankBy :google.maps.places.RankBy.PROMINENCE
+	  }, callback);
+	 service.nearbySearch({
+	location: {lat: parseFloat($('#property_lat').val()), lng: parseFloat($('#property_lon').val())},
+	types: ['university','school'],
+	rankBy :google.maps.places.RankBy.DISTANCE
+	}, callback2);
+	}
+	function get_nearestmrt(mylat,mylon,item)
+	{
+		var map = new google.maps.Map(document.getElementById('map_content'), {
+		center: {lat:parseFloat(mylat) , lng: parseFloat(mylon)},
+		zoom: 15
+	  });
+	  
+	  service = new google.maps.places.PlacesService(map);
+	  //matrix_service = new google.maps.DistanceMatrixService();
+	  service.nearbySearch({
+		location: {lat: parseFloat(mylat), lng: parseFloat(mylon)},
+		radius: '3000',
+		types: ['subway_station'],
+		rankBy :google.maps.places.RankBy.PROMINENCE
+	  }, function (results, status) {
+	 // console.log(results);
+  nearestcallback(results, status, item,mylat,mylon);
+});
+	 
+	}
+	 function init_map() {
+		geocoder = new google.maps.Geocoder();
+		//var var_location = new google.maps.LatLng(1.34698856,103.83689404);
+		var var_location = new google.maps.LatLng(<%= typeof property_lat !== "undefined" ? property_lat: 1.34698856 %>,<%= typeof property_lon !== "undefined" ? property_lon: 103.83689404 %>);
+ 
+        var var_mapoptions = {
+          center: var_location,
+          zoom: 14
+        };
+ 
+        var_map = new google.maps.Map(document.getElementById("map-list"),
+            var_mapoptions);
+  
+		var var_marker = new google.maps.Marker({
+			position: var_location,
+            map: var_map,
+			title:"Venice"});
+			
+		var_marker.setMap(var_map);	
+		markers.push(var_marker);
+		//google.maps.event.trigger(map, 'resize');
+      }
+	  
+	 // if(typeof property_lat  !=="undefined")
+	  google.maps.event.addDomListener(window, 'load', init_map);
+	
+      function setMapOnAll(map) {
+	  for (var i = 0; i < markers.length; i++) {
+		markers[i].setMap(map);
+	  }
+	}
+function clearMarkers() {
+  setMapOnAll(null);
+}
+
+function deleteMarkers() {
+  clearMarkers();
+  markers = [];
+}
+function codeAddress() {
+	//console.log('here in codeaddress');
+	deleteMarkers();
+    var address = document.getElementById("address").value;
+    geocoder.geocode( { 'address': address+" Singapore"}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        var_map.setCenter(results[0].geometry.location);
+		//console.log(results[0].geometry.location.lat());
+      var marker = new google.maps.Marker({
+            map: var_map,
+            position: results[0].geometry.location
+        });
+		markers.push(marker);
+		$("#lat").val(results[0].geometry.location.lat());
+		$("#lon").val(results[0].geometry.location.lng());
+  
+  
+      } else {
+        //alert("Geocode was not successful for the following reason: " + status);
+      }
+    });
+ }
+ /*function getLatLong(cb) {
+	var geocoder = new google.maps.Geocoder();
+    var address = document.getElementById("landmark").value;
+    geocoder.geocode( { 'address': address+' singapore'}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+		$("#lat").val(results[0].geometry.location.lat());
+		$("#lon").val(results[0].geometry.location.lng());
+		cb();
+      } else {
+        //alert("Geocode was not successful for the following reason: " + status);
+      }
+    });
+ }*/
+ $('#lnk_unauthorized').click(function(e){
+	e.preventDefault();
+	bootbox.alert("You don't have permission to post a property!", function(result) {
+		
+	});
+ });
+ 
+$('#avatar').click(function(e){
+		e.preventDefault();
+		$("input[id='my_file']").click();
+	});
+$('#my_file').change(function() {
+ var files = !!this.files ? this.files : [];
+        if (!files.length || !window.FileReader) return; // no file selected, or no FileReader support
+
+        if (/^image/.test( files[0].type)){ // only image file
+            var reader = new FileReader(); // instance of the FileReader
+            reader.readAsDataURL(files[0]); // read the local file
+			if(files[0].size >110000)
+			{
+				bootbox.alert("Image size should not exceed 100Kb!", function(result) {
+		
+				});
+			}
+			else
+			{
+				reader.onloadend = function(){ // set image data as background of div
+				   $('#avatar').attr("data-orgsrc",$('#avatar').attr("src"));
+				   $("#avatar").css("background-image", "url("+this.result+")");
+				   $('#avatar').attr("src",this.result);
+				   $('.profile_imgedit').removeClass('hide');
+				}
+			}
+        }
+		else
+		{
+			bootbox.alert("Please choose a jpg|gif|png image!", function(result) {
+		
+			});
+		}
+ 
+});
+$('.profile_imgedit #edit_cancel').click(function(e){
+	e.preventDefault();
+	$('#avatar').attr("src",$('#avatar').attr("data-orgsrc"));
+	$('.profile_imgedit').addClass('hide');
+});
+$('.profile_imgedit #edit_confirm').click(function(e){
+	e.preventDefault();	
+	$.ajax({
+			url	 		: "/myaccount/change_profilepic",
+			type 		: "POST",
+			contentType : "application/json",
+			dataType: "json",
+			processData : false,
+			cache: false,
+			data		: JSON.stringify({binary_img:$('#avatar').attr("src")}),
+			success		: function(res){
+				if(res.code == "0")
+				{
+					$('.profile_imgedit').addClass('hide');
+				}
+				else
+				{
+					
+				}
+			}
+		});
+});
+$( "#signup_form #email" ).blur(function() {
+
+  if($(this).val() != "")
+  {
+	var mycontrol = $(this);
+	var post_data = {control_name:$(this).attr('id'),control_value:$(this).val()};
+	post_data =JSON.stringify(post_data);
+	$.ajax({
+			url	 		: "/check",
+			type 		: "POST",
+			contentType : "application/json",
+			dataType: "json",
+			processData : false,
+			cache: false,
+			data		: post_data,
+			success		: function(res){
+				if(res.msg == "exist")
+				{
+					$('.existerr_'+mycontrol.attr("id")).remove();
+					mycontrol.parent().after('<label for="name" class="error duplicate existerr_'+mycontrol.attr("id")+'">Already Exist!</label>');
+				}
+				else
+				{
+					
+					$('.existerr_'+mycontrol.attr("id")).remove();
+				}
+			}
+		});
+	}
+});
+$(document).on("click",".divhighlight",function(e){
+	
+		if($(e.target).hasClass('fa-heart') || $(e.target).hasClass('lnkdelete') || $(e.target).hasClass('fa fa-remove') || $(e.target).hasClass('fa fa-edit') || $(e.target).hasClass('lnkedit') || $(e.target).hasClass('lnkactivate') || $(e.target).hasClass('fa fa-eye') || $(e.target).hasClass('fa fa-eye-slash'))
+		{
+			return false;
+		}
+		else
+		{
+			location.href= $(this).find('.go_dtllink').attr('href');
+		}
+	});
+	</script>

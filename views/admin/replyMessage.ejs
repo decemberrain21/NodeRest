@@ -1,0 +1,227 @@
+<html>
+	<head>
+		<title>STC reply messsage</title>
+		 <style type="text/css">
+			.container {
+			width: 500px;
+			clear: both;
+			text-align: right;
+			line-height: 2.5;
+		}
+		.container input {
+			width: 50%;
+			clear: both;
+		}
+		.star {
+			display: inline-block;    
+			width: 10px;
+			height: 10px;
+			background-color: #CC0;
+			margin: 3px;
+		}
+		.active {
+			background-color: #C00;
+		}
+
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			Login Token:(login_token)<input type="text" id="login_token"/><br>
+			message id:(msg_id) <input type="text" id="messageid"><button id="btnmessage">Submit</button><br>
+			<div class="survey">				
+				 <input type="text" id="get_anstype" >
+				 <input type="text" id="subject" >
+				 <input type="text" id="question" >
+				Answer:(ans) <div id="answer"></div>
+				<button id="btnsubmit">Submit</button>
+			</div>
+		</div>
+		<div id="resultdata">	
+			
+		</div>
+	</body>
+	<script src="/assets/js/jquery.min.js"></script>
+	<script>
+	jQuery(function($){
+	
+
+		$("#btnmessage").click(function() {	
+			$.ajax({
+				  url: "/api/getquestion/",
+				  dataType: 'json',
+				  method: "POST",
+				  data:{msg_id:$('#messageid').val(),login_token:$('#login_token').val()}
+				  /*beforeSend: function( xhr ) {
+					xhr.overrideMimeType( "text/plain; charset=x-user-defined" );
+				  }*/
+				})
+				.done(function( data ) {
+					if(data.status == 1)
+					{
+					$('#resultdata').html("");
+						//console.log(data.type);
+					var parsedata = data.result[0];
+					
+					var resultData = JSON.parse(parsedata.data);
+					
+					var resultQuestion = resultData.qa;
+					var resultSubject  = parsedata.title;
+					var ans_type = resultData.ans_type;
+					var str = "";
+					var otherdata;
+					if(typeof resultData.files !=="undefined")
+					{
+						var filesname = resultData.files.split(",");
+					 
+						for(var i = 0; i<filesname.length; i++){
+							if(data.type == "image"){
+								otherdata = '<a href="/assets/upload/image/'+filesname[i]+'" target="_blank">'+filesname[i]+'</a><br>';
+							}
+							if(data.type == "file"){
+								otherdata = '<a href="/assets/upload/file/'+filesname[i]+'" download>'+filesname[i]+'</a>	<br>';
+							}
+							if(data.type == "audio"){						
+								var link = "'demo_"+filesname[i]+"'";
+								otherdata = '<audio id="demo_'+filesname[i]+'" src="/assets/upload/audio/'+filesname+'"></audio>'+
+							'<a onclick="document.getElementById('+link+').play()">'+filesname[i]+'</a>	<br>';
+							
+							}
+							if(data.type == "video"){	
+								var link = "'demo_"+filesname[i]+"'";
+								otherdata = '<video id="demo_'+filesname[i]+'" src="/assets/upload/video/'+filesname+'"></video><a onclick="document.getElementById('+link+').play()"  target="_blank">'+filesname[i]+'</a>	<br>';
+							}
+							
+						}
+					}
+					else
+					{
+						//console.log('no file');
+					}
+					 
+					
+					if(ans_type == "textbox")
+					{					
+							str += '<input type="textbox" name="optionvalue" id="textboxvalue"/>';
+					}else if(ans_type == "rating")
+						{	str += '<div class="rating-container">';
+							for(var i=0; i< 5 ; i++)
+							{	    
+
+								str += '<div class="star"></div>';
+							}
+							str += '</div>';	
+											
+						}else{
+					
+						var options  = resultData.options.split(";;");
+					
+						for(var i = 0; i<options.length; i++){
+							if(ans_type == "radio")
+							{					
+								str += '<input type="radio" name="optionvalue" value="'+options[i]+'"/>' + options[i];
+							}
+							else if(ans_type == "checkbox")
+							{							
+								str += '<input type="checkbox" name="optionvalue" value="'+options[i]+'"/>' + options[i];
+							}			
+						}
+					}	
+					if(ans_type == "rating")
+						{
+							str="";
+							console.log("rating");
+							str += '<div class="rating-container">';
+							for(var i=0; i< 5 ; i++)
+							{	    
+
+								str += '<div class="star"></div>';
+							}
+							str += '</div>';	
+											
+						}
+						$('#answer').html('');
+						$('#otherdata').html('');
+						$('#subject').html('');
+						$('#question').html('');
+						$('#answer').html(str);
+						$('#otherdata').append(otherdata);
+						$('#get_anstype').val(ans_type);
+						//console.log("resultSubject");
+						//console.log(resultSubject);
+						$('#subject').val(resultSubject);
+						$('#question').val(resultQuestion);
+						$('.rating-container .star').click(function () {
+							$('.rating-container .star').removeClass('active');
+							$(this).prevAll('.star').addBack().addClass('active');
+						});
+					}else
+					{
+						$('#resultdata').html(data.msg);
+					}
+					//var data = JSON.parse(result);
+					
+					
+				});
+		});
+		
+		$("#btnsubmit").click(function() {
+			var get_anstype = $('#get_anstype').val();
+			var ans = "";
+			$('input[name=optionvalue]:checked').each(function(e){
+				if(ans == "")
+				{
+					ans +=$(this).val();	
+				}
+				else
+				{
+					ans +="|"+$(this).val();	
+				}
+			});
+					//console.log(get_anstype);
+			if(get_anstype == "rating"){
+				ans += $('.star.active').length;
+			}
+			
+			if(get_anstype == "textbox"){
+				ans = $('#textboxvalue').val();
+			}
+			var data ={
+				
+				subject	: $('#subject').val(),
+				msg_id	: $('#messageid').val(),
+				qa		: $('#question').val(),
+				ans     : ans,
+				ans_type : get_anstype,
+				login_token	: $('#login_token').val()
+			}
+					//console.log(data);
+			$.ajax({
+				  url: "/api/submitAnswer",
+				  dataType: 'json',
+				  data : data,
+				  method: "POST",	
+				  /*beforeSend: function( xhr ) {
+					xhr.overrideMimeType( "text/plain; charset=x-user-defined" );
+				  }*/
+				})
+				.done(function( data ) {
+					if(data.status == "1")
+					{
+						$('#resultdata').html(JSON.stringify(data));
+					}
+					else
+					{
+						$('#resultdata').html(data.msg);
+					}
+				});
+					
+				
+			
+			
+		//
+			
+		});
+	});
+	</script>
+</html>

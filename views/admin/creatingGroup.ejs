@@ -1,0 +1,670 @@
+<br/>
+<br/>
+
+<!-- Modal -->
+	<div class="modal " id="userModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h5 class="blue bigger">Included Users:</h5>
+			</div>
+			<div class="modal-body">
+				<%  
+					if(Group_user != undefined){
+					var userslist = Group_user;
+					for(var i=0; i<userslist.length;i++){
+					%>
+						<%= userslist[i].name%><br>
+					<%
+					}
+					}
+				%>
+			</div>	
+			<div class="modal-footer">
+				
+			</div>					
+		</div>
+	  </div>
+	</div>			
+<!-- Model -->
+
+
+<div class="row">
+	<div class="col-xs-12">
+	<form class="form-horizontal" role="form" id="group_form">
+		<div class="form-group">
+			<label class="col-sm-2 control-label" for="title"> * Title </label>
+			<div class="col-xs-12  col-sm-10">
+				
+				<input type="text" id="title" name="title" placeholder="Title" class="col-xs-12 col-sm-6 col-md-6 formdata" value="<%=(group_attr.title != undefined?group_attr.title:"")%>" required />
+				
+			</div>
+		</div>
+		<div class="form-group <%= hidval?"hide":""%>">
+			<label class="col-sm-2 control-label" for="byuid"> By Employee ID </label>
+			<div class="col-xs-12  col-sm-10">
+				<input type="checkbox" id="byuid" name="byuid">
+			</div>
+		</div>
+		<div class="form-group div_mapping " >
+			<label class="col-sm-2 control-label mapping_attribute" for="options1" data-mapname="biz_sector">  Biz Sector </label>
+			<div class="col-xs-12  col-sm-10">
+				<select  class="col-xs-6 col-sm-2 col-md-2"  name="options1"  data-placeholder="Choose ..." >
+					<option <%=(group_attr.biz_sector != undefined?group_attr.biz_sector.operator== "ignored"?"selected":"selected":"selected")%> value="ignored">Ignored</option>
+					<option <%=(group_attr.biz_sector != undefined?group_attr.biz_sector.operator== "equalto"?"selected":"":"")%> value="equalto">Equal to</option>
+					<option <%=(group_attr.biz_sector != undefined?group_attr.biz_sector.operator== "notequalto"?"selected":"":"")%> value="notequalto">Not equal to</option>
+				</select>
+				<div class="col-xs-6 col-sm-6  col-md-6" >
+					<select  class="form-control formdata"  id="biz_sector" name="textdata1"  data-placeholder="Choose a biz sector...">	
+						<option value="" >Choose a biz sector</option>
+						<% var biz_sector = page.biz_sector;
+							for(var i=0; i < biz_sector.length; i++) { %>
+						   <option value="<%= biz_sector[i].name %>" <%= ( group_attr.biz_sector != undefined && group_attr.biz_sector.value.trim() === biz_sector[i].name.trim() )?"selected":"" %> > <%= biz_sector[i].name %> </option>
+						<% } %>
+					</select>
+				</div>	
+			</div>			
+					
+		</div>
+		<div class="form-group div_mapping " >
+			<label class="col-sm-2 control-label mapping_attribute" for="options2" data-mapname="company">  Company </label>
+			<div class="col-xs-12  col-sm-10">
+				<select  class="col-xs-6 col-sm-2 col-md-2"  name="options2"  data-placeholder="Choose ..." >	
+					<option <%=(group_attr.company != undefined?group_attr.company.operator== "ignored"?"selected":"selected":"selected")%> value="ignored">Ignored</option>
+					<option <%=(group_attr.company != undefined?group_attr.company.operator== "equalto"?"selected":"":"")%> value="equalto">Equal to</option>
+					<option <%=(group_attr.company != undefined?group_attr.company.operator== "notequalto"?"selected":"":"")%> value="notequalto">Not equal to</option>
+				</select>
+				<div class="col-xs-6 col-sm-6  col-md-6" >					
+					<select  class="form-control formdata"  id="company"  name="textdata2" data-placeholder="Choose a company...">	
+						<option value=""  >Choose a company</option>
+						<% var company = page.company;
+							for(var i=0; i < company.length; i++) { %>
+						   <option value="<%= company[i].name %>" <%= ( group_attr.company != undefined && group_attr.company.value.trim() ==  company[i].name.trim() )?"selected":"" %> > <%= company[i].name %></option>
+						<% } %>
+					</select>
+				</div>	
+			</div>			
+					
+		</div>
+		<div class="form-group div_mapping " >
+			<label class="col-sm-2 control-label mapping_attribute" for="options3" data-mapname="department">  Department </label>
+			<div class="col-xs-12  col-sm-10">
+				<select  class="col-xs-6 col-sm-2 col-md-2"  name="options3"  data-placeholder="Choose ..." >	
+					<option <%=(group_attr.department != undefined?group_attr.department.operator== "ignored"?"selected":"selected":"selected")%> value="ignored">Ignored</option>
+					<option <%=(group_attr.department != undefined?group_attr.department.operator== "equalto"?"selected":"":"")%> value="equalto">Equal to</option>
+					<option <%=(group_attr.department != undefined?group_attr.department.operator== "notequalto"?"selected":"":"")%> value="notequalto">Not equal to</option>
+				</select>
+				<div class="col-xs-6 col-sm-6  col-md-6" >
+					<select  class="form-control formdata"  id="department" name="textdata3"  data-placeholder="Choose a department...">	
+						<option value=""  >Choose a department</option>
+						<% var department = page.department;
+							for(var i=0; i < department.length; i++) { %>
+						   <option value="<%= department[i].name %>" <%= (group_attr.department != undefined && group_attr.department.value.trim() ==  department[i].name.trim() )?"selected":"" %> > <%= department[i].name %></option>
+						<% } %>
+					</select>
+				</div>	
+			</div>			
+					
+		</div>
+		<div class="form-group div_mapping " >
+			<label class="col-sm-2 control-label mapping_attribute" for="options4" data-mapname="rank">  Rank(Old) </label>
+			<div class="col-xs-12  col-sm-10">
+				<select  class="col-xs-6 col-sm-2 col-md-2"  name="options4"  data-placeholder="Choose ..." >	
+					<option <%=(group_attr.rank != undefined?group_attr.rank.operator== "ignored"?"selected":"selected":"selected")%> value="ignored">Ignored</option>
+					<option <%=(group_attr.rank != undefined?group_attr.rank.operator== "equalto"?"selected":"":"")%> value="equalto">Equal to</option>
+					<option <%=(group_attr.rank != undefined?group_attr.rank.operator== "notequalto"?"selected":"":"")%> value="notequalto">Not equal to</option>
+				</select>
+				<div class="col-xs-6 col-sm-6  col-md-6" >
+					<select  class="form-control formdata"  id="rank" name="textdata4"  data-placeholder="Choose a rank...">	
+						<option value=""  >Choose a Rank(Old)</option>
+						<% var data = page.rank;
+							for(var i=0; i < data.length; i++) { %>
+						   <option value="<%= data[i].name %>"  <%= ( group_attr.rank != undefined && group_attr.rank.value.trim() ==  data[i].name.trim() )?"selected":"" %> > <%= data[i].name %></option>
+						<% } %>
+					</select>
+				</div>	
+			</div>			
+					
+		</div>
+		<div class="form-group div_mapping " >
+			<label class="col-sm-2 control-label mapping_attribute" for="options13" data-mapname="rank_new">  Rank(New) </label>
+			<div class="col-xs-12  col-sm-10">
+				<select  class="col-xs-6 col-sm-2 col-md-2"  name="options13"  data-placeholder="Choose ..." >	
+					<option <%=(group_attr.rank_new != undefined?group_attr.rank_new.operator== "ignored"?"selected":"selected":"selected")%> value="ignored">Ignored</option>
+					<option <%=(group_attr.rank_new != undefined?group_attr.rank_new.operator== "equalto"?"selected":"":"")%> value="equalto">Equal to</option>
+					<option <%=(group_attr.rank_new != undefined?group_attr.rank_new.operator== "notequalto"?"selected":"":"")%> value="notequalto">Not equal to</option>
+				</select>
+				<div class="col-xs-6 col-sm-6  col-md-6" >
+					<select  class="form-control formdata"  id="rank_new" name="textdata4"  data-placeholder="Choose a rank...">	
+						<option value=""  >Choose a Rank(New)</option>
+						<% var data = page.rank_new;
+							for(var i=0; i < data.length; i++) { %>
+						   <option value="<%= data[i].name %>"  <%= ( group_attr.rank_new != undefined && group_attr.rank_new.value.trim() ==  data[i].name.trim() )?"selected":"" %> > <%= data[i].name %></option>
+						<% } %>
+					</select>
+				</div>	
+			</div>			
+					
+		</div>
+		<div class="form-group div_mapping " >
+			<label class="col-sm-2 control-label mapping_attribute" for="options14" data-mapname="role_old">  Role(Old) </label>
+			<div class="col-xs-12  col-sm-10">
+				<select  class="col-xs-6 col-sm-2 col-md-2"  name="options14"  data-placeholder="Choose ..." >	
+					<option <%=(group_attr.role_old != undefined?group_attr.role_old.operator== "ignored"?"selected":"selected":"selected")%> value="ignored">Ignored</option>
+					<option <%=(group_attr.role_old != undefined?group_attr.role_old.operator== "equalto"?"selected":"":"")%> value="equalto">Equal to</option>
+					<option <%=(group_attr.role_old != undefined?group_attr.role_old.operator== "notequalto"?"selected":"":"")%> value="notequalto">Not equal to</option>
+				</select>
+				<div class="col-xs-6 col-sm-6  col-md-6" >
+					<select  class="form-control formdata"  id="role_old" name="textdata4"  data-placeholder="Choose a role...">	
+						<option value=""  >Choose a Role(Old)</option>
+						<% var data = page.role_old;
+							for(var i=0; i < data.length; i++) { %>
+						   <option value="<%= data[i].name %>"  <%= ( group_attr.role_old != undefined && group_attr.role_old.value.trim() ==  data[i].name.trim() )?"selected":"" %> > <%= data[i].name %></option>
+						<% } %>
+					</select>
+				</div>	
+			</div>			
+					
+		</div>
+		<div class="form-group div_mapping " >
+			<label class="col-sm-2 control-label mapping_attribute" for="options14" data-mapname="role_new">  Role(New) </label>
+			<div class="col-xs-12  col-sm-10">
+				<select  class="col-xs-6 col-sm-2 col-md-2"  name="options14"  data-placeholder="Choose ..." >	
+					<option <%=(group_attr.role_new != undefined?group_attr.role_new.operator== "ignored"?"selected":"selected":"selected")%> value="ignored">Ignored</option>
+					<option <%=(group_attr.role_new != undefined?group_attr.role_new.operator== "equalto"?"selected":"":"")%> value="equalto">Equal to</option>
+					<option <%=(group_attr.role_new != undefined?group_attr.role_new.operator== "notequalto"?"selected":"":"")%> value="notequalto">Not equal to</option>
+				</select>
+				<div class="col-xs-6 col-sm-6  col-md-6" >
+					<select  class="form-control formdata"  id="role_new" name="textdata4"  data-placeholder="Choose a role...">	
+						<option value=""  >Choose a Role(New)</option>
+						<% var data = page.role_new;
+							for(var i=0; i < data.length; i++) { %>
+						   <option value="<%= data[i].name %>"  <%= ( group_attr.role_new != undefined && group_attr.role_new.value.trim() ==  data[i].name.trim() )?"selected":"" %> > <%= data[i].name %></option>
+						<% } %>
+					</select>
+				</div>	
+			</div>			
+					
+		</div>
+		
+		<div class="form-group div_mapping " >
+			<label class="col-sm-2 control-label mapping_attribute" for="options5" data-mapname="gender"> Gender </label>
+			<div class="col-xs-12  col-sm-10">
+				<select  class="col-xs-6 col-sm-2 col-md-2"  name="options5"  data-placeholder="Choose ..." >	
+					<option <%=(group_attr.gender != undefined?group_attr.gender.operator== "ignored"?"selected":"selected":"selected")%> value="ignored">Ignored</option>
+					<option <%=(group_attr.gender != undefined?group_attr.gender.operator== "equalto"?"selected":"":"")%> value="equalto">Equal to</option>
+					<option <%=(group_attr.gender != undefined?group_attr.gender.operator== "notequalto"?"selected":"":"")%> value="notequalto">Not equal to</option>
+				</select>
+				<div class="col-xs-6 col-sm-6  col-md-6" >
+					
+					<select  class="form-control formdata"  id="gender" name="textdata5"  data-placeholder="Choose a gender...">	
+						<option value=""  >Choose a gender</option>
+						<% var data = page.gender;
+							for(var i=0; i < data.length; i++) { %>
+						   <option value="<%= data[i].name %>"  <%= ( group_attr.gender != undefined && group_attr.gender.value.trim() ==  data[i].name.trim() )?"selected":"" %> > <%= data[i].name %></option>
+						<% } %>
+					</select>
+				</div>
+			</div>			
+					
+		</div>
+		<div class="form-group div_mapping">
+			<label class="col-sm-2 control-label mapping_attribute" for="options6" data-mapname="site_location">  Site/Work Location </label>
+			<div class="col-xs-12  col-sm-10">
+				<select  class="col-xs-6 col-sm-2 col-md-2"  name="options6"  data-placeholder="Choose ..." >	
+					<option <%=(group_attr.site_location != undefined?group_attr.site_location.operator== "ignored"?"selected":"selected":"selected")%> value="ignored">Ignored</option>
+					<option <%=(group_attr.site_location != undefined?group_attr.site_location.operator== "equalto"?"selected":"":"")%> value="equalto">Equal to</option>
+					<option <%=(group_attr.site_location != undefined?group_attr.site_location.operator== "notequalto"?"selected":"":"")%> value="notequalto">Not equal to</option>
+				</select>
+				<div class="col-xs-6 col-sm-6 col-md-6" >
+					<select  class="form-control formdata"  id="site_location" name="textdata6"  data-placeholder="Choose a site location...">	
+						<option value="" >Choose a site location</option>
+						<% var data = page.site_location;
+							for(var i=0; i < data.length; i++) { %>
+						   <option value="<%= data[i].name %>"  <%= (group_attr.site_location != undefined &&  group_attr.site_location.value.trim() ==  data[i].name.trim() )?"selected":"" %> > <%= data[i].name %></option>
+						<% } %>
+					</select>
+				</div>	
+			</div>			
+					
+		</div>
+		<div class="form-group div_mapping " >
+			<label class="col-sm-2 control-label mapping_attribute" for="options7" data-mapname="date_of_employment"> Date of Employment </label>
+			<div class="col-xs-12  col-sm-10">
+				<select  class="col-xs-6 col-sm-2 col-md-2"  name="options7"  data-placeholder="Choose ..." >	
+					<option <%=(group_attr.date_of_employment != undefined?group_attr.date_of_employment.operator== "ignored"?"selected":"selected":"selected")%> value="ignored">Ignored</option>
+					<option <%=(group_attr.date_of_employment != undefined?group_attr.date_of_employment.operator== "equalto"?"selected":"":"")%> value="equalto">Equal to</option>
+					<option <%=(group_attr.date_of_employment != undefined?group_attr.date_of_employment.operator== "notequalto"?"selected":"":"")%> value="notequalto">Not equal to</option>
+				</select>
+				<div class="col-xs-6 col-sm-6  col-md-6" >
+					<select  class="col-xs-12 col-sm-12 col-md-12 formdata"  name="textdata7"  data-placeholder="Choose ...">
+						<option value="" >Choose ...</option>
+						<option <%=(group_attr.date_of_employment != undefined?group_attr.date_of_employment.value== "probies"?"selected":"":"")%> value="probies">Employees less then 3 months seniority (Probies)</option>
+						<option value="newbies" <%=(group_attr.date_of_employment != undefined?group_attr.date_of_employment.value== "newbies"?"selected":"":"")%>>Employees more than 3 months and less than 1 year seniority (Newbies)</option>
+						<option value="juniors" <%=(group_attr.date_of_employment != undefined?group_attr.date_of_employment.value== "juniors"?"selected":"":"")%>>Employees more than 1 year and less than 3 years seniority (Juniors)</option>
+						<option value="seniors" <%=(group_attr.date_of_employment != undefined?group_attr.date_of_employment.value== "seniors"?"selected":"":"")%>>Employees between 3 years and 7 years seniority</option>
+						<option value="loyals" <%=(group_attr.date_of_employment != undefined?group_attr.date_of_employment.value== "loyals"?"selected":"":"")%>>Employees more than 7 years and less than 15 years seniority (Loyals)</option>
+						<option value="columns" <%=(group_attr.date_of_employment != undefined?group_attr.date_of_employment.value== "columns"?"selected":"":"")%>>Employees more than 15 years seniority (Columns)</option>
+					</select>
+				</div>
+			</div>			
+					
+		</div>
+		<div class="form-group div_mapping">
+			<label class="col-sm-2 control-label mapping_attribute" for="options8" data-mapname="probation_permanent">  Probation/Permanent</label>
+			<div class="col-xs-12  col-sm-10">
+				<select  class="col-xs-6 col-sm-2 col-md-2"  name="options8"  data-placeholder="Choose ..." >	
+					<option <%=(group_attr.probation_permanent != undefined?group_attr.probation_permanent.operator== "ignored"?"selected":"selected":"selected")%> value="ignored">Ignored</option>
+					<option <%=(group_attr.probation_permanent != undefined?group_attr.probation_permanent.operator== "equalto"?"selected":"":"")%> value="equalto">Equal to</option>
+					<option <%=(group_attr.probation_permanent != undefined?group_attr.probation_permanent.operator== "notequalto"?"selected":"":"")%> value="notequalto">Not equal to</option>
+				</select>
+				<div class="col-xs-6 col-sm-6  col-md-6" >
+					<select  class="form-control formdata"  id="probation_permanent" name="textdata8"  data-placeholder="Choose a probation_permanent...">	
+						<option value="" >Choose probation/permanent</option>
+						<% var data = page.probation_permanent;
+							for(var i=0; i < data.length; i++) { %>
+						   <option value="<%= data[i].name %>" <%= ( group_attr.probation_permanent != undefined && group_attr.probation_permanent.value.trim() ==  data[i].name.trim() )?"selected":"" %>  > <%= data[i].name %></option>
+						<% } %>
+					</select>
+				</div>	
+			</div>			
+					
+		</div>
+		<div class="form-group div_mapping">
+			<label class="col-sm-2 control-label mapping_attribute" for="options8" data-mapname="type_of_contract">  Type of Contract </label>
+			<div class="col-xs-12  col-sm-10">
+				<select  class="col-xs-6 col-sm-2 col-md-2"  name="options8"  data-placeholder="Choose ..." >	
+					<option <%=(group_attr.type_of_contract != undefined?group_attr.type_of_contract.operator== "ignored"?"selected":"selected":"selected")%> value="ignored">Ignored</option>
+					<option <%=(group_attr.type_of_contract != undefined?group_attr.type_of_contract.operator== "equalto"?"selected":"":"")%> value="equalto">Equal to</option>
+					<option <%=(group_attr.type_of_contract != undefined?group_attr.type_of_contract.operator== "notequalto"?"selected":"":"")%> value="notequalto">Not equal to</option>
+				</select>
+				<div class="col-xs-6 col-sm-6  col-md-6" >
+					<select  class="form-control formdata"  id="type_of_contract" name="textdata8"  data-placeholder="Choose a type_of_contract...">	
+						<option value="" >Choose a type of contract</option>
+						<% var data = page.type_of_contract;
+							for(var i=0; i < data.length; i++) { %>
+						   <option value="<%= data[i].name %>" <%= ( group_attr.type_of_contract != undefined && group_attr.type_of_contract.value.trim() ==  data[i].name.trim() )?"selected":"" %>  > <%= data[i].name %></option>
+						<% } %>
+					</select>
+				</div>	
+			</div>			
+					
+		</div>
+		<div class="form-group div_mapping " >
+			<label class="col-sm-2 control-label mapping_attribute" for="options9" data-mapname="date_of_birth"> Date of Birth </label>
+			<div class="col-xs-12  col-sm-10">
+				<select  class="col-xs-6 col-sm-2 col-md-2"  name="options9"  data-placeholder="Choose ..." >	
+					<option <%=(group_attr.date_of_birth != undefined?group_attr.date_of_birth.operator== "ignored"?"selected":"selected":"selected")%> value="ignored">Ignored</option>
+					<option <%=(group_attr.date_of_birth != undefined?group_attr.date_of_birth.operator== "equalto"?"selected":"":"")%> value="equalto">Equal to</option>
+					<option <%=(group_attr.date_of_birth != undefined?group_attr.date_of_birth.operator== "notequalto"?"selected":"":"")%> value="notequalto">Not equal to</option>
+				</select>
+				<div class="col-xs-6 col-sm-6  col-md-6" >
+					<select  class="col-xs-12 col-sm-12 col-md-12 formdata"  name="textdata9"  data-placeholder="Choose ...">
+						<option value="" >Choose ...</option>
+						<option <%=(group_attr.date_of_birth != undefined?group_attr.date_of_birth.operator== "paper"?"selected":"":"")%>  value="paper">Employees less then 20 years old (Paper)</option>
+						<option <%=(group_attr.date_of_birth != undefined?group_attr.date_of_birth.operator== "bamboo"?"selected":"":"")%> value="bamboo">Employees between 20 and 30 yo (Bamboo)</option>
+						<option <%=(group_attr.date_of_birth != undefined?group_attr.date_of_birth.operator== "steel"?"selected":"":"")%> value="steel">employees between 30 and 50 yo (Steel)</option>
+						<option <%=(group_attr.date_of_birth != undefined?group_attr.date_of_birth.operator== "silver"?"selected":"":"")%> value="silver">employees between 50 and 60 yo (Silver)</option>
+						<option <%=(group_attr.date_of_birth != undefined?group_attr.date_of_birth.operator== "platinum"?"selected":"":"")%> value="platinum">employees over 60 yo (Platinum)</option>
+					</select>
+				</div>
+			</div>			
+					
+		</div>
+		<div class="form-group div_mapping">
+			<label class="col-sm-2 control-label mapping_attribute" for="options10" data-mapname="nationality">  Nationality </label>
+			<div class="col-xs-12  col-sm-10">
+				<select  class="col-xs-6 col-sm-2 col-md-2"  name="options10"  data-placeholder="Choose ...">	
+					<option <%=(group_attr.nationality != undefined?group_attr.nationality.operator== "ignored"?"selected":"selected":"selected")%> value="ignored">Ignored</option>
+					<option <%=(group_attr.nationality != undefined?group_attr.nationality.operator== "equalto"?"selected":"":"")%> value="equalto">Equal to</option>
+					<option <%=(group_attr.nationality != undefined?group_attr.nationality.operator== "notequalto"?"selected":"":"")%> value="notequalto">Not equal to</option>
+				</select>
+				<div class="col-xs-6 col-sm-6  col-md-6" >
+					<select  class="form-control formdata"  id="nationality" name="textdata10"  data-placeholder="Choose a nationality...">	
+						<option value="" >Choose a nationality</option>
+						<% var data = page.nationality;
+							for(var i=0; i < data.length; i++) { %>
+						   <option value="<%= data[i].name %>"   <%= (group_attr.nationality != undefined &&  group_attr.nationality.value.trim() ==  data[i].name.trim() )?"selected":"" %>  > <%= data[i].name %></option>
+						<% } %>
+					</select>
+				</div>	
+			</div>			
+					
+		</div>
+		<div class="form-group div_mapping">
+			<label class="col-sm-2 control-label mapping_attribute" for="options11" data-mapname="direct_report_to">  Direct report to </label>
+			<div class="col-xs-12  col-sm-10">
+				<select  class="col-xs-6 col-sm-2 col-md-2"  name="options11"  data-placeholder="Choose ..." >	
+					<option <%=(group_attr.direct_report_to != undefined?group_attr.direct_report_to.operator== "ignored"?"selected":"selected":"selected")%> value="ignored">Ignored</option>
+					<option <%=(group_attr.direct_report_to != undefined?group_attr.direct_report_to.operator== "equalto"?"selected":"":"")%> value="equalto">Equal to</option>
+					<option <%=(group_attr.direct_report_to != undefined?group_attr.direct_report_to.operator== "notequalto"?"selected":"":"")%> value="notequalto">Not equal to</option>
+				</select>
+				<div class="col-xs-6 col-sm-6  col-md-6" >
+					<input type="text" class="col-xs-12 col-sm-12 col-md-12 formdata" name="textdata11" value="<%=group_attr.direct_report_to != undefined?group_attr.direct_report_to.value:"" %>"/>
+				</div>	
+			</div>			
+					
+		</div>
+		<div class="form-group div_mapping">
+			<label class="col-sm-2 control-label mapping_attribute" for="options12" data-mapname="employee_id">  Employee ID </label>
+			<div class="col-xs-12  col-sm-10">
+				<select  class="col-xs-6 col-sm-2 col-md-2"  name="options12"  data-placeholder="Choose ...">	
+					<option <%=(group_attr.employee_id != undefined?group_attr.employee_id.operator== "ignored"?"selected":"selected":"selected")%> value="ignored">Ignored</option>
+					<option <%=(group_attr.employee_id != undefined?group_attr.employee_id.operator== "equalto"?"selected":"":"")%> value="equalto">Equal to</option>
+					<option <%=(group_attr.employee_id != undefined?group_attr.employee_id.operator== "notequalto"?"selected":"":"")%> value="notequalto">Not equal to</option>
+				</select>
+				<div class="col-xs-6 col-sm-6  col-md-6" >
+					<input type="text" class="col-xs-12 col-sm-12 col-md-12 formdata" name="textdata12" value="<%=group_attr.employee_id != undefined?group_attr.employee_id.value:"" %>"/>
+				</div>	
+			</div>			
+					
+		</div>
+		<div class="form-group div_byuid hide">
+			<label class="col-sm-2 control-label" for="userid"> *By Employee ID</label>
+			<div class="col-xs-12  col-sm-10">				
+				<textarea id="userid" name="userid" style="min-height:400px;" class="col-xs-12 col-sm-6 col-md-6 formdata"><%=group_attr.user_id != undefined?group_attr.user_id:"" %></textarea>
+				&nbsp;&nbsp;<input type="button" name="btncheck" id="btncheck" value="Check" />
+			</div>
+		</div>
+		<!-- <div class="form-group sim">
+			<label class="col-sm-2 control-label " for="corporate_sim_card" data-mapname="corporate_sim_card"> Corporate Issued SIM CARD </label>
+			<div class="col-xs-3 col-sm-1">
+				<label>
+					<input type="checkbox" id="corporate_sim_card" name="corporate_sim_card" value=""  <%= (group_attr.corporate_sim_card != undefined?group_attr.corporate_sim_card.value == "Yes" ? "checked" :"":"")%>/>
+				</label>
+			</div>
+		</div> -->
+		<div class="form-group div_mapping">
+			<label class="col-sm-2 control-label mapping_attribute" for="options13" data-mapname="corporate_sim_card">  corporate_sim_card </label>
+			<div class="col-xs-12  col-sm-10">
+				<select  class="col-xs-6 col-sm-2 col-md-2"  name="options13"  data-placeholder="Choose ...">	
+					<option <%=(group_attr.corporate_sim_card != undefined?group_attr.corporate_sim_card.operator== "ignored"?"selected":"selected":"selected")%> value="ignored">Ignored</option>
+					<option <%=(group_attr.corporate_sim_card != undefined?group_attr.corporate_sim_card.operator== "equalto"?"selected":"":"")%> value="equalto">Equal to</option>
+					<option <%=(group_attr.corporate_sim_card != undefined?group_attr.corporate_sim_card.operator== "notequalto"?"selected":"":"")%> value="notequalto">Not equal to</option>
+				</select>				
+				<div class="col-xs-6 col-sm-6  col-md-6" >
+					<select  class="col-xs-12 col-sm-12 col-md-12 formdata"  id="corporate_sim_card" name="textdata13"  data-placeholder="Choose corporate sim card...">	
+						<option value="" >Choose corporate sim card avaliable</option>
+						<option <%=(group_attr.corporate_sim_card != undefined?group_attr.corporate_sim_card.value== "Yes"?"selected":"":"")%>  value="Yes">Yes</option>
+						<option <%=(group_attr.corporate_sim_card != undefined?group_attr.corporate_sim_card.value== "No"?"selected":"":"")%> value="No">No</option>
+					</select>
+				</div>	
+				</div>			
+					
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">  </label>
+			<div class="col-xs-12  col-sm-10">
+			<input type="hidden" id="hidval" value="<%= hidval%>"/>
+			<input type="hidden" id="hidisuserid" value="<%=(group_attr.is_userid != undefined?"1":"")%>"/>
+				<button class="btn btn-sm btn-success" id="create">
+					<i class="icon-ok"></i>
+					Save
+				</button>
+				<button class="btn btn-sm btncancel" data-link="/admin/group/groupdata/">
+					<i class="icon-ban-circle align-top bigger-125"></i>
+					Cancel
+				</button>				
+
+				<button class="btn btn-sm btn-danger delete  <%= hidval?"hide":"hide"%>" name="user" id="delete_user">
+					<i class="icon-trash"></i>
+					Delete
+				</button>
+			</div>
+		</div>
+		</form>
+	</div>
+</div>
+<div class="row hide div_warning">
+	<h3>Following Employee ID do not exist!</h3>
+	<div class="col-xs-12 mydiv">
+		
+	</div>
+</div>
+<div class="row  <%= hidval?"":"hide"%>">
+	<label class="col-sm-2 control-label" align="right">Included Users:</label>
+	<div class="col-xs-12  col-sm-10">
+		<a class="callModal" href="#">Users List</a>
+	</div>
+</div>
+<div class="modal " id="groupDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h5 class="blue bigger">Are you sure to delete this group?</h5>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-sm" data-dismiss="modal">
+					<i class="icon-remove"></i>
+					Cancel
+				</button>
+
+				<button class="btn btn-sm btn-primary" name="save" id="deleteGroup">
+					<i class="icon-ok"></i>
+					Delete
+				</button>
+			</div>					
+		</div>
+	  </div>
+</div>
+	<script type="text/javascript">
+	$(document).on("click", '.callModal', function(e){	
+		$('#userModal').modal();
+	});
+	jQuery(function($){
+		$('#biz_sector').chosen();
+		$('#company').chosen();
+		$('#department').chosen();
+		$('#gender').chosen();
+		$('#site_location').chosen();
+		$('#probation_permanent').chosen();
+		$('#nationality').chosen();
+		$('#type_of_contract').chosen();
+		$('#rank').chosen();
+		$('#rank_new').chosen();
+		$('#role_old').chosen();
+		$('#role_new').chosen();
+	});
+	
+	$(document).ready(function(){
+		if($('#hidisuserid').val() != "")
+		{
+			$('#byuid').prop('checked', true);
+			$('.div_mapping').addClass("hide");
+			//$('.sim').addClass("hide");
+			$('.div_byuid').removeClass("hide");
+			$('#userid').attr("required","true");
+		}
+	});
+	$('#btncheck').click(function(e){
+		if($('.imgloading').length == 0)
+		{
+			$.ajax({
+			  method: "POST",
+			  url: "/admin/group/check",
+			  data: { ids: $('#userid').val() },
+			  beforeSend: function( xhr ) {
+				$('#btncheck').html('<img class="imgloading" src="/assets/img/ajax-loader.gif" />');
+			},
+			success		:function(msg){
+				$('#btncheck').html('Check');
+				if(msg.status == "1")
+				{
+					var ids_text = $('#userid').val();
+					for(var i =0;i<msg.results.length;i++)
+					{
+						ids_text = ids_text.replace(msg.results[i],"");
+						if(i == msg.results.length-1)
+						{
+							$('#userid').val(ids_text.trim());
+						}
+					}
+					if(msg.results.length >0)
+					{
+						$('.div_warning .mydiv').html(msg.results.join('<br>'));
+						$('.div_warning').removeClass('hide');
+					}else
+					{
+						$('.div_warning').addClass('hide');
+					}
+					
+					
+				}
+			}
+			});
+		}
+		
+		 
+	});
+	$('#create').on('click', function(e){
+	e.preventDefault();
+	var validation_result = $('#group_form').valid();
+	if(validation_result  === true)
+	{
+		var postdata = "";
+// #################################################################
+				
+				
+		// if($('#corporate_sim_card'). prop("checked") == true){
+		// postdata += "corporate_sim_card;equalto;Yes";
+		// }
+		// else if($('#corporate_sim_card'). prop("checked") == false){
+		// postdata += "corporate_sim_card;equalto;No";
+		// }
+	
+// #################################################################
+		$('.div_mapping').each(function(){
+			if(postdata == "")
+			{
+
+				if($(this).find('select').val() != "ignored")
+				{
+					if($(this).find('input[type="text"]').length >0 && $(this).find('input[type="text"]').val() != "")
+					{
+						postdata = $(this).find('.mapping_attribute').attr('data-mapname')+";"+$(this).find('select').val()+";"+$(this).find('input[type="text"]').val();
+					}
+					else if($(this).find('.mapping_attribute').attr('data-mapname') == "date_of_employment" || $(this).find('.mapping_attribute').attr('data-mapname') == "date_of_birth" || $(this).find('.mapping_attribute').attr('data-mapname') == "corporate_sim_card" ){
+						postdata = $(this).find('.mapping_attribute').attr('data-mapname')+";"+$(this).find('select').val()+";"+$(this).find('.formdata :selected').val();
+					}
+					
+					else{
+						postdata = $(this).find('.mapping_attribute').attr('data-mapname')+";"+$(this).find('select').val()+";"+($(this).find('.formdata :selected').val()?$(this).find('.formdata :selected').text().trim():"");
+					}//console.log(postdata);
+				}
+
+			}
+			else
+			{
+				if($(this).find('select').val() != "ignored")
+				{	
+					if($(this).find('input[type="text"]').length >0 && $(this).find('input[type="text"]').val() != "")
+					{
+						postdata += "|"+ $(this).find('.mapping_attribute').attr('data-mapname')+";"+$(this).find('select').val()+";"+$(this).find('input[type="text"]').val();
+					}
+					else if($(this).find('.mapping_attribute').attr('data-mapname') == "date_of_employment" || $(this).find('.mapping_attribute').attr('data-mapname') == "date_of_birth" || $(this).find('.mapping_attribute').attr('data-mapname') == "corporate_sim_card"){
+						if($(this).find('select').val() != "")
+						{
+							postdata += "|"+$(this).find('.mapping_attribute').attr('data-mapname')+";"+$(this).find('select').val()+";"+$(this).find('.formdata :selected').val();
+						}
+						
+					}
+
+					else{
+						postdata += "|"+$(this).find('.mapping_attribute').attr('data-mapname')+";"+$(this).find('select').val()+";"+($(this).find('.formdata :selected').val()?$(this).find('.formdata :selected').text().trim():"");
+					}
+				}
+// #################################################################
+				
+					
+					// if($('#corporate_sim_card'). prop("checked") == true){
+					// postdata += "corporate_sim_card;equalto;Yes";
+					// }
+					// else if($('#corporate_sim_card'). prop("checked") == false){
+					// postdata += "corporate_sim_card;equalto;No";
+					// }
+// #################################################################
+			}
+		});
+		//console.log("here");
+		//console.log(postdata);
+		//return false;
+		//var postdata = $('#attribute1').text()+";"+$('#type1').val()+";"+$('#textdata1').val()+"|"+ $('#attribute2').text()+";"+$('#type2').val()+";"+$('#textdata2').val()+"|"+ $('#attribute3').text()+";"+$('#type3').val()+";"+$('#textdata3').val();
+		
+			var data = {
+				title : $('#title').val(),
+				filtered_by : postdata, 
+				hidval : $('#hidval').val()
+			}
+			if($("#byuid").is(':checked')) {
+				data["byuid"] = "1";
+				data["user_id"] = $("#userid").val();
+			}
+			else
+			{
+				data["byuid"] = "0";
+			}
+			//console.log(data);
+			//return false;
+		$.post('/admin/group/createNewGroup',data,function(res){
+				//console.log(res.status);
+				if(res.status == "1"){	
+					/*if($("#byuid").is(':checked')) {
+					location.href="/admin/group/creatingGroup/"+res.inserted;
+					}else{
+					location.href="/admin/group/groupdata";
+					}*/
+					//location.href="/admin/group/groupdata";
+					window.history.back();
+				}
+				
+			});
+		}
+		
+		});
+		
+		$(document).on("click",'.btncancel',function(e){
+			e.preventDefault();
+			//location.href = $(this).attr('data-link');
+			window.history.back();
+		});
+		$("#byuid").change(function() {
+			//alert("change");
+			if($("#byuid").is(':checked')) {
+				$('.div_mapping').addClass("hide");
+				//$('.sim').addClass("hide");
+				$('.div_byuid').removeClass("hide");
+				$('#userid').attr("required","true");
+				$('.div_warning').addClass('hide');
+			}
+			else
+			{
+				$('.div_mapping').removeClass("hide");
+				//$('.sim').removeClass("hide");
+				$('.div_byuid').addClass("hide");
+				$('#userid').removeAttr("required");
+				$('.div_warning').addClass('hide');
+			}
+		});
+		
+		
+		$(document).on("click", '.delete', function(e){	
+			e.preventDefault();
+			$('#groupDeleteModal').modal();
+			var obj = $(this);
+			var id = $('#hidval').val();					
+			$("#deleteGroup").click(function(){						
+				$.post("/admin/group/deleteGroup", {id : id }, function (e) {	
+					var data = JSON.parse(e);							
+					if(data.message == "success")
+					{
+						$('#groupDeleteModal').modal("hide");
+						window.history.back();
+						//location.href="/admin/group/groupdata";
+					}							
+				});
+			});
+			
+		});	
+	</script>

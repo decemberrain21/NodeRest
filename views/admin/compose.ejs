@@ -1,0 +1,1910 @@
+<style type="text/css">
+	.hei {
+		height: 28.5px;
+	}
+</style>
+	<div class="col-xs-12" id="divcompose">
+		<form class="form-horizontal" role="form" id="user_form">
+		<div class="row">
+			<div  class="col-xs-12">
+				<div class="clearfix errlabel">
+					
+				</div>
+				<div class="space"></div>
+				
+				<h4 class="lighter">
+					<i class="icon-envelope"></i> Compose Message
+				</h4>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="to"> To </label>
+					<input type="hidden" id="draft_msg_id" value="<%= (page)?page["msg_id"]:""%>">
+					<div class="col-xs-12  col-sm-10">
+						<input type="radio" class="to" name="togri"  value="0" checked /> Group
+						<input type="radio" class="to" name="togri"  value="1" <%= (state=="drafts"||state=="schedule"?(page && page["group_id"] == "NULL"?"checked":""):"")%>/>
+						 Individual
+					</div>
+				</div>				
+				<div class="form-group group_con">
+					<label class="col-sm-2 control-label" for="group_id"> * Group </label>
+					<input type="hidden" id="draft_group_id" value="<%= (page)?page["group_id"]:""%>">
+					
+					<input type="hidden" id="state" value="<%= state%>">
+					<div class="col-xs-12  col-sm-10">
+						<select multiple class="col-xs-12 col-sm-4 col-md-4" id="group_id" name="group_id"  data-placeholder="Choose a group...">	
+							<option value="" disabled>Choose a Group</option>
+							<%
+								if(page){
+									var mygroup = page["group_id"];									
+								}
+								for(var i=0; i < group_list[0].length; i++) {
+								
+								%>
+							   <option value="<%= group_list[0][i].id %>"  <%= (state=="drafts"||state=="schedule"?(page && mygroup == group_list[0][i].id?"selected":""):"") %>> <%= group_list[0][i].title %></option>
+							   <!-- <option value="<%= group_list[0][i].id %>"  <%= (state=="schedule"?(page && mygroup == group_list[0][i].id?"selected":""):"") %>> <%= group_list[0][i].title %></option> -->
+							
+							<%
+							} %>
+						</select>
+					</div>
+				</div>
+				<div class="form-group hide individual_con">
+					<label class="col-sm-2 control-label" for="individual"> * Individual </label>
+					
+					<div class="col-xs-12  col-sm-10">						
+						
+						<select  name="toUser" id="toUser" class=""  >
+						
+								
+						</select>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="title">  Title </label>
+					<div class="col-xs-12  col-sm-10">
+						<input type="text" id="title" required name="title" placeholder="Title" class="col-xs-12 col-sm-4 col-md-4" value="<%= (page)?page["title"]:""%>"  />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="msg">  Message </label>	
+					<div class="col-xs-12  col-sm-10">
+						<textarea id="msg" name="msg"  required placeholder="Message" class="col-xs-12 col-sm-4 col-md-4 savedata" style="    height: 125px;" ><%= (page)?page["message"]:""%></textarea>
+					</div>
+				</div>
+				
+				<!-- Survey -->
+				<hr>
+				<h4 class="lighter">
+					<i class="icon-question"></i> Survey
+				</h4>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="question"> Question </label>
+					<div class="col-xs-12  col-sm-10">
+						<textarea id="question" name="question" placeholder="Question" class="col-xs-12 col-sm-4 col-md-4 savedata" ><%= (page)?page["qa"]:""%></textarea>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="ans_type"> Answer Type </label>
+					<div class="col-xs-12  col-sm-10">
+					
+						<select class="col-xs-12 col-sm-4 col-md-4" id="ans_type" name="ans_type">
+							<option value=""   >Choose Answer Type</option>
+							<option value="radio" <%= (page)&&page["ans_type"] == "radio"?"selected":""%>>Single Choice</option>
+							<option value="checkbox" <%= (page)&&page["ans_type"] == "checkbox"?"selected":""%>>Multi Choice</option>
+							<option value="rating" <%= (page)&&page["ans_type"]== "rating"?"selected":""%>>Rating</option>
+							<option value="textbox"<%= (page)&&page["ans_type"]== "textbox"?"selected":""%> >Freetext</option>
+						</select>
+					</div>
+				</div>
+				
+				<div class="form-group hide ans_opt_div">
+				<label class="col-sm-2 control-label" for="ans_opt">  </label>
+				<div class="col-xs-12  col-sm-10">
+					<input type="hidden" id="draft_options" value="<%= (page)?page["options"]:""%>">
+					<span style="color:red;" class="msg_options hide">Please enter something here!</span><br/>
+					<input type="text" id="opt_text" placeholder="Options" class="col-xs-12 col-sm-4 col-md-4" />&nbsp;&nbsp;<button class="btn btn-xs btn-success btnadd"><i class="icon-plus"></i>Add</button>
+				</div>
+				</div>
+				<div class="form-group opt_div">
+					<label class="col-sm-2 control-label" for="showopt"></label>
+					<div class="col-xs-12  col-sm-10 ">
+						<div class="col-xs-12 col-sm-4 col-md-4 show_sample">
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="n_a"> N/A </label>
+					<div class="col-xs-12  col-sm-10">
+						<input type="checkbox" id="n_a" name="n_a" <%= (page)&&page["n_a"]== "1"?"checked":"" %>>
+					</div>
+				</div>
+				<!-- Attachment -->
+				<hr>
+				<h4 class="lighter">
+					<i class="icon-paperclip"></i> Attachment
+				</h4>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="type">  Type </label>
+					<div class="col-xs-12  col-sm-10">
+						<select class="col-xs-12 col-sm-4 col-md-4" id="type" name="type" >	
+							<option value=""   >Choose Message Type</option>
+							<option value="link" <%= (page)&&page["type"] == "link"?"selected":""%>>Link</option>
+							<option value="image" <%= (page)&&page["type"] == "image"?"selected":""%>>Image</option>
+							<option value="video" <%= (page)&&page["type"] == "video"?"selected":""%>>Video</option>
+							<option value="audio" <%= (page)&&page["type"] == "audio"?"selected":""%>>Audio</option>
+							<option value="file" <%= (page)&&page["type"] == "file"?"selected":""%>>File</option>
+							<!-- <option value="question" >Question</option> -->
+							
+						</select>
+						<input type="hidden" id="draft_links" value="<%= (page)?page["links"]:""%>">
+						<input type="hidden" name="hidval" id="hidval" value=""/>
+						<input type="hidden" id="draft_files" value="<%= (page)?page["files"]:""%>">
+					</div>
+				</div>
+				<div class="hide type_specific">
+				</div>
+				
+				
+		</div>
+		</form>
+		<div class="row">
+			<div class="col-xs-12 hide divdropzone">
+				<div id="dropzone">
+					<form action="/admin/message/upload_file" method="post" id="images_form" class="dropzone" enctype="multipart/form-data">						
+						<div class="fallback">
+							<input name="displayImage" type="file" multiple="" />
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="space"></div>
+			<label class="col-sm-2 control-label">  </label>
+			<div class="col-xs-12  col-sm-12">
+				<input type="button" class="btn btn-sm btn-yellow btnschmsg" value="Save as schedule message" />
+				<input type="button" class="btn btn-sm btn-pink btndrafts" value="Save as draft" />
+				<input type="button" class="btn btn-sm btn-info btnpreview" value="Preview" />
+				<input type="button" class="btn btn-sm btn-success btnsave" value="Send"  />
+				<input type="button"  class="btn btn-sm btncancel" value="Cancel" data-link="/admin/message/compose/" />
+					
+			</div>
+		</div>
+		<div id="myProgress">
+		  <div id="myBar"></div>
+		</div>
+	</div>
+</div>
+<div class="col-xs-12 hide" id="divpreview">
+	<h3 id="msg_title"></h3>
+				<hr class="hrborder"/>	
+				<div class="row col-sm-offset-1">
+					<label class="col-sm-2 control-label" for="group_id">TO:</label>
+					<div class="col-xs-12  col-sm-10" id="msg_to">
+						
+					</div>
+				</div>
+				<div class="row col-sm-offset-1">
+					<label class="col-sm-2 control-label" for="message">  MESSAGE: </label>
+					<div class="col-xs-12  col-sm-10">
+						<label id="message" name="message" class=" control-label"  ></label>
+					</div>
+				</div>
+				<div class="row col-sm-offset-1 div_q hide">
+					<label class="col-sm-2 control-label" for="type"> QUESTION: </label>
+					<div class="col-xs-12  col-sm-10">
+						<label id="lblquestion" name="lblquestion" class=" control-label"  ></label>						
+					</div>
+				</div>
+				<div class="row col-sm-offset-1 div_a hide">
+					<label class="col-sm-2 control-label" for="type"> ANSWER: </label>
+					<div class="col-xs-12  col-sm-10 show_ans" id="show_ans">
+						
+					</div>
+				</div>
+				<hr class="hrborder"/>
+				
+				<div class="row col-sm-offset-1 div_attached">
+					<label class="col-sm-2 control-label" for="files">ATTACHED FILES: </label>
+					<div class="col-xs-12  col-sm-10" id="divattached">
+					
+					</div>
+				</div>		
+				<hr class="hrborder"/>
+				<div class="row" style="max-height: 50px;">
+				<div class="col-sm-2">
+					<button class="btn btn-sm btn-primary btnback">
+						<i class="icon-angle-left"></i>
+						Back
+					</button>
+				</div>
+</div>
+</div>
+<!-- Modal -->
+			<div class="modal" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  data-backdrop="static" data-keyboard="false">
+			  <div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close hide" data-dismiss="modal">&times;</button>
+						<h5 class="blue bigger">Are you sure to send this message?</h5>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-sm" data-dismiss="modal" id="modalcancel">
+							<i class="icon-remove"></i>
+							Cancel
+						</button>
+
+						<button class="btn btn-sm btn-primary" name="user" id="confirm">
+							<i class="icon-ok"></i>
+							OK
+						</button>
+					</div>					
+				</div>
+			  </div>
+			</div>			
+			<!-- Model -->
+<!-- Schedule Message Modal -->
+			<div class="modal" id="confirmScheduleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  data-backdrop="static" data-keyboard="false">
+			  <div class="modal-dialog">
+			  	
+				<div class="modal-content">
+					<div class="modal-header">
+					
+						<button type="button" class="close hide" data-dismiss="modal">&times;</button>
+						<!-- <h5 class="blue bigger">Are you sure to create this schedule message?</h5> -->
+						<h5 align="center">Please choose your schedule date</h5>
+						<input  type="text" id="schdt" name="schdt" class="hei col-xs-6 datetimepicker" placeholder="Choose Date" >
+						<select  class="hei col-xs-3" id="schhr" name="schhr"  data-placeholder="Choose hours...">	
+							<option value="" disabled>Choose hours</option>
+							<%
+							
+							for ( var i = 0; i <= 23; i++ )
+							{if(i<=9){%>
+							    <option value="0<%= i %>" >0<%=i %></option>
+							<%
+							}else{ %>
+								<option value="<%= i %>"><%=i %></option>
+							<%}}
+							%>
+						</select>
+						
+						<select  class="hei col-xs-3" id="schmm" name="schmm"  data-placeholder="Choose minute...">	
+							<option value="" disabled>Choose minute</option>
+							<%
+							
+							for ( var i = 0; i <= 60; i++ )
+							{if(i<=9){%>
+							    <option value="0<%= i %>" >0<%=i %></option>
+							<%
+							}else{ %>
+								<option value="<%= i %>"><%=i %></option>
+							<%}}
+							%>						
+							
+						</select>
+						<br>
+					</div>
+					<!-- <div class="col-xs-6">
+						
+					</div> -->
+					<div class="modal-footer">
+						<button class="btn btn-sm" data-dismiss="modal" id="modalcancel">
+							<i class="icon-remove"></i>
+							Cancel
+						</button>
+
+						<button class="btn btn-sm btn-primary" name="user" id="scheduleconfirm">
+							<i class="icon-ok"></i>
+							Saved
+						</button>
+					</div>					
+				</div>
+			  </div>
+			</div>			
+<!-- Schedule Message Modal -->
+<script src="/assets/js/jquery.gritter.min.js"></script>
+
+<script>
+var scheduleDateU = "<%= page["schedule_date"]%>";
+var scheduleDate = (scheduleDateU).slice(0,10);
+var scheduleHr = (scheduleDateU).slice(11,13);
+var scheduleMm = (scheduleDateU).slice(14,16);
+var current_work = "compose";
+	var post_data="";
+	var all_files = [];
+	var existed_files = [];
+	var queued_files = [];
+	var new_files = [];
+	var findinarr = function(arrhaystack,needle)
+	{
+		return (arrhaystack.indexOf(needle) > -1);
+	};
+jQuery(function($){
+	var state = "<%= state%>";
+		if (state == "drafts"){
+			$('.btnschmsg').addClass('hide');
+		}else if(state == "schedule"){
+			$('.btndrafts').addClass('hide');
+			$('.datetimepicker').attr("value",scheduleDate);
+			$('#schhr').val(scheduleHr);
+			$('#schmm').val(scheduleMm);
+
+		}
+	$('.datetimepicker').datepicker({ format: 'yyyy-mm-dd'});				
+			//$('#to').chosen();
+	$('#group_id').chosen();
+	$('#toUser').select2(
+	{
+		placeholder: "Add users!",
+		minimumInputLength: 2,
+		multiple: true,
+		ajax: {
+		url: "/admin/message/tousers",
+		dataType: 'json',
+		quietMillis: 100,
+		 type: "GET",
+		data: function (term, page) {
+		  
+			return {
+			user: term, 
+		   // page_limit: 10,
+			//page: page //you need to send page number or your script do not know witch results to skip
+			};/*
+			 var queryParameters = {
+				q: params.term,
+				user:$('#toUser').val()
+			}
+			return queryParameters;*/
+		},	
+		processResults: function (data, page) {
+		  //data = { results:[{ItemId:1,ItemText:"a"},{ItemId:2,ItemText:"b"}] };
+			var array = data.userlist.result;
+			//console.log(array[0]['user_id']);
+			var i = 0;
+			while(i < array.length){
+				array[i]["id"] = array[i].employee_id;
+				array[i]["text"] = array[i].name +" , " +array[i].biz_sector+" , " +array[i].department;
+				//array[i]["biz"] = ;
+				//array[i]["text"] = array[i].department;
+				delete array[i]["employee_id"];
+				delete array[i]["name"];
+				//delete array[i]["biz_sector"];
+			i++;
+			}
+			return { results: array };
+		  },
+		dropdownCssClass: "bigdrop"
+		}
+	});
+			try {
+			Dropzone.options.myAwesomeDropzone = false;
+        Dropzone.autoDiscover = false;
+			  $(".dropzone").dropzone({
+			  
+			    paramName: "file", // The name that will be used to transfer the file
+			    //maxFilesize: 20, // MB
+				autoProcessQueue: false,
+				parallelUploads: 6,
+				maxFiles: 6,
+				
+				maxfilesexceeded: function(file) {
+					//this.removeAllFiles();
+					this.removeFile(file);
+					alert("Max file limit exceed");
+				},
+				//acceptedFiles: filetype,
+				addRemoveLinks : true,
+				/*renameFilename: function (filename) {
+					
+					return new Date().getTime() + '_' + filename;
+				},*/
+				dictDefaultMessage :
+				'<span class="bigger-150 bolder"><i class="icon-caret-right red"></i> Drop files</span> to upload \
+				<span class="smaller-80 grey">(or click)</span> <br /> \
+				<i class="upload-icon icon-cloud-upload blue icon-3x"></i>',
+				dictResponseError: 'Error while uploading file!',
+				
+				//change the previewTemplate to use Bootstrap progress bars
+				previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class=\"progress progress-small progress-striped active\"><div class=\"progress-bar progress-bar-success\" data-dz-uploadprogress></div></div>\n  <div class=\"dz-success-mark\"><span></span></div>\n  <div class=\"dz-error-mark\"><span></span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>",
+				//start
+				
+			  init: function() {
+			  
+			  
+			  data = [];
+			  myDropzone = this; 
+			  myDropzone.options.dictRemoveFile = "Delete";
+			  
+				if($('#draft_files').val() != ""){
+					var draft_files=$('#draft_files').val();
+					draft_files = draft_files.split(",");
+						draft_files.forEach(function(row){
+							
+							var mockFile = { name: row };
+							var url = "/assets/upload/"+$('#type').val()+"/"+row;
+							//myDropzone.options.addedfile.call(myDropzone, mockFile);
+							//myDropzone.options.thumbnail.call(myDropzone, mockFile,url);
+							myDropzone.emit("addedfile", mockFile);
+							myDropzone.emit("thumbnail", mockFile, url);
+							myDropzone.files.push(mockFile);
+							
+							if($('#type').val() == "file"){
+								myDropzone.emit("thumbnail", mockFile,  "/assets/img/fileicon.png");
+							}
+							mockFile.previewElement.classList.add('dz-success');
+							mockFile.previewElement.classList.add('dz-complete');
+							var fileSizeElement = mockFile.previewElement.querySelector(".dz-size");
+							fileSizeElement.parentNode.removeChild(fileSizeElement);
+							//data.push(row);								
+						});
+				}
+			  
+				/*var submitButton = document.querySelector("#submit-all");
+					myDropzone = this; // closure
+
+				submitButton.addEventListener("click", function() {
+				  myDropzone.processQueue(); // Tell Dropzone to process all queued files.
+				  
+				});*/
+				
+				// You might want to show the submit button only when 
+				// files are dropped here:
+				
+				/**/
+				$('#type').change(function(){
+					myDropzone.removeAllFiles(true);	
+				  });
+				myDropzone.on("processing", function(file) { // was processingfile
+				  this.options.url = $('#images_form').attr('action')+'/'+$('#type').val()+'/'+(current_work=="schedule"?$('#schdt').val():"current") ;
+				}); 
+
+				myDropzone.on("error", function(file) { // file size error error
+					//console.log(this);
+					 
+					//alert("Error: file size is too big. It allows less than 15 MB.");
+					//this.removeFile(file);
+				}); 
+				myDropzone.on("complete", function(file) { // was processingfile
+				 is_drafts = 0;
+				 is_scheduled = 0;
+				if($('.btndrafts').val()=="Saving..."){
+					is_drafts = 1;
+				}else if($('.btnschmsg').val()=="Saving..."){
+					is_scheduled = 1;
+				}//else{}
+				if(this.getUploadingFiles().length ===0 && this.getQueuedFiles().length === 0)
+				{
+					//console.log(all_files);
+					//return false;
+					
+					//var imgfiles = data.concat(all_files);//merge new files and old files
+					var imgfiles = data.concat(existed_files);//merge new files and old files
+					post_data +=',"files":"'+imgfiles.join()+'"}';
+					var formdata = {
+						to:$('#toUser').val(),//$('#to').val(),
+						group_id:$('#group_id').val(),
+						g_i:$('input[name="togri"]:checked').val(),
+						type:$('#type').val(),
+						title:esc_chars($('#title').val().trim()),
+						message:$('#msg').val().trim().substr(0,25)+"...",
+						postdata:post_data,
+						is_answered : $('#question').val(),
+						n_a : (($('input[name="n_a"]').is(':checked'))?1:0),
+						is_drafts : is_drafts,
+						schedule_date:(is_scheduled=="1"?($('#schdt').val()+" "+$('#schhr').val()+":"+$('#schmm').val()+":"+00):""),
+						is_schedule : is_scheduled,
+						state:$('#state').val(),
+						draft_id:$("#draft_msg_id").val()
+						//names:data
+						
+					};
+			
+				if($('.btnsave').val() != "Loading..." || $('.btndrafts').val()=="Saving...")
+				{
+					$.ajax({			
+						url	 		: "/admin/message/compose_save",
+						type 		: "POST",
+						cache: false,
+						data		: formdata,
+						beforeSend: function( xhr ) {
+								if($('.btndrafts').val()!="Saving..."){
+									$('.btnsave').val('Loading...');
+								}
+								
+								
+						},
+						success		: function(res){
+							//console.log(res);
+							//<input type="button" class="btn btn-sm btn-success btnsave" value="Save" />
+							if($('.btndrafts').val()=="Saving..."){
+								if(res.status == "1")
+								{
+									
+									$('#hidval').val(res.msg_id);
+									if(myDropzone.getQueuedFiles().length >0)
+									{
+										myDropzone.processQueue();
+									}
+									else
+									{
+										bootbox.alert("Message has been saved ", function(result) {
+											
+												//location.reload();
+												location.href="/admin/message/compose/";
+											});
+									}
+								
+								}
+								else
+								{
+									bootbox.alert(res.error, function(result) {
+						
+									});
+									
+								}	
+							}else{
+								$('#confirmModal').modal("hide");
+								if(res.status == "1")
+								{
+									
+									$('#hidval').val(res.msg_id);
+									
+									bootbox.alert("Message has been sent", function(result) {
+										
+											//location.reload();
+											location.href="/admin/message/compose/";
+										});
+									
+								
+								}
+								else
+								{
+									bootbox.alert(res.error, function(result) {
+											location.href="/admin/message/compose/";
+									});
+									
+								}
+							}
+							
+						
+						}
+					});
+				}
+					/*$.post('/admin/message/set_files', {'names': data, 'id': $('#hidval').val() }, function(data) {
+						
+							
+							if(data.status == "1")
+							{
+								bootbox.alert("Message has been sent", function(result) {
+									
+									location.reload();
+								});	
+							}
+							else
+							{
+								
+							}
+					});*/
+				}
+				
+				});
+				myDropzone.on("addedfile", function(file) {
+					
+				    var _this = this;
+				    var uploadtype = $("#type").val();
+					var filetype = file.type;
+					
+					if(uploadtype == "video"){
+						if(filetype != "video/mp4" &&  file.size > 15000000){			
+							_this.removeFile(file);
+						}
+					} 
+					
+					if( uploadtype == "audio"){
+						if(filetype != "audio/mp3"){
+							_this.removeFile(file);
+						}
+					} 
+					if( uploadtype == "file" ){
+						if(filetype != "application/pdf"){
+							_this.removeFile(file);
+						}
+					} 
+					if(   uploadtype == "image" ){
+						var imagetype = filetype.split("/")[0];
+						if( imagetype != "image"){
+							_this.removeFile(file);
+						}
+					}
+				  
+				});
+				// On removing file
+				myDropzone.on("removedfile", function(file) {
+					
+				});
+				myDropzone.on('success', function(file, responseText) {
+				  //pop from allfiles console.log(file.name);
+				 // console.log(file.name);
+				 
+				  if(all_files.indexOf(file.name) > -1)
+				  {
+					all_files.splice(all_files.indexOf(file.name),1);
+				  }
+				 //myDropzone.files
+				  data.push(responseText.data);
+				 
+				});
+			  },  
+			  accept: function(file, done) 
+			   {
+					 var _this = this;
+					var uploadtype = $("#type").val();
+					var filetype = file.type;
+					
+					if(uploadtype == "video" ){
+			
+						if(filetype == "video/mp4" &&  file.size < 15000000){			
+							done();
+						}else{
+							alert("Error: The uploaded file type is wrong or its size may be too big. The Filesize should be less than 15 MB and the file type should be mp4. ");		
+							_this.removeFile(file);
+						}
+					} 
+					
+					if( uploadtype == "audio"){
+						if(filetype == "audio/mp3" &&  file.size <  5000000){
+							done();
+						}else{
+							alert("Error: The uploaded file type is wrong. The file type should be mp3. ");
+							_this.removeFile(file);
+						}
+					} 
+					
+					if( uploadtype == "file" ){
+						if(filetype != "application/pdf"){
+							alert("Error: The uploaded file type is wrong. The file type should be pdf. ");
+							_this.removeFile(file);
+						}else{
+							done();
+						}
+					} 
+					if(  uploadtype == "image" ){
+						var imagetype = filetype.split("/")[0];
+						if( imagetype != "image"){
+							alert("Error: The uploaded file type is wrong. The file type should be image/jpeg. ");
+							_this.removeFile(file);
+						}else{
+							done();
+						}
+					}
+				}
+				//end
+			  });
+			} catch(e) {
+			  alert('Dropzone.js does not support older browsers!');
+			}
+			
+	if($('#state').val() != "compose"){	
+		if($('#state').val() == "drafts")
+		{
+			if($('#draft_group_id').val()=="NULL"){
+			$('#toUser').attr("required","true");
+			$('#group_id').removeAttr("required");
+			$(".individual_con").removeClass('hide');
+			$(".group_con").addClass('hide');		
+			$('input[type=radio][name=togri]').change();
+			}
+		}
+			if($('#state').val() == "schedule")
+		{
+			if($('#draft_group_id').val()=="NULL"){
+			$('#toUser').attr("required","true");
+			$('#group_id').removeAttr("required");
+			$(".individual_con").removeClass('hide');
+			$(".group_con").addClass('hide');		
+			$('input[type=radio][name=togri]').change();
+			}
+		}
+		
+		
+		//var draft_sentto = [];
+		//var sentto_arr = [];
+		if(($("#draft_group_id").val() == "" || $("#draft_group_id").val() == "NULL" ) && $('#state').val() == "drafts" || $('#state').val() == "schedule" )
+		{
+			
+				var draft_sentto = <%- JSON.stringify(page["sent_user"]) %>;
+				
+				for(var row in draft_sentto)
+				{
+					//console.log(draft_sentto[row]);
+					$("#toUser").append('<option value="'+draft_sentto[row].id+'" selected="selected">'+draft_sentto[row].text+'</option>');
+				}
+				$("#toUser").trigger("change");
+			
+		}
+		
+		
+
+		
+		if($('#ans_type').val()!=""){
+			var draft_options=$('#draft_options').val();
+			
+			draft_options = draft_options.split(";;");
+			
+					var deleteclass = $('.deleteclass').length;
+					if($('#ans_type').val() == "radio")
+					{	
+						$('.ans_opt_div').removeClass('hide');
+						draft_options.forEach(function(row){
+							$('.show_sample').html($('.show_sample').html()+"<span class = ' deleteclass deleteclass_"+deleteclass+"'><label class='rdo_"+row+"'><input type='radio' name='rdosample' /> <label class='qtext' id='qtext'>"+row+"</label>&nbsp;&nbsp;<a href='#' data-count='"+ deleteclass +"' class='lnkred closeaddedlink' >&#10006</a></label></span>");
+
+						});
+					}
+					else if($('#ans_type').val() == "checkbox")
+					{
+						$('.ans_opt_div').removeClass('hide');
+						draft_options.forEach(function(row){
+							$('.show_sample').html($('.show_sample').html()+"<span class = ' deleteclass deleteclass_"+deleteclass+"'><label class='chk_"+row+"'><input type='checkbox' name='chksample'  /><label class='qtext' id='qtext'>"+row+"</label>&nbsp;&nbsp;&nbsp;<a href='#'  data-count='"+deleteclass+"' class='lnkred closeaddedlink' >&#10006</a></label></span>");
+						});
+					}
+					else if($('#ans_type').val() == "rating")
+					{	
+						
+						var str = '<i class="icon-star"></i>';
+						var star="";
+						for(var i=0;i<5;i++){
+							star+=str;
+						}
+						$('.show_sample').html(star);
+						
+					}
+					$('#opt_text').val('');
+				
+		}
+		
+		if($('#type').val()!=""){
+			var html = "";
+			if($('#type').val() == "link")
+			{
+				
+				html +='<div class="form-group"><label class="col-sm-2 control-label" for="url"> * Url </label><div class="col-xs-12  col-sm-10"><input type="text" id="url" placeholder="Url" class="col-xs-12 col-sm-4 col-md-4 savedata" /><span class="samplemsg">(example. https://www.google.com)</span></div></div>';
+				html +='<div class="form-group"><label class="col-sm-2 control-label" for="text"> * Text </label><div class="col-xs-12  col-sm-10">	<input type="text" id="text" placeholder="Text" class="col-xs-12 col-sm-4 col-md-4 savedata" />	</div></div>';
+				html +='<div class="form-group"><label class="col-sm-2 control-label" for="url"> </label><div class="col-xs-12  col-sm-10"><button class="btn btn-xs btn-success btnlnkadd"><i class="icon-plus"></i>Add</button></div></div>';
+				html +='<div class="form-group"><label class="col-sm-2 control-label"></label><div class="col-xs-12  col-sm-10 "><div class="col-xs-12 col-sm-4 col-md-4 link_sample" style="padding-left: 5px;"></div></div></div>';
+				$(".type_specific").removeClass('hide');
+				$(".type_specific").html(html);	
+				$(".divdropzone").addClass('hide');	
+				if($('#draft_links').val() != "" )
+				 {	
+					var draft_links=$('#draft_links').val();
+					
+					draft_links = draft_links.split(";;");
+					
+					var deleteclass = $('.deleteclass').length;
+					draft_links.forEach(function(row){
+					
+						var get_eachlink = row.split("|");
+						var text = get_eachlink[0];
+						var link = get_eachlink[1];
+						
+						$('.link_sample').html($('.link_sample').html()+'<span class = "col-xs-12 col-sm-12 col-md-12 deleteclass deleteclass_'+deleteclass+'" style="padding-left: 5px;"><a target="_blank" class="lnkurl" href="'+link+'">'+text+'</a>&nbsp;&nbsp;&nbsp;<a href="#"  data-count="'+deleteclass+'" class="lnkred closeaddedlink" >&#10006</a></span>');
+
+					});
+					$('#url').val('');
+					$('#text').val('');
+				 }
+			}
+			else if($('#type').val() == "image" || $('#type').val() == "video" || $('#type').val() == "audio" || $('#type').val() == "file")
+			{
+				$(".type_specific").addClass('hide');
+				$(".divdropzone").removeClass('hide');
+				
+				$(function() {
+					
+					
+				});
+			}else if($('#type').val() == ""){
+				$(".type_specific").addClass('hide');
+				$(".divdropzone").addClass('hide');	
+			}
+		}
+	}		
+});
+
+$(document).on("change",'#ans_type',function(){
+	
+	if($('#ans_type').val() == "rating"){
+		var str ="";
+		for(var i=0; i< 5 ; i++)
+		{	
+			str += '<i class="icon-star"></i>';
+		}
+		$('.ans_opt_div').addClass('hide');
+		$('.show_sample').html(str);		
+	}else if($('#ans_type').val() == "textbox"){
+		$('.ans_opt_div').addClass('hide');
+		$(".show_sample").html("");
+	}else if($('#ans_type').val() == ""){
+		$('.ans_opt_div').addClass('hide');
+		$(".show_sample").html("");
+	}
+	else{
+		$('#opt_text').val('');
+		$('.ans_opt_div').removeClass('hide');
+		$(".show_sample").html("");
+	}
+});
+$(document).on("click",'.btnlnkadd',function(e){
+e.preventDefault();
+ if($('#url').val() != "" && $('#text').val() != "")
+ {
+	if($('#url').val().indexOf("http://") == 0 || $('#url').val().indexOf("https://") == 0)
+	{
+		$(".samplemsg").removeClass("ermsg");
+		var deleteclass = $('.deleteclass').length;
+		//console.log(deleteclass + " >>>>>>>>>>>>>>>>>>>>>> deleteclass");
+		$('.link_sample').html($('.link_sample').html()+'<span class = "col-xs-12 col-sm-12 col-md-12 deleteclass deleteclass_'+deleteclass+'" style="padding-left: 5px;"><a target="_blank" class="lnkurl" href="'+$('#url').val()+'">'+$('#text').val()+'</a>&nbsp;&nbsp;&nbsp;<a href="#"  data-count="'+deleteclass+'" class="lnkred closeaddedlink" >&#10006</a></span>');
+		$('#url').val('');
+		$('#text').val('');
+	}else
+	{
+		$(".samplemsg").addClass("ermsg");
+	}
+ }
+ 
+});
+$(document).on("click",'.btncancel',function(e){
+	location.href = $(this).attr('data-link');
+});
+$(document).on("click",'.btnpreview',function(e){
+	$("#msg_title").html($('#title').val());
+	$("#message").html($('#msg').val().replace(/\n/g,"<br/>"));
+	if($('input[name=togri]:checked').val() == 0)
+	{
+		var sent_to_val = "";
+		$('#group_id option:selected').each(function(){
+			
+			if(sent_to_val == "")
+			{
+				sent_to_val =$(this).text();
+			}
+			else
+			{
+				sent_to_val +=","+$(this).text();
+			}
+		});
+		$('#msg_to').html(sent_to_val);
+	}
+	else
+	{
+		var sent_to_val = "";
+		$('#toUser option:selected').each(function(){
+			
+			if(sent_to_val == "")
+			{
+				sent_to_val =$(this).text();
+			}
+			else
+			{
+				sent_to_val +=","+$(this).text();
+			}
+		});
+		$('#msg_to').html(sent_to_val);
+	}
+	if($('#question').val() !="")
+	{
+		$(".div_q").removeClass("hide");
+		$("#lblquestion").html($('#question').val());
+		$(".div_a").removeClass("hide");
+		$(".show_ans").html($(".show_sample").html());
+		$(".show_ans .qtext").removeClass('qtext');
+		$(".show_ans .closeaddedlink").remove();
+	}
+	else
+	{
+		$(".div_q").addClass("hide");
+		$(".div_a").addClass("hide");
+	}
+	if($('#type').val() =="link")
+	{
+		$('#divattached').html($('.link_sample').html());
+		$("#divattached .closeaddedlink").remove();
+	}
+	if($('#type').val() =="video" || $('#type').val() =="audio" || $('#type').val() =="file")
+	{
+		var text='';
+		for(var i= 0; i< myDropzone.files.length;i++){
+			var data = myDropzone.files[i].previewElement;
+			var src = $(data).find("span")[0].innerText;
+			text += '<span style="color: blue;">'+src+'</span></br>';		
+		}
+	
+		$('#divattached').html(text);
+	}
+	if($('#type').val() =="image")
+	{	
+		var text='';
+		for(var i= 0; i< myDropzone.files.length;i++){
+			var data = myDropzone.files[i].previewElement;
+			var src = $(data).find("img")[0].currentSrc;
+			text += '<img data-dz-thumbnail="" alt="" src="'+ src +'"></br>';
+		
+		}
+		
+		$('#divattached').html(text);
+	}
+	
+	
+	$('#divcompose').addClass('hide');
+	$('#divpreview').removeClass('hide');
+});
+$(document).on("click",'.btnback',function(e){
+	
+	$('#divpreview').addClass('hide');
+	$('#divcompose').removeClass('hide');
+});
+$(document).on("click",'.closeaddedlink',function(e){
+	
+	var count = $(this).attr('data-count');
+	$('.deleteclass_'+count).remove();
+    return false;
+});
+
+$(document).on("click",'.btnadd',function(e){
+e.preventDefault();
+ if($('#opt_text').val() != "")
+ {	
+	var deleteclass = $('.deleteclass').length;
+	//console.log(deleteclass + " >>>>>>>>>>>>>>>>>>>>>> deleteclass");
+	if($('#ans_type').val() == "radio")
+	{
+		$('.show_sample').html($('.show_sample').html()+"<span class = ' deleteclass deleteclass_"+deleteclass+"'><label class='rdo_"+$('#opt_text').val()+"'><input type='radio' name='rdosample' /> <label class='qtext'>"+$('#opt_text').val()+"</label>&nbsp;&nbsp;<a href='#' data-count='"+ deleteclass +"' class='lnkred closeaddedlink' >&#10006</a></label></span>");
+	}
+	else if($('#ans_type').val() == "checkbox")
+	{
+		$('.show_sample').html($('.show_sample').html()+"<span class = ' deleteclass deleteclass_"+deleteclass+"'><label class='chk_"+$('#opt_text').val()+"'><input type='checkbox' name='chksample'  /><label class='qtext'>"+$('#opt_text').val()+"</label>&nbsp;&nbsp;&nbsp;<a href='#'  data-count='"+deleteclass+"' class='lnkred closeaddedlink' >&#10006</a></label></span>");
+	}
+	else if($('#ans_type').val() == "rating")
+	{	
+		/*if($('.show_sample').html() == "")
+		{
+			$('.show_sample').html("<span class = ' deleteclass deleteclass_"+deleteclass+"'><label class='firstrate rate_"+$('#opt_text').val()+"'><i class='icon-circle'></i><label class='qtext'>"+$('#opt_text').val()+"</label>&nbsp;&nbsp;&nbsp;<a href='#' data-count='"+deleteclass+"' class='lnkred closeaddedlink' >&#10006</a></label></span>");
+		}
+		else
+		{
+			$('.show_sample').html($('.show_sample').html()+"<span class = ' deleteclass deleteclass_"+deleteclass+"'><label class='rate_"+$('#opt_text').val()+"'><i class='icon-circle'></i><label class='qtext'>"+$('#opt_text').val()+"</label>&nbsp;&nbsp;&nbsp;<a href='#' id='close' data-count='"+deleteclass+"' class='lnkred closeaddedlink' >&#10006</a></label></span>");
+		}*/
+		//var str = '<i class="icon-star"></i>';
+		//$('.show_sample').html(str);
+		
+	}
+	$('#opt_text').val('');
+ }
+ 
+});
+$(document).on("click",'.btnremove',function(e){
+e.preventDefault();
+ if($('#opt_text').val() != "")
+ {
+	if($('#ans_type').val() == "radio")
+	{
+		var element = ".rdo_"+$('#opt_text').val();
+		$(element).remove();
+	}
+	else if($('#ans_type').val() == "checkbox")
+	{
+		var element = ".chk_"+$('#opt_text').val();
+		$(element).remove();
+	}
+	else if($('#ans_type').val() == "rating")
+	{
+		var element = ".rate_"+$('#opt_text').val();
+		$(element).remove();
+	}
+ }
+ 
+});
+
+	
+	$("#type").change(function(){		
+		var html = "";
+		if($(this).val() == "link")
+		{
+			html +='<div class="form-group"><label class="col-sm-2 control-label" for="url"> * Url </label><div class="col-xs-12  col-sm-10"><input type="text" id="url" placeholder="Url" class="col-xs-12 col-sm-4 col-md-4 savedata" /><span class="samplemsg">(example. https://www.google.com)</span></div></div>';
+			html +='<div class="form-group"><label class="col-sm-2 control-label" for="text"> * Text </label><div class="col-xs-12  col-sm-10">	<input type="text" id="text" placeholder="Text" class="col-xs-12 col-sm-4 col-md-4 savedata" />	</div></div>';
+			html +='<div class="form-group"><label class="col-sm-2 control-label" for="url"> </label><div class="col-xs-12  col-sm-10"><button class="btn btn-xs btn-success btnlnkadd"><i class="icon-plus"></i>Add</button></div></div>';
+			html +='<div class="form-group"><label class="col-sm-2 control-label"></label><div class="col-xs-12  col-sm-10 "><div class="col-xs-12 col-sm-4 col-md-4 link_sample" style="padding-left: 5px;"></div></div></div>';
+			$(".type_specific").removeClass('hide');
+			$(".type_specific").html(html);	
+			$(".divdropzone").addClass('hide');			
+		}
+		else if($(this).val() == "image" || $(this).val() == "video" || $(this).val() == "audio" || $(this).val() == "file")
+		{
+			$(".type_specific").addClass('hide');
+			$(".divdropzone").removeClass('hide');
+		}else if($('#type').val() == ""){
+			$(".type_specific").addClass('hide');
+			$(".divdropzone").addClass('hide');	
+		}
+				
+				
+		
+	});
+
+	$('input[type=radio][name=togri]').change(function() {	
+		if($(this).val() == "0"){
+			$('#group_id').attr("required","true");
+			$('#toUser').removeAttr("required");
+			$(".group_con").removeClass('hide');
+			$(".individual_con").addClass(' hide');
+		}else{
+			$('#toUser').attr("required","true");
+			$('#group_id').removeAttr("required");
+			$(".individual_con").removeClass('hide');
+			$(".group_con").addClass('hide');		
+			$("#toUser").next("span").css("width", $("#group_id").next("div").css("width"));			
+			$("#toUser").find(".select2-search__field").css("width", $("#group_id").next("div").css("width"));			
+			// $('#to').trigger("chosen:updated");
+		}
+	});
+
+		
+	
+
+
+
+function esc_chars(objdata)
+{
+	var esc_data = objdata.replace(/[\\]/g, '\\\\')
+    .replace(/[\"]/g, '\\\"')
+   // .replace(/[\']/g, '\\\'')
+    .replace(/[\/]/g, '\\/')
+    .replace(/[\b]/g, '\\b')
+    .replace(/[\f]/g, '\\f')
+    .replace(/[\n]/g, '\\n')
+    .replace(/[\r]/g, '\\r')
+    .replace(/[\t]/g, '\\t');
+	return esc_data;
+}
+$('.btnsave').on('click', function(e) {
+	all_files = [];
+	existed_files = [];
+	e.preventDefault();
+	//console.log(myDropzone.files);
+	//return false;
+	var obj = $(this);
+	var id = $(this).data("id");
+	var validation_result = $('#user_form').valid();
+	
+		if($('#question').val() !="")
+		{	
+			if(!$('#ans_type').val()){
+				$("#ans_type").parent().append('<label for="title" class="error qerr">This field is required.</label>');
+				validation_result = false;
+			}else{
+				//console.log("here");
+				$(".qerr").html("");
+			}		
+		}
+		
+		if($('#ans_type').val() !="")
+		{	
+			if($('#question').val() == ""){
+				
+				$("#question").parent().append('<label for="title" class="error myerr">This field is required.</label>');
+				validation_result = false;
+			}else{
+				
+				$(".myerr").html("");		
+				if($('#ans_type').val() == "radio" || $('#ans_type').val() == "checkbox" ){
+					if(!$('.show_sample').html()){
+						$(".show_sample").parent().append('<label for="title" class="error qerr1">This field is required.</label>');
+						validation_result = false;
+					}else{
+						$(".qerr1").remove();
+					}
+				}
+			}	
+		}
+		
+		if($('#type').val() !="" && $('#type').val() != null)
+		{	
+			//console.log("here");
+			if($('#type').val() == "link"){
+				if($(".lnkurl").length<1){
+					$("#url").parent().append('<label for="title" class="error urlerr">This field is required.</label>');
+					validation_result = false;
+					
+				}else{
+					$(".urlerr").remove();
+				}
+			}else{
+				//console.log(myDropzone.files);
+				if(myDropzone.files.length<1){
+					
+					$("#images_form").parent().append('<label for="title" class="error typeerr">This field is required.</label>');
+					validation_result = false;
+					
+				}else{
+					$(".typeerr").remove();
+				}
+			}
+		}
+		
+		if($('input[name=togri]:checked').val() == 1 && $("#toUser").val() == null ){
+			$("#to_chosen").parent().append('<label for="title" class="error chosenerr">This field is required.</label>');			
+			validation_result = false;
+		}else{
+			$(".chosenerr").remove();
+		}		
+		
+		if($('input[name=togri]:checked').val() == 0 && $("#group_id").val() == null ){
+			$("#group_id_chosen").parent().append('<label for="title" class="error chosenerr2">This field is required.</label>');			
+			validation_result = false;
+		}else{
+			$(".chosenerr2").remove();
+		}	
+						
+		post_data = '{"message":"'+esc_chars($('#msg').val().trim())+'"';
+		if($('#type').val() == "link")
+		{
+			var link_url = "";
+			$(".lnkurl").each(function() {		
+				link_url += (link_url == "")? $(this).text()+"|"+$(this).attr('href') :  ";;"+$(this).text()+"|"+$(this).attr('href');
+			});
+			post_data += ',"links":"'+esc_chars(link_url)+'"';
+		}
+		var qtext = "";
+		if($('#question').val() != "" && $('.show_sample').html().trim() !="")
+		{
+			qtext = "";
+			$(".qtext").each(function() {		
+				qtext += (qtext == "")? $(this).text() :  ";;"+$(this).text();
+			});	
+			post_data += ',"qa":"'+esc_chars($('#question').val().trim())+'","ans_type":"'+$('#ans_type').val()+'","options":"'+esc_chars(qtext)+'"';
+		}else if($('#question').val() != "" && $('#ans_type').val() == "textbox" ){
+			post_data += ',"qa":"'+esc_chars($('#question').val().trim())+'","ans_type":"'+$('#ans_type').val()+'"';
+		}
+		post_data +=',"n_a":"'+(($('input[name="n_a"]').is(':checked'))?1:0)+'"';
+		if(myDropzone.files.length>0)
+		{
+			for(var i in myDropzone.getQueuedFiles())
+			{
+				new_files.push(myDropzone.getQueuedFiles()[i].name);
+				//queued_files.push(myDropzone.getQueuedFiles()[i].name);
+			}
+			for(var i=0;i<myDropzone.files.length;i++)
+			{
+				all_files.push(myDropzone.files[i].name);
+				if(new_files.length >0)
+				{
+					//console.log(new_files);
+					//console.log(new_files);
+					if(!findinarr(new_files,myDropzone.files[i].name))
+					{
+						existed_files.push(myDropzone.files[i].name);					
+					}
+				}
+				else
+				{
+					existed_files.push(myDropzone.files[i].name);	
+				}
+				
+			}
+			
+			
+		}
+		
+			if(validation_result  === true)
+			{
+				
+				$('#confirmModal').modal();
+				$("#confirm").click(function(){
+				
+				$(this).attr("disabled","true");
+				$("#modalcancel").attr("disabled","true");
+				//start
+				if(myDropzone.getQueuedFiles().length == 0 && myDropzone.files.length == 0)
+				{
+					//no file
+					post_data +="}";
+					
+				}
+				 else if(existed_files.length >0)
+				{ 
+					//if($('#state').val() == 'forward'){
+						$.ajax({			
+						url	 		: "/admin/message/setexisted_files",
+						type 		: "POST",
+						cache: false,
+						async :false,
+						data		: {setfiles:existed_files,type:$("#type").val(),from:($('#state').val() == 'forward')?"send":"draft",state:$('#state').val()},				
+						success		: function(res){
+							existed_files = res;
+							if(myDropzone.getQueuedFiles().length == 0 && myDropzone.files.length >0)//all old files
+							{	
+
+								
+								post_data +=',"files":"'+res.join()+'"}';
+							}
+							
+							
+						}
+					});
+						//}
+						/*else {
+							post_data +=',"files":"'+existed_files.join()+'"}';
+						}*/
+						//old files
+						
+						
+				}
+				
+				//end
+				//console.log("clocked");
+				//console.log(post_data);
+				if(myDropzone.getQueuedFiles().length >0)
+				{				
+					myDropzone.processQueue();
+				}
+				else
+				{
+					var data = {
+					to:$('#toUser').val(),//$('#to').val(),
+					group_id:$('#group_id').val(),
+					g_i:$('input[name="togri"]:checked').val(),
+					type:$('#type').val(),
+					title:esc_chars($('#title').val().trim()),
+					message:$('#msg').val().trim().substr(0,25)+"...",
+					postdata:post_data,
+					is_answered : $('#question').val(),
+					n_a : (($('input[name="n_a"]').is(':checked'))?1:0),
+					is_drafts : 0,
+					is_schedule:0,
+					state:$('#state').val(),
+					draft_id:$("#draft_msg_id").val()
+				};
+				//console.log(data);
+					if($('.btnsave').val() != "Loading...")
+					{
+						$.ajax({			
+							url	 		: "/admin/message/compose_save",
+							type 		: "POST",
+							cache: false,
+							data		: data,
+							beforeSend: function( xhr ) {
+									$('.btnsave').val('Loading...');
+							},
+							success		: function(res){
+								//console.log(res);
+								//<input type="button" class="btn btn-sm btn-success btnsave" value="Save" />
+								$('#confirmModal').modal("hide");
+								if(res.status == "1")
+								{
+									
+									$('#hidval').val(res.msg_id);
+									if(myDropzone.getQueuedFiles().length >0)
+									{
+										myDropzone.processQueue();
+									}
+									else
+									{
+										bootbox.alert("Message has been sent", function(result) {
+											
+												//location.reload();
+												location.href="/admin/message/compose/";
+											});
+									}
+								
+								}
+								else
+								{
+									bootbox.alert(res.error, function(result) {
+						
+									});
+									
+								}
+							
+							}
+						});
+					}
+				}
+				
+				});
+			}
+			else
+			{
+				$('#confirmModal').modal("hide");
+			}
+		
+		
+		// if($('#state').val() == 'forward'){
+		
+		
+	
+});
+	
+		
+$('.btndrafts').on('click', function(e) {
+	e.preventDefault();
+	all_files = [];
+	existed_files = [];
+	var obj = $(this);
+	var id = $(this).data("id");
+	post_data = '{"message":"'+esc_chars($('#msg').val().trim())+'"';
+	if($('#type').val() == "link")
+	{
+		var link_url = "";
+		$(".lnkurl").each(function() {		
+			link_url += (link_url == "")? $(this).text()+"|"+$(this).attr('href') :  ";;"+$(this).text()+"|"+$(this).attr('href');
+		});
+		post_data += ',"links":"'+esc_chars(link_url)+'"';
+	}
+	var qtext = "";
+	if($('#question').val() != "" && $('.show_sample').html().trim() !="")
+	{
+		qtext = "";
+		$(".qtext").each(function() {		
+			qtext += (qtext == "")? $(this).text() :  ";;"+$(this).text();
+		});	
+		post_data += ',"qa":"'+esc_chars($('#question').val().trim())+'","ans_type":"'+$('#ans_type').val()+'","options":"'+esc_chars(qtext)+'"';
+	}else if($('#question').val() != "" && $('#ans_type').val() == "textbox" ){
+		post_data += ',"qa":"'+esc_chars($('#question').val().trim())+'","ans_type":"'+$('#ans_type').val()+'"';
+	}
+	post_data +=',"n_a":"'+(($('input[name="n_a"]').is(':checked'))?1:0)+'"';
+	var validation_result = $('#user_form').valid();
+
+	if($('#question').val() !="")
+	{	
+		if(!$('#ans_type').val()){
+			$("#ans_type").parent().append('<label for="title" class="error qerr">This field is required.</label>');
+			validation_result = false;
+		}else{
+			//console.log("here");
+			$(".qerr").html("");
+		}		
+	}
+	
+	if($('#ans_type').val() !="")
+	{	
+		if($('#ans_type').val() == "radio" || $('#ans_type').val() == "checkbox" ){
+			if(!$('.show_sample').html()){
+				$(".show_sample").parent().append('<label for="title" class="error qerr1">This field is required.</label>');
+				validation_result = false;
+			}else{
+				$(".qerr1").remove();
+			}
+		}	
+	}
+	
+	if($('#type').val() !="" && $('#type').val() != null)
+	{	
+		//console.log("here");
+		if($('#type').val() == "link"){
+			if($(".lnkurl").length<1){
+				$("#url").parent().append('<label for="title" class="error urlerr">This field is required.</label>');
+				validation_result = false;
+				
+			}else{
+				$(".urlerr").remove();
+			}
+		}else{
+			if(myDropzone.files.length<1){
+				
+				$("#images_form").parent().append('<label for="title" class="error typeerr">This field is required.</label>');
+				validation_result = false;
+				
+			}else{
+				$(".typeerr").remove();
+			}
+		}
+	}
+	
+	if($('input[name=togri]:checked').val() == 1 && $("#toUser").val() == null ){
+		$("#to_chosen").parent().append('<label for="title" class="error chosenerr">This field is required.</label>');
+		
+		validation_result = false;
+	}else{
+		$(".chosenerr").remove();
+	}
+	
+	
+	if($('input[name=togri]:checked').val() == 0 && $("#group_id").val() == null ){
+		$("#group_id_chosen").parent().append('<label for="title" class="error chosenerr2">This field is required.</label>');
+		
+		validation_result = false;
+	}else{
+		$(".chosenerr2").remove();
+	}
+
+		if(myDropzone.files.length>0)
+		{
+			for(var i in myDropzone.getQueuedFiles())
+			{
+				new_files.push(myDropzone.getQueuedFiles()[i].name);
+				//queued_files.push(myDropzone.getQueuedFiles()[i].name);
+			}
+			for(var i=0;i<myDropzone.files.length;i++)
+			{
+				all_files.push(myDropzone.files[i].name);
+				if(new_files.length >0)
+				{
+					//console.log(new_files);
+					//console.log(new_files);
+					if(!findinarr(new_files,myDropzone.files[i].name))
+					{
+						existed_files.push(myDropzone.files[i].name);					
+					}
+				}
+				else
+				{
+					existed_files.push(myDropzone.files[i].name);	
+				}
+				
+			}
+			
+			
+		}
+	
+// $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+		var callsave = function(){
+			if(validation_result  === true)
+			{
+			
+				// $('#confirmModal').modal();
+				// $("#confirm").click(function(){	
+				// $(this).attr("disabled","true");
+				// $("#modalcancel").attr("disabled","true");
+				//console.log("clocked");
+				//console.log(post_data);
+				if(myDropzone.getQueuedFiles().length >0)
+				{
+					$('.btndrafts').val('Saving...');
+					myDropzone.processQueue();
+				}
+				else
+				{
+				var data = {
+				to:$('#toUser').val(),//$('#to').val(),
+				group_id:$('#group_id').val(),
+				g_i:$('input[name="togri"]:checked').val(),
+				type:$('#type').val(),
+				title:esc_chars($('#title').val().trim()),
+				message:$('#msg').val().trim().substr(0,25)+"...",
+				postdata:post_data,
+				is_answered : $('#question').val(),
+				n_a : (($('input[name="n_a"]').is(':checked'))?1:0),
+				is_drafts : 1,
+				is_schedule:0,
+				state:$('#state').val(),
+				draft_id:$("#draft_msg_id").val()
+				};
+				//console.log(data);
+				$.ajax({			
+					url	 		: "/admin/message/compose_save",
+					type 		: "POST",
+					cache: false,
+					data		: data,
+					beforeSend: function( xhr ) {
+							$('.btndrafts').val('Saving...');
+					},
+					success		: function(res){
+						//console.log(res);
+						//<input type="button" class="btn btn-sm btn-success btnsave" value="Save" />
+						//$('#confirmModal').modal("hide");
+						if(res.status == "1")
+						{
+							
+							$('#hidval').val(res.msg_id);
+							if(myDropzone.getQueuedFiles().length >0)
+							{
+								myDropzone.processQueue();
+							}
+							else
+							{
+								bootbox.alert("Message has been saved ", function(result) {
+									
+										//location.reload();
+										location.href="/admin/message/compose/";
+									});
+							}
+						
+						}
+						else
+						{
+							bootbox.alert(res.error, function(result) {
+				
+							});
+							
+						}
+					
+					}
+				});//ajax for drafts
+				}
+				
+				// });
+			}
+			else
+			{
+				$('#confirmModal').modal("hide");
+			}
+		}
+		if(myDropzone.getQueuedFiles().length == 0 && myDropzone.files.length == 0)
+		{
+			//no file
+			post_data +="}";
+			callsave();
+		}
+		 else if(existed_files.length >0)
+		 {
+		 	//old files
+		 	$.ajax({			
+		 		url	 		: "/admin/message/setexisted_files",
+		 		type 		: "POST",
+		 		cache: false,
+		 		async :false,
+		 		data		: {setfiles:existed_files,type:$("#type").val(),from:"draft",state:$('#state').val()},				
+		 		success		: function(res){
+					existed_files = res;
+		 			if(myDropzone.getQueuedFiles().length == 0 && myDropzone.files.length >0)//all old files
+		 			{	
+		 				
+		 				post_data +=',"files":"'+res.join()+'"}';
+		 			}
+					
+		 			callsave();
+		 		}
+		 	});
+			
+		 }
+		else
+		{
+			
+			callsave();
+		}
+// $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+					
+					
+	
+	//var validation_result = $('#user_form').valid();
+	//var validation_result = true;
+	// ################################################
+	// if(validation_result  === true)
+	// {
+		
+	// 	if(myDropzone.getQueuedFiles().length >0)
+	// 	{
+	// 		$('.btndrafts').val('Saving...');
+	// 		myDropzone.processQueue();
+	// 	}
+	// 	else
+	// 	{
+	// 		var data = {
+	// 		to:$('#toUser').val(),//$('#to').val(),
+	// 		group_id:$('#group_id').val(),
+	// 		g_i:$('input[name="togri"]:checked').val(),
+	// 		type:$('#type').val(),
+	// 		title:esc_chars($('#title').val().trim()),
+	// 		message:$('#msg').val().trim().substr(0,25)+"...",
+	// 		postdata:post_data,
+	// 		is_answered : $('#question').val(),
+	// 		n_a : (($('input[name="n_a"]').is(':checked'))?1:0),
+	// 		is_drafts : 1,
+	// 		is_schedule:0,
+	// 		state:$('#state').val(),
+	// 		draft_id:$("#draft_msg_id").val()
+	// 		};
+			
+	// 			$.ajax({			
+	// 				url	 		: "/admin/message/compose_save",
+	// 				type 		: "POST",
+	// 				cache: false,
+	// 				data		: data,
+	// 				beforeSend: function( xhr ) {
+	// 						$('.btndrafts').val('Saving...');
+	// 				},
+	// 				success		: function(res){
+	// 					//console.log(res);
+	// 					//<input type="button" class="btn btn-sm btn-success btnsave" value="Save" />
+	// 					//$('#confirmModal').modal("hide");
+	// 					if(res.status == "1")
+	// 					{
+							
+	// 						$('#hidval').val(res.msg_id);
+	// 						if(myDropzone.getQueuedFiles().length >0)
+	// 						{
+	// 							myDropzone.processQueue();
+	// 						}
+	// 						else
+	// 						{
+	// 							bootbox.alert("Message has been saved ", function(result) {
+									
+	// 									//location.reload();
+	// 									location.href="/admin/message/compose/";
+	// 								});
+	// 						}
+						
+	// 					}
+	// 					else
+	// 					{
+	// 						bootbox.alert(res.error, function(result) {
+				
+	// 						});
+							
+	// 					}
+					
+	// 				}
+	// 			});//ajax for drafts
+	// 	}	
+		
+	// }
+	// else
+	// {
+	// 	//$('#confirmModal').modal("hide");
+	// }
+	// ################################################
+});
+	
+// ############################ schedule message #####################
+
+
+	$('.btnschmsg').on('click', function(e) {
+		current_work = "";
+		e.preventDefault();
+		all_files = [];
+		existed_files = [];
+		var obj = $(this);
+		var id = $(this).data("id");
+		post_data = '{"message":"'+esc_chars($('#msg').val().trim())+'"';
+		if($('#type').val() == "link")
+		{
+			var link_url = "";
+			$(".lnkurl").each(function() {		
+				link_url += (link_url == "")? $(this).text()+"|"+$(this).attr('href') :  ";;"+$(this).text()+"|"+$(this).attr('href');
+			});
+			post_data += ',"links":"'+esc_chars(link_url)+'"';
+		}
+		var qtext = "";
+		if($('#question').val() != "" && $('.show_sample').html().trim() !="")
+		{
+			qtext = "";
+			$(".qtext").each(function() {		
+				qtext += (qtext == "")? $(this).text() :  ";;"+$(this).text();
+			});	
+			post_data += ',"qa":"'+esc_chars($('#question').val().trim())+'","ans_type":"'+$('#ans_type').val()+'","options":"'+esc_chars(qtext)+'"';
+		}else if($('#question').val() != "" && $('#ans_type').val() == "textbox" ){
+			post_data += ',"qa":"'+esc_chars($('#question').val().trim())+'","ans_type":"'+$('#ans_type').val()+'"';
+		}
+		post_data +=',"n_a":"'+(($('input[name="n_a"]').is(':checked'))?1:0)+'"';
+				var validation_result = $('#user_form').valid();
+	
+		if($('#question').val() !="")
+		{	
+			if(!$('#ans_type').val()){
+				$("#ans_type").parent().append('<label for="title" class="error qerr">This field is required.</label>');
+				validation_result = false;
+			}else{
+				//console.log("here");
+				$(".qerr").html("");
+			}		
+		}
+		
+		if($('#ans_type').val() !="")
+		{	
+			if($('#ans_type').val() == "radio" || $('#ans_type').val() == "checkbox" ){
+				if(!$('.show_sample').html()){
+					$(".show_sample").parent().append('<label for="title" class="error qerr1">This field is required.</label>');
+					validation_result = false;
+				}else{
+					$(".qerr1").remove();
+				}
+			}	
+		}
+		
+		if($('#type').val() !="" && $('#type').val() != null)
+		{	
+			//console.log("here");
+			if($('#type').val() == "link"){
+				if($(".lnkurl").length<1){
+					$("#url").parent().append('<label for="title" class="error urlerr">This field is required.</label>');
+					validation_result = false;
+					
+				}else{
+					$(".urlerr").remove();
+				}
+			}else{
+				if(myDropzone.files.length<1){
+					
+					$("#images_form").parent().append('<label for="title" class="error typeerr">This field is required.</label>');
+					validation_result = false;
+					
+				}else{
+					$(".typeerr").remove();
+				}
+			}
+		}
+		
+		if($('input[name=togri]:checked').val() == 1 && $("#toUser").val() == null ){
+			$("#to_chosen").parent().append('<label for="title" class="error chosenerr">This field is required.</label>');
+			
+			validation_result = false;
+		}else{
+			$(".chosenerr").remove();
+		}
+		
+		
+		if($('input[name=togri]:checked').val() == 0 && $("#group_id").val() == null ){
+			$("#group_id_chosen").parent().append('<label for="title" class="error chosenerr2">This field is required.</label>');
+			
+			validation_result = false;
+		}else{
+			$(".chosenerr2").remove();
+		}
+
+		 /*if(myDropzone.files.length>0)
+		 {
+		 	for(var i=0;i<myDropzone.files.length;i++)
+		 	{
+		 		all_files.push(myDropzone.files[i].name);
+		 	}
+		 }*/
+		
+		 if(myDropzone.files.length>0)
+		{
+			for(var i in myDropzone.getQueuedFiles())
+			{
+				new_files.push(myDropzone.getQueuedFiles()[i].name);
+				//queued_files.push(myDropzone.getQueuedFiles()[i].name);
+			}
+			for(var i=0;i<myDropzone.files.length;i++)
+			{
+				all_files.push(myDropzone.files[i].name);
+				if(new_files.length >0)
+				{
+					//console.log(new_files);
+					//console.log(new_files);
+					if(!findinarr(new_files,myDropzone.files[i].name))
+					{
+						existed_files.push(myDropzone.files[i].name);					
+					}
+				}
+				else
+				{
+					existed_files.push(myDropzone.files[i].name);	
+				}
+				
+			}
+			
+			
+		}
+
+
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	
+		if(validation_result  === true)
+		{
+			$('#confirmScheduleModal').modal();
+			$("#scheduleconfirm").click(function(){	
+				// $('#schmm').attr("disabled","true");
+				current_work = "schedule";
+				$('#confirmScheduleModal').modal("hide");
+				$("#modalcancel").attr("disabled","true");
+				if(myDropzone.getQueuedFiles().length == 0 && myDropzone.files.length == 0)
+				{
+					//no file
+					post_data +="}";
+					
+				}
+				 else if(existed_files.length >0)
+				{ 				 
+					//old files
+					$.ajax({			
+						url	 		: "/admin/message/setexisted_files",
+						type 		: "POST",
+						cache: false,
+						async :false,
+						data		: {setfiles:existed_files,type:$("#type").val(),from:"schedule",scheduled_date:$('#schdt').val(),state:$('#state').val()},				
+						success		: function(res){
+							existed_files = res;
+							if(myDropzone.getQueuedFiles().length == 0 && myDropzone.files.length >0)//all old files
+							{	
+								
+								post_data +=',"files":"'+res.join()+'"}';
+							}
+							
+							
+						}
+					});
+					
+				 }
+		
+				if(myDropzone.getQueuedFiles().length >0)
+				{
+					$('.btnschmsg').val('Saving...');
+					myDropzone.processQueue();
+				}
+				else
+				{
+					var data = {
+					to:$('#toUser').val(),//$('#to').val(),
+					group_id:$('#group_id').val(),
+					g_i:$('input[name="togri"]:checked').val(),
+					type:$('#type').val(),
+					title:esc_chars($('#title').val().trim()),
+					message:$('#msg').val().trim().substr(0,25)+"...",
+					postdata:post_data,
+					schedule_date:$('#schdt').val()+" "+$('#schhr').val()+":"+$('#schmm').val()+":"+00,
+					is_answered : $('#question').val(),
+					n_a : (($('input[name="n_a"]').is(':checked'))?1:0),
+					is_drafts : 0,
+					is_schedule:1,
+					state:$('#state').val(),
+					draft_id:$("#draft_msg_id").val()
+					};
+					
+						$.ajax({			
+							url	 		: "/admin/message/compose_save",
+							type 		: "POST",
+							cache: false,
+							data		: data,
+							beforeSend: function( xhr ) {
+									$('.btnschmsg').val('Saving...');
+							},
+							success		: function(res){
+								//console.log(res);
+								//<input type="button" class="btn btn-sm btn-success btnsave" value="Save" />
+								$('#confirmScheduleModal').modal("hide");
+								if(res.status == "1")
+								{
+									
+									$('#hidval').val(res.msg_id);
+									if(myDropzone.getQueuedFiles().length >0)
+									{
+										myDropzone.processQueue();
+									}
+									else
+									{
+										bootbox.alert("Your Schedulemessage has been saved ", function(result) {
+											
+												//location.reload();
+												location.href="/admin/message/compose/";
+											});
+									}
+								
+								}
+								else
+								{
+									bootbox.alert(res.error, function(result) {
+						
+									});
+									
+								}
+							
+							}
+						});//ajax for drafts
+				}	
+			
+			});
+		}
+		else
+		{
+			$('#confirmScheduleModal').modal("hide");
+		}
+	
+	
+	
+	
+		
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	});
+
+// ############################ schedule message #####################
+	
+	
+	
+
+	// jQuery('#datetimepicker').datetimepicker();
+
+</script>
+

@@ -1,0 +1,93 @@
+<% 	var c_message = page.c_message;
+							var messagebody;
+								var each_json;
+							
+								for(var p=0; p<c_message.length; p++){
+									messagebody = JSON.stringify(c_message[p]);
+										each_json = JSON.parse(messagebody);
+										
+										var divBackground="white";
+										if(each_json["sender"] == "hr"){
+											divBackground = "black";
+										}	
+							%>
+							<div class="<%= divBackground %>">
+									<div class="row hide">
+										<label class="col-sm-2 control-label" for="msg"> id </label>	
+										<div class="col-xs-12  col-sm-10">
+											<input type="hidden" id="id" value="<%= each_json["id"] %>" />
+											<input type="hidden" id="c_id" value="<%= each_json["c_id"] %>" />
+										</div>
+									</div>
+									<div class="row">
+										<label class="col-sm-2 control-label" for="question">Type </label>
+										<div class="col-xs-12  col-sm-10">
+											<label id="question" name="question" class=" control-label"  ><%= each_json["type"] %></label>						
+										</div>
+									</div>
+									<div class="row">
+											<% 	var data = each_json["data"];
+												var ansType = each_json["type"];
+												var showfiles = JSON.parse(data);
+													for(var v in showfiles){
+														var idHide =" ";
+														if(v == "msg_id"){
+															idHide += "hide";
+														}
+												%>
+												<div class="<%= idHide  %>">
+													<label class="col-sm-2 control-label" for="question"> <%=  v %></label>
+													<div class="col-xs-12  col-sm-10">
+										
+													
+												<%	
+													if(v == "files"){
+														var parseData = showfiles[v].split(",");
+															
+														for(var r = 0; r<parseData.length; r++){
+														
+															if(ansType == "video"){
+												%>			
+																<video id="demo_<%=parseData[r]%>" src="/assets/upload/video/<%= parseData[r] %>"></video>
+																<a onclick="document.getElementById('demo_<%= parseData[r] %>').play()"><%= parseData[r] %></a>	<br>
+												<%			}
+															if(ansType == "audio"){
+												%>			
+																<audio id="demo_<%=parseData[r]%>" src="/assets/upload/audio/<%= parseData[r] %>"></audio>
+																<a onclick="document.getElementById('demo_<%= parseData[r] %>').play()"><%= parseData[r] %></a>	<br>
+												<%			}
+															if(ansType == "image"){
+												%>			
+																<a href="/assets/upload/image/<%= parseData[r] %>" target="_blank"><%= parseData[r] %></a><br>
+												<%			}
+															if(ansType == "pdf"){
+												%>
+																<a href="/assets/upload/file/<%= parseData[r] %>" download><%= parseData[r] %></a>	<br>
+												<%
+															}
+														}
+													}else{%>
+														<label id="question" name="question" class=" control-label"  ><%= showfiles[v] %></label>
+													<%}
+												%>	
+													</div>											
+												</div>	
+											<% }%>
+									</div>
+									
+									<div class="row">
+										<label class="col-sm-2 control-label" for="question"> date</label>
+										<div class="col-xs-12  col-sm-10">
+											<label id="question" name="question" class=" control-label"  ><%= each_json["date"] %></label>						
+										</div>
+									</div>
+									<div class="row">
+										<label class="col-sm-2 control-label" for="question"> sender </label>
+										<div class="col-xs-12  col-sm-10">
+											<label id="question" name="question" class=" control-label"  ><%= each_json["sender"] %></label>						
+										</div>
+									</div>
+					
+								
+							</div>
+						<%} %>

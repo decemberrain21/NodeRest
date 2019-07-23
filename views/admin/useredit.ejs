@@ -1,0 +1,709 @@
+<br/>
+<div class="row">
+	<div class="col-xs-12">
+		<form class="form-horizontal" role="form" id="user_form">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="clearfix errlabel">
+					
+				</div>    
+				<div class="space">
+				
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" > </label>
+					<div class="col-xs-12  col-sm-10 ">
+						<span class="profile-picture center">
+							<img id="avatar" class="editable img-responsive" alt="User's Avatar" src="/assets/upload/users/<%= page.user[0].photo?page.user[0].photo:"defaultprofile.jpg" %>" />
+						</span>
+						<input type="hidden" name="binary_img" id="binary_img" value="" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="email"> Login Name</label>
+					<div class="col-xs-12  col-sm-10">
+						<input type="text" id="email" name="email" value="<%=  page.user[0].email %>" class="col-xs-12 col-sm-4 col-md-4"  placeholder="Email" data-rule-required="true" />
+						<input type="hidden" id="userId" value="<%= page.user[0].employee_id%>"/>
+						<input type="hidden" id="oldpassword" value="<%= page.user[0].cms_password%>"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="name"> Name</label>
+					<div class="col-xs-12  col-sm-10">
+						<input data-rule-required="true" type="text" id="name" name="name" value="<%=  page.user[0].name %>"  class="col-xs-12 col-sm-4 col-md-4"  placeholder="Name" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="point"> Point</label>
+					<div class="col-xs-12  col-sm-10">
+						<input type="text"  id="point" name="point" value="<%=  page.user[0].point %>" class="col-xs-12 col-sm-4 col-md-4"  placeholder="Point" disabled/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="allow_cms"> Allow cms </label>
+					<div class="col-xs-3 col-sm-1">
+						<label>
+							
+							<input type="checkbox" id="allow_cms" name="allow_cms"  value="1" <%= (page.user[0].allow_cms == 1)?"checked" :""%> />Allow
+						</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="password1"> CMS password</label>
+					<div class="col-xs-12  col-sm-10">
+						<input type="password" id="password1" name="password1" placeholder="Password" class="col-xs-12 col-sm-4 col-md-4"  />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="password2"> ReEnter CMS password</label>
+					<div class="col-xs-12  col-sm-10">
+						<input type="password" id="password2" name="password2" placeholder="Confirm Password" class="col-xs-12 col-sm-4 col-md-4"  />
+						<span id="info" name="info" style="margin-left:20px;"> </span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="active"> Status </label>
+					<div class="col-xs-3 col-sm-1">
+						<label>
+							
+							<input type="checkbox" id="active" name="active" value="" <%= (page.user[0].active == 1) ? "checked" :""%>/>Active
+						</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="biz_sector"> Biz Sector </label>
+					<div class="col-xs-12  col-sm-10">
+					
+						<select  data-rule-required="true" class="col-xs-12 col-sm-4 col-md-4"  id="biz_sector" name="biz_sector"  data-placeholder="Choose a biz sector...">
+							<option selected  disabled>Choose a biz sector</option>
+								<% var biz_sector = page.biz_sector;
+									for(var i=0; i < biz_sector.length; i++) { %>
+								   <option value="<%= biz_sector[i].name %>" <%= ( page.user[0].biz_sector != null && page.user[0].biz_sector.trim() === biz_sector[i].name.trim() )?"selected":"" %> > <%= biz_sector[i].name %> </option>
+								<% } %>
+							<option value="others">Others</option>
+						</select>
+						<br/>
+						<input type="text"  name="otherbizsector" placeholder="Please type a new Biz Sector Name" class="col-xs-12 col-sm-4 col-md-4 other hide" />
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="company"> Company </label>
+					<div class="col-xs-12  col-sm-10">
+						<select data-rule-required="true" class="col-xs-12 col-sm-4 col-md-4" id="company" name="company">	
+							<option selected  disabled>Choose a company</option>
+								<% var company = page.company;
+									for(var i=0; i < company.length; i++) { %>
+								   <option value="<%= company[i].name %>" <%= ( page.user[0].company != null && page.user[0].company.trim() ==  company[i].name.trim() )?"selected":"" %> > <%= company[i].name %></option>
+								<% } %>		
+							<option value="others">Others</option>								
+						</select>
+						<br/>
+						<input type="text"  name="othercompany" placeholder="Please type a new Company Name" class="col-xs-12 col-sm-4 col-md-4 other hide" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="department"> Department </label>
+					<div class="col-xs-12  col-sm-10">
+						<select data-rule-required="true" class="col-xs-12 col-sm-4 col-md-4" id="department" name="department"  data-placeholder="Choose a department...">	
+							<option selected  disabled>Choose a department</option>
+								<% var department = page.department;
+									for(var i=0; i < department.length; i++) { %>
+								   <option value="<%= department[i].name %>" <%= (page.user[0].department != null && page.user[0].department.trim() ==  department[i].name.trim() )?"selected":"" %> > <%= department[i].name %></option>
+								<% } %>		
+						<option value="others">Others</option>									
+						</select>
+						<br/>
+						<input type="text"  name="otherdepartment" placeholder="Please type a new Department Name" class="col-xs-12 col-sm-4 col-md-4 other hide" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="rank"> Rank(Old) </label>
+					<div class="col-xs-12  col-sm-10">
+						<select data-rule-required="true"  class="col-xs-12 col-sm-4 col-md-4" id="rank" name="rank"  data-placeholder="Choose a rank...">	
+							<option selected disabled >Choose a rank</option>
+							<% var data = page.rank;
+									for(var i=0; i < data.length; i++) { %>
+								   <option value="<%= data[i].name %>"  <%= ( page.user[0].rank != null && page.user[0].rank.trim() ==  data[i].name.trim() )?"selected":"" %> > <%= data[i].name %></option>
+								<% } %>		
+							<option value="others">Others</option>	
+						</select>
+						<br/>
+						<input type="text"  name="otherrank" placeholder="Please type a new Rank Name" class="col-xs-12 col-sm-4 col-md-4 other hide" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="rank_new"> Rank(New) </label>
+					<div class="col-xs-12  col-sm-10">
+						<select class="col-xs-12 col-sm-4 col-md-4" id="rank_new" name="rank_new" data-rule-required="true" data-placeholder="Choose a Rank(New)...">	
+							<option  selected disabled >Choose a Rank(New)</option>
+								<% var data = page.rank_new;
+									for(var i=0; i < data.length; i++) { %>
+								    <option value="<%= data[i].name %>"  <%= ( page.user[0].rank_new != null && page.user[0].rank_new.trim() ==  data[i].name.trim() )?"selected":"" %> > <%= data[i].name %></option>
+								<% } %>	
+							<option value="others">Others</option>
+						</select>
+						<br/>
+						<input type="text"  name="otherranknew" placeholder="Please type a new Rank Name" class="col-xs-12 col-sm-4 col-md-4 other hide" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="role_old"> Role(Old) </label>
+					<div class="col-xs-12  col-sm-10">
+						<select class="col-xs-12 col-sm-4 col-md-4" id="role_old" name="role_old" data-rule-required="true" data-placeholder="Choose a Role(Old)...">	
+							<option  selected disabled >Choose a Role(Old)</option>
+								<% var data = page.role_old;
+									for(var i=0; i < data.length; i++) { %>
+								    <option value="<%= data[i].name %>" <%= ( page.user[0].role_old != null && page.user[0].role_old.trim() ==  data[i].name.trim() )?"selected":"" %>  > <%= data[i].name %></option>
+								<% } %>	
+							<option value="others">Others</option>
+						</select>
+						<br/>
+						<input type="text"  name="otherroleold" placeholder="Please type a new Role Name" class="col-xs-12 col-sm-4 col-md-4 other hide" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="role_new"> Role(New) </label>
+					<div class="col-xs-12  col-sm-10">
+						<select class="col-xs-12 col-sm-4 col-md-4" id="role_new" name="role_new" data-rule-required="true" data-placeholder="Choose a Role(New)...">	
+							<option  selected disabled >Choose a Role(New)</option>
+								<% var data = page.role_new;
+									for(var i=0; i < data.length; i++) { %>
+								    <option value="<%= data[i].name %>" <%= ( page.user[0].role_new != null && page.user[0].role_new.trim() ==  data[i].name.trim() )?"selected":"" %> > <%= data[i].name %></option>
+								<% } %>	
+							<option value="others">Others</option>
+						</select>
+						<br/>
+						<input type="text"  name="otherrolenew" placeholder="Please type a new Role Name" class="col-xs-12 col-sm-4 col-md-4 other hide" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="gender"> Gender </label>
+					<div class="col-xs-12  col-sm-10">
+						<select data-rule-required="true"  class="col-xs-12 col-sm-4 col-md-4" id="gender" name="gender"  data-placeholder="Choose a gender...">	
+							<option selected  disabled>Choose a gender</option>
+								<% var data = page.gender;
+									for(var i=0; i < data.length; i++) { %>
+								   <option value="<%= data[i].name %>"  <%= ( page.user[0].gender != null && page.user[0].gender.trim() ==  data[i].name.trim() )?"selected":"" %> > <%= data[i].name %></option>
+								<% } %>				
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="site_location"> Site/Work Location </label>
+					<div class="col-xs-12  col-sm-10">
+						<select data-rule-required="true"  class="col-xs-12 col-sm-4 col-md-4" id="site_location" name="site_location"  data-placeholder="Choose a site location...">	
+							<option selected disabled>Choose a site location</option>
+								<% var data = page.site_location;
+									for(var i=0; i < data.length; i++) { %>
+								   <option value="<%= data[i].name %>"  <%= ( page.user[0].site_location != null &&  page.user[0].site_location.trim() ==  data[i].name.trim() )?"selected":"" %> > <%= data[i].name %></option>
+								<% } %>	
+							<option value="others">Others</option>	
+						</select>
+						<br/>
+						<input type="text"  name="otherlocation" placeholder="Please type a new Site/Work Location Name" class="col-xs-12 col-sm-4 col-md-4 other hide" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="date_of_employment">Date of Employment</label>
+					<div class="col-xs-12  col-sm-10">
+<!-- 						<input type="date" onkeydown="return false"  data-rule-required="true"   class="col-xs-12 col-sm-4 col-md-4" id="date_of_employment" name="date_of_employment"  value="<%=  page.user[0].date_of_employment %>">
+ -->						
+					<input type="text" id="date_of_employment" name="date_of_employment" placeholder="Date of Employment" class="col-xs-12 col-sm-4 col-md-4 datepicker" value="<%=  page.user[0].date_of_employment %>">
+						
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="probation_permanent"> Probation/Permanent </label>
+					<div class="col-xs-12  col-sm-10">
+						<select  data-rule-required="true"  class="col-xs-12 col-sm-4 col-md-4" id="probation_permanent" name="probation_permanent"  data-placeholder="Choose a probation/permanent...">	
+							<option selected disabled>Choose  probation/permanent</option>
+								<% var data = page.probation_permanent;
+									for(var i=0; i < data.length; i++) { %>
+								   <option value="<%= data[i].name %>" <%= ( page.user[0].probation_permanent != null &&  page.user[0].probation_permanent.trim() ==  data[i].name.trim() )?"selected":"" %>  > <%= data[i].name %></option>
+								<% } %>
+							<option value="others">Others</option>	
+						</select>
+						<br/>
+						<input type="text" name="otherprobation" placeholder="Please type a new Name" class="col-xs-12 col-sm-4 col-md-4 other hide" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="type_of_contract"> Type of Contract</label>
+					<div class="col-xs-12  col-sm-10">
+						<select data-rule-required="true"  class="col-xs-12 col-sm-4 col-md-4" id="type_of_contract" name="type_of_contract"  data-placeholder="Choose a type of contract...">
+							<option selected disabled >Choose a type of contract</option>
+								<% var data = page.type_of_contract;
+									for(var i=0; i < data.length; i++) { %>
+								<option value="<%= data[i].name %>" <%= ( page.user[0].type_of_contract != null &&  page.user[0].type_of_contract.trim() ==  data[i].name.trim() )?"selected":"" %>  > <%= data[i].name %></option>
+								<% } %>
+							<option value="others">Others</option>	
+						</select>
+						<br/>
+						<input type="text" name="othercontract" placeholder="Please type a new Contract Name" class="col-xs-12 col-sm-4 col-md-4 other hide" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="date_of_birth">Date of Birth</label>
+					<div class="col-xs-12  col-sm-10">
+<!-- 						<input type="date" onkeydown="return false"  data-rule-required="true"   class="col-xs-12 col-sm-4 col-md-4" id="date_of_birth" name="date_of_birth" value="<%=  page.user[0].date_of_birth %>">
+ -->					
+					<input type="text" id="date_of_birth" name="date_of_birth" placeholder="Date of Birth" class="col-xs-12 col-sm-4 col-md-4 datepicker" value="<%=  page.user[0].date_of_birth %>">
+ 
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="nationality"> Nationality</label>
+					<div class="col-xs-12  col-sm-10">
+						<select data-rule-required="true"  class="col-xs-12 col-sm-4 col-md-4" id="nationality" name="nationality"  data-placeholder="Choose a nationality...">
+							<option  selected disabled >Choose a nationality</option>
+								<% var data = page.nationality;
+									for(var i=0; i < data.length; i++) { %>
+								   <option value="<%= data[i].name %>"   <%= ( page.user[0].nationality != null && page.user[0].nationality.trim() ==  data[i].name.trim() )?"selected":"" %>  > <%= data[i].name %></option>
+								<% } %>
+							<option value="others">Others</option>	
+						</select>
+						<br/>
+						<input type="text" name="othernationality" placeholder="Please type a new Nationality Name" class="col-xs-12 col-sm-4 col-md-4 other hide" />
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="direct_report_to"> Direct report to</label>
+					<div class="col-xs-12  col-sm-10">
+						<input type="text" class="col-xs-12 col-sm-4 col-md-4" id="direct_report_to" name="direct_report_to"  value="<%=  page.user[0].direct_report_to %>"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="contact_number"> Contact Number</label>
+					<div class="col-xs-12  col-sm-10">
+						<input type="text" class="col-xs-12 col-sm-4 col-md-4" id="contact_number" name="contact_number"  value="<%=  page.user[0].contact_number %>"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="corporate_sim_card"> Corporate Issued SIM CARD </label>
+					<div class="col-xs-3 col-sm-1">
+						<label>
+							
+							<input type="checkbox" id="corporate_sim_card" name="corporate_sim_card" value="" <%= (page.user[0].corporate_sim_card == "Yes") ? "checked" :""%> />
+						</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="employee_id"> Employee ID</label>
+					<div class="col-xs-12  col-sm-10">
+						<input type="text" class="col-xs-12 col-sm-4 col-md-4" id="employee_id" name="employee_id"  value="<%=  page.user[0].employee_id %>" readonly />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label"> </label>
+					<div class="col-xs-12  col-sm-10">
+						<a href="#" id="cleartoken" name="cleartoken">Clear Token</a>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label"> </label>
+					<div class="col-xs-12  col-sm-10">
+						<a href="/admin/user/pointHistory/<%= page.user[0].employee_id%>" target="_blank">point history</a>
+					</div>
+				</div>
+				
+				
+				<div class="form-group">
+					<label class="col-sm-2 control-label">  </label>
+					<div class="col-xs-12  col-sm-10">
+						<button class="btn btn-sm btn-success btnsave">
+								<i class="icon-ok"></i>
+								Save
+						</button>
+						<button class="btn btn-sm btncancel">
+							<i class="icon-ban-circle align-top bigger-125"></i>
+							Cancel
+						</button>	
+						<button class="btn-danger btn-sm delete">
+							<i class="icon-trash bigger-130 "></i>
+							Delete
+						</button>	
+						
+						
+					</div>
+				</div>
+		</div>
+		</form>
+		
+	</div>
+	<!-- Modal -->
+			<div class="modal user" id="userModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			  <div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h5 class="blue bigger">Are you sure to delete this user?</h5>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-sm" data-dismiss="modal">
+							<i class="icon-remove"></i>
+							Cancel
+						</button>
+
+						<button class="btn btn-sm btn-primary" name="user" id="delete_user">
+							<i class="icon-ok"></i>
+							Delete
+						</button>
+					</div>					
+				</div>
+			  </div>
+			</div>			
+			<!-- Model -->
+</div>
+<script src="/js/moment.min.js"></script>
+<script src="/assets/js/jquery.gritter.min.js"></script>
+<script src="/assets/js/x-editable/bootstrap-editable.min.js"></script>
+<script src="/assets/js/x-editable/ace-editable.min.js"></script>
+<script>
+	jQuery(function($){
+	
+		$('.datepicker').datepicker({ format: 'yyyy-mm-dd'});
+		$("#email").blur(function(){
+			if($(this).val() != "")
+			{
+				var mycontrol = $(this);
+				var post_data = {control_value:$(this).val(),uid:$("#userId").val()};
+				//post_data =JSON.stringify(post_data);
+				$.ajax({
+						url	 		: "/admin/user/check",
+						type 		: "POST",
+						data		: post_data,
+						success		: function(res){
+							if(res.msg == "exist")
+							{
+								$('.existerr').remove();
+								mycontrol.parent().after('<label for="name" class="col-xs-12  col-sm-10 error duplicate existerr">Already Exist!</label>');
+							}
+							else
+							{
+								
+								$('.existerr').remove();
+							}
+						}
+					});
+			}
+		});
+		$('#biz_sector').chosen();
+		$('#company').chosen();
+		$('#department').chosen();
+		$('#gender').chosen();
+		$('#site_location').chosen();
+		$('#type_of_contract').chosen();
+		$('#nationality').chosen();
+		$('#rank').chosen();
+		$('#rank_new').chosen();
+		$('#role_old').chosen();
+		$('#role_new').chosen();
+		$("#employee_id").blur(function(){
+			if($(this).val() != "")
+			{
+				var mycontrol = $(this);
+				var post_data = {control_value:$(this).val(),uid:$("#userId").val(),eid:$("#employee_id").val()};
+				//post_data =JSON.stringify(post_data);
+				$.ajax({
+						url	 		: "/admin/user/check_employeeid",
+						type 		: "POST",
+						data		: post_data,
+						success		: function(res){
+							if(res.msg == "exist")
+							{
+								$('.existerr').remove();
+								mycontrol.parent().after('<label for="name" class="col-xs-12  col-sm-10 error duplicate existerr">Already Exist!</label>');
+							}
+							else
+							{
+								
+								$('.existerr').remove();
+							}
+						}
+					});
+			}
+		});
+		$.fn.editable.defaults.mode = 'inline';
+				$.fn.editableform.loading = "<div class='editableform-loading'><i class='light-blue icon-2x icon-spinner icon-spin'></i></div>";
+			    $.fn.editableform.buttons = '<button type="submit" class="btn btn-info editable-submit"><i class="icon-ok icon-white"></i></button>'+
+			                                '<button type="button" class="btn editable-cancel"><i class="icon-remove"></i></button>';    
+				
+				// *** editable avatar *** //
+				try {//ie8 throws some harmless exception, so let's catch it
+			
+					//it seems that editable plugin calls appendChild, and as Image doesn't have it, it causes errors on IE at unpredicted points
+					//so let's have a fake appendChild for it!
+					if( /msie\s*(8|7|6)/.test(navigator.userAgent.toLowerCase()) ) Image.prototype.appendChild = function(el){}
+			
+					var last_gritter
+					$('#avatar').editable({
+						type: 'image',
+						name: 'avatar',
+						value: null,
+						image: {
+							//specify ace file input plugin's options here
+							btn_choose: 'Change Avatar',
+							droppable: true,
+							/**
+							//this will override the default before_change that only accepts image files
+							before_change: function(files, dropped) {
+								return true;
+							},
+							*/
+			
+							//and a few extra ones here
+							name: 'avatar',//put the field name here as well, will be used inside the custom plugin
+							max_size: 110000,//~100Kb
+							on_error : function(code) {//on_error function will be called when the selected file has a problem
+								if(last_gritter) $.gritter.remove(last_gritter);
+								if(code == 1) {//file format error
+									last_gritter = $.gritter.add({
+										title: 'File is not an image!',
+										text: 'Please choose a jpg|gif|png image!',
+										class_name: 'gritter-error gritter-center'
+									});
+								} else if(code == 2) {//file size rror
+									last_gritter = $.gritter.add({
+										title: 'File too big!',
+										text: 'Image size should not exceed 100Kb!',
+										class_name: 'gritter-error gritter-center'
+									});
+								}
+								else {//other error
+								}
+							},
+							on_success : function() {
+								$.gritter.removeAll();
+							}
+						},
+					    url: function(params) {
+							// ***UPDATE AVATAR HERE*** //
+							//You can replace the contents of this function with examples/profile-avatar-update.js for actual upload
+			
+			
+							var deferred = new $.Deferred
+			
+							//if value is empty, means no valid files were selected
+							//but it may still be submitted by the plugin, because "" (empty string) is different from previous non-empty value whatever it was
+							//so we return just here to prevent problems
+							var value = $('#avatar').next().find('input[type=hidden]:eq(0)').val();
+							if(!value || value.length == 0) {
+								deferred.resolve();
+								return deferred.promise();
+							}
+			
+			
+							//dummy upload
+							setTimeout(function(){
+								if("FileReader" in window) {
+									//for browsers that have a thumbnail of selected image
+									var thumb = $('#avatar').next().find('img').data('thumb');
+									if(thumb) $('#avatar').get(0).src = thumb;
+									
+									$("#binary_img").val($('#avatar').get(0).src);
+								}
+								
+								deferred.resolve({'status':'OK'});
+			
+								if(last_gritter) $.gritter.remove(last_gritter);
+								/*last_gritter = $.gritter.add({
+									title: 'Avatar Updated!',
+									text: 'Uploading to server can be easily implemented. A working example is included with the template.',
+									class_name: 'gritter-info gritter-center'
+								});*/
+								
+							 } , parseInt(Math.random() * 800 + 800))
+			
+							return deferred.promise();
+						},
+						
+						success: function(response, newValue) {
+						}
+					})
+				}catch(e) {}
+	});
+$('.btnsave').on('click', function(e) {
+	e.preventDefault();
+	$("#user_form").validate({
+    
+		errorPlacement: function(error, element) {
+			if (element.attr("name") == "biz_sector" || element.attr("name") == "company" || element.attr("name") == "rank" || element.attr("name") == "rank_new" || element.attr("name") == "role_new" || element.attr("name") == "role_old" || element.attr("name") == "nationality" || element.attr("name") == "type_of_contract" ||  element.attr("name") == "site_location" || element.attr("name") == "department" || element.attr("name") == "gender" ) {
+				//console.log($(element).next());
+				var place = $(element).next();
+				error.insertAfter(place);
+			}else{
+				error.insertAfter(element);
+			}
+		}
+	});
+	var validation_result = $('#user_form').valid();
+	//console.log(validation_result);
+	if($('.duplicate').length >0 )
+	{
+		validation_result = false;
+		$('.duplicate').show();
+		
+	}
+	if(validation_result  === true){
+		var allow_cms = 0;
+	if($('#allow_cms').prop('checked')){
+		allow_cms = 1;
+	}
+	
+	var active = 0;
+	if($('#active').prop('checked')){
+		active = 1;
+	}
+	var corporate_sim_card = "";
+	if($('#corporate_sim_card').prop('checked')){
+		corporate_sim_card = "Yes";
+	}
+	if(($('#password1').val() != "" || $('#password2').val() != "") &&  ($('#password1').val() != $('#password2').val()))
+	{
+		var message = "Password and Confirm Password must be same !";
+		$("#info").html("<span id='msg' class='red'> "+ message +" </span>");
+	}	
+	else
+	{	
+
+		
+		/*var formatDate = function(date) {
+		//'DD-MM-YYYY',
+			var mydate = date.split('-');
+			var year = mydate[2];
+			var month = mydate[1];	
+			var day = mydate[0];
+			//return [year, month, day].join('-');
+			return [year, month, day].join('-');
+							
+		}	*/
+		var data={
+			email :	$('#email').val(),
+			user_id: $('#userId').val(),
+			point : $('#point').val() || 0,
+			allow_cms : allow_cms,
+			active 	: active,
+			corporate_sim_card 	: corporate_sim_card,	
+			password1 : $('#password1').val(),
+			password2 : $('#password2').val(),				
+			cms_password : $('#oldpassword').val(),	
+			name : $('#name').val(),
+			biz_sector : $('#biz_sector  option:selected').text().trim(),//$('#biz_sector').val(),
+			otherbizsector :$('input[name="otherbizsector"]').val(),
+			company : $('#company  option:selected').text().trim(),//$('#company').val(),
+			othercompany :$('input[name="othercompany"]').val(),
+			department : $('#department  option:selected').text().trim(),//$('#department').val(),
+			otherdepartment :$('input[name="otherdepartment"]').val(),
+			rank : $('#rank  option:selected').text().trim(),//$('#rank').val(),
+			otherrank :$('input[name="otherrank"]').val(),
+			rank_new : $('#rank_new  option:selected').text().trim(),			
+			otherranknew :$('input[name="otherranknew"]').val(),
+			role_old : $('#role_old  option:selected').text().trim(),
+			otherroleold :$('input[name="otherroleold"]').val(),
+			role_new : $('#role_new  option:selected').text().trim(),
+			otherrolenew :$('input[name="otherrolenew"]').val(),
+			gender : $('#gender  option:selected').text().trim(),//$('#gender').val(),
+			site_location : $('#site_location  option:selected').text().trim(),//$('#site_location').val(),
+			otherlocation :$('input[name="otherlocation"]').val(),
+			date_of_employment : $('#date_of_employment').val(),
+			type_of_contract : $('#type_of_contract  option:selected').text().trim(),//$('#type_of_contract').val(),
+			othercontract :$('input[name="othercontract"]').val(),
+			probation_permanent : $('#probation_permanent  option:selected').text().trim(),
+			otherprobation :$('input[name="otherprobation"]').val(),
+			date_of_birth : $('#date_of_birth').val(),
+			nationality : $('#nationality  option:selected').text().trim(),//$('#nationality').val(),
+			othernationality :$('input[name="othernationality"]').val(),
+			direct_report_to : $('#direct_report_to').val(),
+			contact_number : $('#contact_number').val(),
+			employee_id : $('#employee_id').val(),	
+			binary_img:$("#binary_img").val()
+		}
+		//console.log(data);return false;
+		$.post("/admin/user/editedUser", data, function (e) {	
+			var data = JSON.parse(e);
+			//console.log(data);					
+			if(data.message == "success")
+			{
+				window.history.back();
+				//location.href="/admin/user/usermanagement";
+			}
+			else
+			{
+				$("#error").html("<span id='msg' class='red'> "+ data.message +" </span>");
+				//setTimeout(function(){  $('#msg').fadeOut('slow');}, 2000);
+			}
+		});			
+	}
+	
+	}
+	
+
+});
+
+$('.btncancel').click(function(e){
+e.preventDefault();
+ window.history.back();
+//location.href="/admin/user/usermanagement/";
+});
+$('#cleartoken').click(function(e){
+	e.preventDefault();
+	bootbox.confirm("Are you sure?", function(result) {
+		if(result) {
+		$.ajax({			
+				url	 		: "/admin/user/cleartoken",
+				type 		: "POST",
+				cache: false,
+				data		: {uid:$('#userId').val()},
+				success		: function(res){
+					//console.log(res);
+					//<input type="button" class="btn btn-sm btn-success btnsave" value="Save" />
+					if(res.status == "1")
+					{
+						//location.href="/admin/user/usermanagement";
+						window.history.back();
+					}
+					else
+					{
+						
+						
+					}
+				
+				}
+			});
+		}
+	});
+});
+$('select').change(function(){
+	if($(this).val() == "others")
+	{
+		$(this).parent().find(".other").removeClass("hide");
+	}
+	else
+	{
+		$(this).parent().find(".other").addClass("hide");
+	}
+});
+
+
+		$(document).on("click", '.delete', function(e){	
+			$('#userModal').modal();
+			var obj = $(this);
+			var id = $('#userId').val();					
+			$("#delete_user").click(function(){						
+				$.post("/admin/user/delete_user", {id : id }, function (e) {	
+					var data = JSON.parse(e);							
+					if(data.message == "success")
+					{
+						$('#userModal').modal("hide");
+						window.history.back();
+						//location.href="/admin/user/usermanagement";
+						//oTable1.fnReloadAjax();
+					}							
+				});
+			});
+			e.preventDefault();
+		});	
+</script>
+

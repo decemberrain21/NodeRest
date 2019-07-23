@@ -1,0 +1,131 @@
+				<div class="sidebar" id="sidebar">
+					<script type="text/javascript">
+						try{ace.settings.check('sidebar' , 'fixed')}catch(e){}
+					</script>
+					
+					<ul class="nav nav-list">
+						<li>
+							<a href="/admin/dashboard" class="lmenu" data-link="/admin/dashboard">
+								<i class="icon-dashboard"></i>
+								<span class="menu-text"> Dashboard  </span>
+							</a>
+						</li>
+						<li>
+							<a href="/admin/message/compose/" class="lmenu" data-link="/admin/message/compose/">
+								<i class="icon-envelope"></i>
+								<span class="menu-text"> Compose Message  </span>
+							</a>
+						</li>
+						<li>
+							<a href="/admin/message/sent/" class="lmenu" data-link="/admin/message/sent/">
+								<i class="icon-upload"></i>
+								<span class="menu-text"> Sent Message  </span>
+							</a>
+						</li>
+						<li>
+							<a href="/admin/message/drafts/" class="lmenu" data-link="/admin/message/drafts/">
+								<i class="icon-envelope-alt"></i>
+								<span class="menu-text"> Drafts  </span>
+							</a>
+						</li>
+						<li>
+							<a href="/admin/message/schedule_message/" class="lmenu" data-link="/admin/message/schedule_message/">
+								<i class="glyphicon glyphicon-calendar"></i>
+								<span class="menu-text"> Schedule Message  </span>
+							</a>
+						</li>
+						<li>
+							<a href="/admin/group/groupdata/" class="lmenu" data-link="/admin/group/groupdata/">
+								<i class="icon-inbox"></i>
+								<span class="menu-text"> Recipient Group </span>
+							</a>
+						</li>
+						<li>
+							<a href="/admin/message/conversation/" class="lmenu" data-link="/admin/message/conversation/">
+								<i class="icon-comment"></i>
+								<span class="menu-text"> Reports  </span>
+								<span class="newreportalert"></span>
+							</a>
+						</li>
+
+						<li>
+							<a href="/admin/message/answer/" class="lmenu" data-link="/admin/message/answer/">
+								<i class="icon-question"></i>
+								<span class="menu-text"> Answer </span>
+							</a>
+						</li>
+
+						<li class="subli">
+							<a href="#" class="dropdown-toggle">
+								<i class="icon-user"></i>
+								<span class="menu-text"> User Management  </span>
+								<b class="arrow icon-angle-down"></b>
+							</a>
+							<ul class="submenu subnav">						
+									<li>
+										<a href="/admin/user/usermanagement/" class="lmenu" data-link="/admin/user/usermanagement/">
+											<i class="icon-double-angle-right"></i>
+											<span class="menu-text"> User List </span>
+										</a>
+									</li>
+									<li>
+										<a href="/admin/user/usercsvupload/" class="lmenu">
+											<i class="icon-double-angle-right"></i>
+											<span class="menu-text"> User CSV Upload </span>
+										</a>
+									</li>
+									
+							</ul>
+						</li>
+						<li>
+							<a href="/admin/user/attribute/" class="lmenu  hide" data-link="/admin/user/attribute/">
+								<i class="icon-hdd"></i>
+								<span class="menu-text"> Attribute </span>
+							</a>
+						</li>
+						<li>
+							<a href="/admin/user/appdownload/" class="lmenu" data-link="/admin/user/appdownload/">
+								<i class="icon-android"></i>
+								<span class="menu-text"> App Download </span>
+							</a>
+						</li>
+						
+						
+						
+					</ul><!-- /.nav-list -->
+					<div class="sidebar-collapse" id="sidebar-collapse">
+						<i class="icon-double-angle-left" data-icon1="icon-double-angle-left" data-icon2="icon-double-angle-right"></i>
+					</div>
+
+					<script type="text/javascript">
+						try{ace.settings.check('sidebar' , 'collapsed')}catch(e){}
+						/*menu handler*/
+						$(function(){
+						  function stripTrailingSlash(str) {
+							if(str.substr(-1) == '/') {
+							  return str.substr(0, str.length - 1);
+							}
+							return str;
+						  }
+
+						  var url = window.location.pathname;  
+						  var activePage = stripTrailingSlash(url);
+						
+						  $('.nav li a').each(function(){  
+							var currentPage = stripTrailingSlash($(this).attr('href'));						
+							
+							if (activePage == currentPage) {	
+								if($(this).parent().parent().parent().hasClass('subli')){
+									$(this).parent().parent().parent().addClass('subli active open');
+									$(this).parent().addClass('active'); 
+								}else{
+									$(this).parent().addClass('active'); 
+								}
+							
+							} 
+						  });
+						});
+					</script>
+				</div>
+				
+				

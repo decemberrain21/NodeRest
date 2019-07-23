@@ -1,0 +1,66 @@
+<html>
+	<head>
+		<title>STC Inbox</title>
+		 <style type="text/css">
+		.container {
+			width: 500px;
+			clear: both;
+			text-align: right;
+			line-height: 2.5;
+		}
+		.container input {
+			width: 50%;
+			clear: both;
+		}
+
+		</style>
+	</head>
+	
+	<body>
+		<div class="container">
+			reportId:(c_id)<input type="text" id="c_id"/><br>
+			Login Token:(login_token)<input type="text" id="login_token"/><br>
+			offset:(offset)<input type="text" id="offset"/><br>
+			limit:(limit)<input type="text" id="limit"/><br>
+			Url:&nbsp;&nbsp;<label>/api/getReportMessages</label><br>
+		<br>
+		<button id="btnsubmit">Submit</button>
+		</div>
+		<div id="resultdata">	
+			
+		</div>
+	</body>
+	<script src="/assets/js/jquery.min.js"></script>
+	<script>
+	jQuery(function($){
+		$("#btnsubmit").click(function() {
+			
+			var data ={
+				login_token : $('#login_token').val(), 
+				c_id : $('#c_id').val(), 
+				offset : $('#offset').val(), 
+				limit : $('#limit').val()
+			}
+			$.ajax({
+				  url: "/api/getReportMessages",
+				  dataType: 'json',
+				  data : data,
+				  method: "POST",	
+				  /*beforeSend: function( xhr ) {
+					xhr.overrideMimeType( "text/plain; charset=x-user-defined" );
+				  }*/
+				})
+				.done(function( data ) {
+					if(data.status == "1")
+					{
+						$('#resultdata').html(JSON.stringify(data.result));
+					}
+					else
+					{
+						$('#resultdata').html(data.msg);
+					}
+				});
+		});
+	});
+	</script>
+</html>

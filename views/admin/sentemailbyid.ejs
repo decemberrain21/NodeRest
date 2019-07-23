@@ -1,0 +1,458 @@
+<br/>
+
+<div class="row">
+			<div class="col-xs-12 ">
+				<input type="hidden" id="hidval" value="<%= msg_id %>"/>
+				<h3><%= page.title %></h3>
+				<hr class="hrborder"/>	
+				<div class="row group_con col-sm-offset-1 hide">
+					<label class="col-sm-2 control-label" for="group_id">TO:</label>
+					<div class="col-xs-12  col-sm-10">
+						<%=page.sent_to%>
+					</div>
+				</div>
+				<div class="row col-sm-offset-1">
+					<label class="col-sm-2 control-label" for="type">  MESSAGE: </label>
+					<div class="col-xs-12  col-sm-10">
+						<p id="bodymsg"><%= typeof page.message!="undefined"?(page.message?page.message.replace(/\n/g,"<br/>"):"-"):"-" %></p>
+					</div>
+				</div>
+				<div class="row col-sm-offset-1">
+					<label class="col-sm-2 control-label" for="type"> QUESTION: </label>
+					<div class="col-xs-12  col-sm-10">
+						<label id="question" name="question" class=" control-label"  ><%= typeof page.qa!="undefined"?page.qa:"-" %></label>						
+					</div>
+				</div>
+				<div class="row col-sm-offset-1">
+					<label class="col-sm-2 control-label" for="type"> ANSWER: </label>
+					<div class="col-xs-12  col-sm-10">
+						<%	var ans_type = page.ans_type;
+							if(typeof page.options != "undefined")
+							{
+								var options  = page.options.split(";;");
+								if(ans_type == "radio")
+								{
+									if(typeof page.rdo_options != "undefined")
+									{
+										for(var j=0;j<options.length;j++){
+										%>
+										<span id="option_<%=j%>>"><%= options[j] %> - <%= page.rdo_options["option_"+j] %> (<%= page.rdo_options["option_"+j]==0?0:(100*page.rdo_options["option_"+j]/page.total)%>%)</span><br/>
+										<%
+										
+										}
+									}
+									else
+									{
+										for(var i=0;i<options.length;i++)
+										{
+										%>
+											<span id="option_<%=options[i]%>"><%=options[i]%></span><br/>
+										<%
+										}
+									}
+								}
+								else if(ans_type == "checkbox")
+								{
+									if(typeof page.chk_options != "undefined")
+									{
+										for(var prop in page.chk_options){
+										%>
+										
+										<span id="option_<%=prop%>>"><%= prop %> - <%= page.chk_options[prop] %> (<%= page.chk_options[prop]==0?0:(100*page.chk_options[prop]/page.total)%>%) </span><br/>
+										<%
+										
+										}
+									
+									}
+									else
+									{
+										for(var i=0;i<options.length;i++)
+										{
+										%>
+											<span id="option_<%=options[i]%>"><%=options[i]%> - 0%</span><br/>
+										<%
+										}
+									}
+								}
+							}
+							if(ans_type == "rating")
+							{
+															
+							%>	
+								
+								<i class="icon-star"></i><span id="onestar"><%= page.onestar %> (<%= page.onestar==0?0:(100*page.onestar/page.totalstar)%>%)</span><br/>	
+								<i class="icon-star"></i><i class="icon-star"></i><span id="twostar"><%= page.twostar %> (<%= page.twostar==0?0:(100*page.twostar/page.totalstar)%>%)</span><br/>	
+								<i class="icon-star"></i><i class="icon-star"></i><i class="icon-star"></i><span id="threestar"><%= page.threestar %>(<%= page.threestar==0?0:(100*page.threestar/page.totalstar)%>%)</span><br/>	
+								<i class="icon-star"></i><i class="icon-star"></i><i class="icon-star"></i><i class="icon-star"></i><span id="fourstar"><%= page.fourstar %>(<%= page.fourstar==0?0:(100*page.fourstar/page.totalstar)%>%)</span><br/>	
+								<i class="icon-star"></i><i class="icon-star"></i><i class="icon-star"></i><i class="icon-star"></i><i class="icon-star"></i><span id="fivestar"><%= page.fivestar %>(<%= page.fivestar==0?0:(100*page.fivestar/page.totalstar)%>%)</span><br/>	
+							<%	
+							}
+							else if(ans_type == "textbox")
+							{
+							%>
+								<input type="text" name="sampletextbox" readonly />
+							<%
+							}
+						%>
+					</div>
+				</div>
+				<div class="row group_con col-sm-offset-1">
+					<label class="col-sm-2 control-label" >Sent to:</label>
+					<div class="col-xs-12  col-sm-10">
+						<a class="callModal" href="#"><%=page.sent_count+" users"%></a>
+					</div>
+				</div>
+				<div class="row group_con col-sm-offset-1">
+					<label class="col-sm-2 control-label" >Received by:</label>
+					<div class="col-xs-12  col-sm-10">
+						<%=page.received_count+" users"%>
+					</div>
+				</div>
+				<div class="row group_con col-sm-offset-1">
+					<label class="col-sm-2 control-label" >Read by:</label>
+					<div class="col-xs-12  col-sm-10">
+						<%=page.read_count+" users"%>
+					</div>
+				</div>
+				<% if(page.no_q == "0" ){%>
+				<div class="row group_con col-sm-offset-1">
+					<label class="col-sm-2 control-label">Answered by:</label>
+					<div class="col-xs-12  col-sm-10">
+						<%=page.answer_count+" users"%>
+					</div>
+				</div>
+				<% }
+				 if(page.is_na == "1" ){%>
+				<div class="row group_con col-sm-offset-1">
+					<label class="col-sm-2 control-label">N/A :</label>
+					<div class="col-xs-12  col-sm-10">
+						<a class="naModal" href="#"><%=page.na_cnt+" users"%></a>
+					</div>
+				</div>
+				<% } 
+				if(typeof page.links != "undefined" || typeof page.files != "undefined"){ %>
+				<hr class="hrborder"/>
+				<% 
+					var _type = page.type;					
+					
+				%>
+					<div class="row col-sm-offset-1">
+					<label class="col-sm-2 control-label" for="files">ATTACHMENTS: </label>
+					<div class="col-xs-12  col-sm-10">
+					<ul>
+					<% if(_type == "link"){ 
+						if(typeof page.links != "undefined"){
+							link_arr = page.links.split(";;");
+							for(var i = 0; i<link_arr.length; i++){
+								var url_text = link_arr[i].split("|");
+
+							%>
+								
+								<li><a target="_blank" href="<%= url_text[1] %>" ><%= url_text[0] %></a></li>
+							<%
+							}
+						}%>
+					<%}else{ 
+					
+					
+					if(typeof page.files != "undefined"){
+					var showfiles = page.files.split(",");
+					for(var i = 0; i<showfiles.length; i++){
+					%>
+				
+					<%
+						if(_type == "image"){	
+					%>
+						<li><a  href="#" class=" fancybox fancybox-thumbs" data-href="/assets/upload/image/<%= showfiles[i] %>" ><%= showfiles[i] %></a></li>
+						
+					<% }
+						else if(_type == "file"){
+						
+					%>
+						<li><a href="/assets/upload/file/<%= showfiles[i] %>" download><%= showfiles[i] %></a>	</li>
+					<%}
+						else if(_type == "audio"){						
+					%>
+						<li><a href="#" class=" fancybox fancybox-media" data-href="/assets/upload/audio/<%= showfiles[i] %>" ><%= showfiles[i] %></a></li>						
+						
+					<%}	else if(_type == "video"){						
+					%>
+						
+						<li><a href="#" class=" fancybox fancybox-media" data-href="/assets/upload/video/<%= showfiles[i] %>" ><%= showfiles[i] %></a></li>
+						
+					<%
+						} 
+						
+					}	
+					}					
+					%>
+					
+					<%}%>
+					</ul>
+					</div>
+				</div>
+				
+				
+				
+				<br>				
+				<hr class="hrborder"/><%	}
+				%>
+				<div class="row" style="max-height: 50px;">
+				<div class="col-xs-12  col-sm-10">
+					<button class="btn btn-sm btn-primary btnback" data-link="/admin/message/sent">
+						<i class="icon-angle-left"></i>
+						Back
+					</button>
+					<button class="btn btn-sm btn-success btnforward">
+						<i class="icon-mail-forward"></i>
+						Forward
+					</button>
+				</div>
+				</div>
+			
+			
+
+	
+</div>
+<!-- Modal -->
+	<div class="modal " id="userModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h5 class="blue bigger">Sent to:</h5>
+			</div>
+			<div class="modal-body">
+				<%  var sent_to = page.sent_user;
+					
+					for(var i=0; i<sent_to.length;i++){
+					%>
+						<%= sent_to[i].name%>&nbsp; ,&nbsp; <%= sent_to[i].biz_sector%>&nbsp; ,&nbsp; <%= sent_to[i].department%><br>
+					<%
+					}
+				%>
+			</div>	
+			<div class="modal-footer">
+				
+			</div>					
+		</div>
+	  </div>
+	</div>	
+	<div class="modal " id="naModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h5 class="blue bigger">N/A users:</h5>
+			</div>
+			<div class="modal-body">
+				<%  var na_users = page.na_users;
+					
+					for(var i=0; i<na_users.length;i++){
+					%>
+						<%= na_users[i].name+", "+na_users[i].biz_sector+", "+na_users[i].department %><br>
+					<%
+					}
+				%>
+			</div>	
+			<div class="modal-footer">
+				
+			</div>					
+		</div>
+	  </div>
+	</div>			
+	<!-- Model -->
+
+
+	<script type="text/javascript">
+	$(document).on("click", '.callModal', function(e){	
+		$('#userModal').modal();
+	});
+	$(document).on("click", '.naModal', function(e){	
+		$('#naModal').modal();
+	});
+		$(document).ready(function() {
+			var t = $("#bodymsg").text();
+			$("#bodymsg").html(t.replace('&lt','<').replace('&gt', '>'));			
+			/*
+			 *  Simple image gallery. Uses default settings	
+			 
+			
+			 */
+			
+			$('.fancybox').fancybox();
+		
+
+			/*
+			 *  Different effects
+			 */
+
+			// Change title type, overlay closing speed
+			$(".fancybox-effects-a").fancybox({
+				helpers: {
+					title : {
+						type : 'outside'
+					},
+					overlay : {
+						speedOut : 0
+					}
+				}
+			});
+
+			// Disable opening and closing animations, change title type
+			$(".fancybox-effects-b").fancybox({
+				openEffect  : 'none',
+				closeEffect	: 'none',
+
+				helpers : {
+					title : {
+						type : 'over'
+					}
+				}
+			});
+
+			// Set custom style, close if clicked, change title type and overlay color
+			$(".fancybox-effects-c").fancybox({
+				wrapCSS    : 'fancybox-custom',
+				closeClick : true,
+
+				openEffect : 'none',
+
+				helpers : {
+					title : {
+						type : 'inside'
+					},
+					overlay : {
+						css : {
+							'background' : 'rgba(238,238,238,0.85)'
+						}
+					}
+				}
+			});
+
+			// Remove padding, set opening and closing animations, close if clicked and disable overlay
+			$(".fancybox-effects-d").fancybox({
+				padding: 0,
+
+				openEffect : 'elastic',
+				openSpeed  : 150,
+
+				closeEffect : 'elastic',
+				closeSpeed  : 150,
+
+				closeClick : true,
+
+				helpers : {
+					overlay : null
+				}
+			});
+
+			/*
+			 *  Button helper. Disable animations, hide close button, change title type and content
+			 */
+
+
+
+			/*
+			 *  Thumbnail helper. Disable animations, hide close button, arrows and slide to next gallery item if clicked
+			 */
+
+			$('.fancybox-thumbs').fancybox({
+				
+				type:'image',
+				prevEffect : 'none',
+				nextEffect : 'none',
+
+				closeBtn  : true,
+				arrows    : true,
+				nextClick : true,
+
+				helpers : {
+						thumbs : {
+						width  : 50,
+						height : 50
+					}
+				},
+				beforeLoad: function () {
+						 var url= $(this.element).data("href");
+						 this.href = url;
+					
+					},
+				afterClose: function () { // USE THIS IT IS YOUR ANSWER THE KEY WORD IS "afterClose"
+					//$.fancybox.update();
+					}
+			});
+
+			/*
+			 *  Media helper. Group items, disable animations, hide arrows, enable media and button helpers.
+			*/
+			$('.fancybox-media')
+				
+				.fancybox({
+					autoScale: false,
+					type: 'iframe',
+					openEffect : 'none',
+					closeEffect : 'none',
+					prevEffect : 'none',
+					nextEffect : 'none',
+					closeClick: false,
+					arrows : true,
+					helpers : {
+						/*media : {},
+						buttons : {}*/
+					},
+					beforeLoad: function () {
+						 var url= $(this.element).data("href");
+						 this.href = url;
+
+					}
+				});
+
+			/*
+			 *  Open manually
+			 */
+
+			$("#fancybox-manual-a").click(function() {
+				//$.fancybox.open('1_b.jpg');
+			});
+
+			$("#fancybox-manual-b").click(function() {
+				$.fancybox.open({
+					href : 'iframe.html',
+					type : 'iframe',
+					padding : 5
+				});
+			});
+
+		/*	$("#fancybox-manual-c").click(function() {
+				$.fancybox.open([
+					{
+						href : '1_b.jpg',
+						title : 'My title'
+					}, {
+						href : '2_b.jpg',
+						title : '2nd title'
+					}, {
+						href : '3_b.jpg'
+					}
+				], {
+					helpers : {
+						thumbs : {
+							width: 75,
+							height: 50
+						}
+					}
+				});
+			});*/
+
+
+		});
+		$(document).on("click",'.btnback',function(e){
+			window.history.back();
+			//location.href = $(this).attr('data-link');
+		});
+		$(document).on("click",'.btnforward',function(e){
+			
+			location.href = "/admin/message/compose/"+$("#hidval").val()+"/forward";
+		});
+	</script>

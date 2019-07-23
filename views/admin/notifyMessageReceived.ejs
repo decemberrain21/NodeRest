@@ -1,0 +1,56 @@
+<html>
+	<head>
+		<title>STC notify message received</title>
+		 <style type="text/css">
+		.container {
+			width: 500px;
+			clear: both;
+			text-align: right;
+			line-height: 2.5;
+		}
+		.container input {
+			width: 50%;
+			clear: both;
+		}
+
+		</style>
+	</head>
+	<body>
+		<div class="container">
+		Login Token:(login_token)<input type="text" id="login_token"/><br>
+		message id:(msg_id) <input type="text" id="messageid"><br>
+		Url:&nbsp;&nbsp;<label>/api/messageReceived</label><br>
+		<button id="btnsubmit">Submit</button>
+		</div>
+		<div id="resultdata">	
+			
+		</div>	
+	</body>
+	<script src="/assets/js/jquery.min.js"></script>
+	<script>
+	jQuery(function($){
+		$("#btnsubmit").click(function() {
+			
+			var data ={
+				msg_id : $('#messageid').val(), 
+				login_token:$('#login_token').val()
+			}
+			$.ajax({
+				  url: "/api/notifymessageReceived",
+				  dataType: 'json',
+				  data : data,
+				  method: "POST",	
+				  /*beforeSend: function( xhr ) {
+					xhr.overrideMimeType( "text/plain; charset=x-user-defined" );
+				  }*/
+				})
+				.done(function( data ) {
+					
+						$('#resultdata').html(data.msg);
+					
+				});
+		});
+		
+	});
+	</script>
+</html>

@@ -1,0 +1,175 @@
+<br/>
+<style type="text/css">
+	.trash {
+		padding-left: 60%;
+	}
+</style>
+<div class="row" style="max-height: 50px;">
+<div class="col-sm-2">
+		<button class="btn btn-sm btn-primary btnadd" data-link="/admin/group/creatingGroup">
+			<i class="icon-plus"></i>
+			Add New
+		</button>
+</div>
+</div>
+<div class="row">
+	<div class="col-xs-12">
+	<input type="hidden" id="hidsortedCol" value="<%= sortedCol%>">
+		<input type="hidden" id="hidsortedDir" value="<%= sortedDir%>">
+		<input type="hidden" id="hiddisplay" value="<%= display%>">
+		<input type="hidden" id="hidstart" value="<%= start%>">
+		<input type="hidden" id="hidsearch" value="<%= search%>">
+		<div class="table-responsive">
+			<table id="groupTable" class="table table-striped table-bordered table-hover" style="width:100%">
+				<thead>
+					<tr>
+						<th>Group ID</th>
+						<th>Title</th>
+						<th class="hide">Filtered by</th>
+						<th>Action</th>	
+					</tr>
+				</thead>
+				<tbody>
+					
+				</tbody>
+			</table>
+		</div>
+	
+	</div>
+	
+	</div>
+<div class="modal " id="groupDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h5 class="blue bigger">Are you sure to delete this group?</h5>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-sm" data-dismiss="modal">
+					<i class="icon-remove"></i>
+					Cancel
+				</button>
+
+				<button class="btn btn-sm btn-primary" name="save" id="deleteGroup">
+					<i class="icon-ok"></i>
+					Delete
+				</button>
+			</div>					
+		</div>
+	  </div>
+</div>	  
+
+<script>
+	
+	jQuery(function($){
+		oTable1="";
+		oTable1 = $('#groupTable').dataTable( {
+		"bProcessing": true,
+		"bServerSide": true,				
+		"iDisplayLength": $("#hiddisplay").val(),
+		"iDisplayStart": $("#hidstart").val(),
+		"sAjaxSource": '/admin/group/grouplist',
+		"aaSorting": [[ $('#hidsortedCol').val(), $('#hidsortedDir').val() ]],
+		"oSearch": {"sSearch": $("#hidsearch").val()},
+		"aoColumnDefs": [            
+				{
+					"bSortable": false,
+					"aTargets": [-1],
+					"mData": null,
+					//"sClass":((inArray("MODIFY", permission)||inArray("DELETE", permission)!=false) ? "" : " hide" ),
+					"mRender": function (data, type, full) {		
+						//<a class="green edit " href="/admin/group/groupbyId/'+full[0]+'"><i class="icon-pencil bigger-130"></i></a>					
+						var str = '<a  href="/admin/user/usermanagement?group='+full[0]+'" class="viewincludedmember" data-id="'+full[0]+'"><i class="icon-eye-open green  bigger-130 "></i></a>&nbsp; &nbsp;';
+						str += '<a href="/admin/group/creatingGroup/'+full[0]+'" class="lnkedit"><i class="icon-pencil bigger-130"></i></a> '
+						str +='&nbsp; &nbsp; &nbsp; &nbsp;';
+						str += '<a class="trash red delete" data-id="'+full[0]+'"><i class=" icon-trash bigger-130"></i></a> ';
+
+						return str;
+						//str += '<a target="_blank" href="/admin/user/usermanagement?group='+full[0]+'" class="viewincludedmember" data-id="'+full[0]+'"><i class="icon-eye-open green  bigger-130 "></i></a>'
+						//return str;
+						//return '<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons"><a class="red delete" href="/admin/group/delete/'+full[0]+'" data-id="'+full[0]+'"><i class="icon-trash bigger-130"></i></a></div>';
+					}
+				},
+				{
+					//"bSortable": false,
+					"sWidth": "15%",
+					"aTargets": [0],
+					
+				},
+				{
+					//"bSortable": false,
+					"sWidth": "60%",
+					"aTargets": [1],
+					
+				},
+				{
+					"bSearchable": false,
+					"bVisible": false, 
+					"aTargets": [ 2 ]
+				},
+			],
+		/*	"fnDrawCallback": function () {
+					$('#groupTable tbody tr ').click(function (evt) {
+						var $cell=$(evt.target).closest('td'), msg;
+						
+						if( $cell.index() != 2){
+								
+						// get position of the selected row
+						var position = oTable1.fnGetPosition(this);
+
+						// value of the first column (can be hidden)
+						var id = oTable1.fnGetData(position)[0];
+						
+						location.href = "/admin/group/creatingGroup/" + id;
+						}
+					  });
+			},*/
+		});
+		function appenddata()
+		{
+			
+			var sortedCol = $('#groupTable').dataTable().fnSettings().aaSorting[0][0];
+			var sortedDir = $('#groupTable').dataTable().fnSettings().aaSorting[0][1];
+			var page_length = $('#groupTable').dataTable().fnSettings()._iDisplayLength;
+			var page_start = $('#groupTable').dataTable().fnSettings()._iDisplayStart;
+			var page_search = $('.dataTables_filter input').val();
+			var qs = '?sortedCol='+sortedCol+'&sortedDir='+sortedDir+'&display='+page_length+'&start='+page_start+'&search='+page_search;
+			var current_url = location.href.substr(0,location.href.indexOf('?'));
+			history.pushState({}, "STC", current_url+qs);
+		}
+		$(document).on("click", '.delete', function(e){	
+			e.preventDefault();
+			$('#groupDeleteModal').modal();
+			var obj = $(this);
+			var id = $(this).data("id");					
+			$("#deleteGroup").click(function(){						
+				$.post("/admin/group/deleteGroup", {id : id }, function (e) {	
+					var data = JSON.parse(e);							
+					if(data.message == "success")
+					{
+						$('#groupDeleteModal').modal("hide");
+						oTable1.fnReloadAjax();
+					}							
+				});
+			});
+			
+		});	
+		
+		$(document).on("click", '.btnadd', function(e){	
+			e.preventDefault();
+			appenddata();
+			location.href = $(this).attr('data-link');
+		});
+		$(document).on("click", '.lnkedit,.viewincludedmember', function(e){	
+			e.preventDefault();
+			appenddata();
+			location.href = $(this).attr('href');
+		});	
+		
+		
+		
+		
+	});
+
+</script>

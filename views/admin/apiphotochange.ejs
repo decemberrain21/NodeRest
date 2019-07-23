@@ -1,0 +1,124 @@
+<html>
+	<head>
+		<title>STC user compose</title>
+		 <style type="text/css">
+
+
+		</style>
+	</head>
+	<body>
+		<div class="row">
+		Login Token:(login_token)<input type="text" id="login_token"/><br>
+			<div class="col-xs-12  divdropzone">
+				<div id="dropzone">
+					<form action="/admin/message/upload_file" method="post" id="images_form" class="dropzone" enctype="multipart/form-data">						
+						<div class="fallback">
+							<input name="displayImage" type="file" multiple="" />
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+			<button id="btnsubmit">Submit</button>
+		</div>
+		<div id="resultdata">	
+			
+		</div>
+	</body>
+	<script src="/assets/js/jquery.min.js"></script>
+	<script src="/assets/js/jquery.gritter.min.js"></script>
+	<script src="/assets/js/dropzone.min.js"></script>
+	<script>
+	jQuery(function($){
+		
+		try {
+			  $(".dropzone").dropzone({
+			  
+			    paramName: "file", // The name that will be used to transfer the file
+			    //maxFilesize: 20, // MB
+				autoProcessQueue:true,
+				parallelUploads: 1,
+				maxFiles: 1,
+				maxfilesexceeded: function(file) {
+					//this.removeAllFiles();
+					this.removeFile(file);
+					alert("Max file limit exceed");
+				},
+				//acceptedFiles: filetype,
+				acceptedFiles: "image/jpeg,image/png",
+				addRemoveLinks : true,
+				dictDefaultMessage :
+				'<span class="bigger-150 bolder"><i class="icon-caret-right red"></i> Drop files</span> to upload \
+				<span class="smaller-80 grey">(or click)</span> <br /> \
+				<i class="upload-icon icon-cloud-upload blue icon-3x"></i>',
+				dictResponseError: 'Error while uploading file!',
+				
+				//change the previewTemplate to use Bootstrap progress bars
+				previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class=\"progress progress-small progress-striped active\"><div class=\"progress-bar progress-bar-success\" data-dz-uploadprogress></div></div>\n  <div class=\"dz-success-mark\"><span></span></div>\n  <div class=\"dz-error-mark\"><span></span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>",
+				//start
+				
+			  init: function() {
+			  myDropzone = this; 
+			  myDropzone.options.dictRemoveFile = "Delete";
+				/*var submitButton = document.querySelector("#submit-all");
+					myDropzone = this; // closure
+
+				submitButton.addEventListener("click", function() {
+				  myDropzone.processQueue(); // Tell Dropzone to process all queued files.
+				  
+				});*/
+				
+				// You might want to show the submit button only when 
+				// files are dropped here:
+				
+				/**/
+				myDropzone.on("processing", function(file) { // was processingfile
+				  this.options.url = $('#images_form').attr('action')+'/user'
+				}); 
+	
+
+				
+			  },  
+			
+			  });
+			} catch(e) {
+			  alert('Dropzone.js does not support older browsers!');
+			}
+
+	$("#btnsubmit").click(function(e) {
+			
+			e.preventDefault();
+			
+
+
+		var data ={
+			photo: $('img').attr('src'),
+			login_token:$("#login_token").val()
+		};
+		$.ajax({
+			url	 		: "/api/changeprofilepicture",
+			type 		: "POST",
+			cache: false,
+			data		: data,
+			success		: function(res){
+				console.log(res);
+				if(res.status == "1")
+				{	
+					
+					
+				}
+				else
+				{
+					$('#resultdata').html(res.msg);
+				}
+				
+			}
+		}).done(function( data ) {
+					$('#resultdata').append(data);
+				});
+	
+		});
+	
+});
+	</script>
+</html>

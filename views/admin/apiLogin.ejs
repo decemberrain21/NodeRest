@@ -1,0 +1,59 @@
+<html>
+	<head>
+		<title>STC Inbox</title>
+		 <style type="text/css">
+		.container {
+			width: 500px;
+			clear: both;
+			text-align: right;
+			line-height: 2.5;
+		}
+		.container input {
+			width: 50%;
+			clear: both;
+		}
+
+		</style>
+	</head>
+	
+	<body>
+		<div class="container">
+			email(email): <input type="text" id="email"/><br>
+			password(password):<input type="text" id="password"/><br>
+			notificationToken(noti_token):<input type="text" id="noti_token"/><br>
+			Url:&nbsp;&nbsp;<label>/api/login</label><br>
+		<br>
+		<button id="btnsubmit">Submit</button>
+		</div>
+		<div id="resultdata">	
+			
+		</div>
+	</body>
+	<script src="/assets/js/jquery.min.js"></script>
+	<script>
+	jQuery(function($){
+		$("#btnsubmit").click(function() {
+			
+			var data ={
+				email : $('#email').val(), 
+				password : $('#password').val(), 
+				noti_token:$('#noti_token').val()
+			}
+			$.ajax({
+				  url: "/api/login",
+				  dataType: 'json',
+				  data : data,
+				  method: "POST",	
+				  /*beforeSend: function( xhr ) {
+					xhr.overrideMimeType( "text/plain; charset=x-user-defined" );
+				  }*/
+				 
+				})
+				.done(function( data ) {
+			
+						$('#resultdata').html("Login Token :  "+data.login_token);
+				});
+		});
+	});
+	</script>
+</html>

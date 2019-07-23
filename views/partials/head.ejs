@@ -1,0 +1,64 @@
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" id="meta-description" content="<%= page.description %>">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="/assets/img/favicon.png">
+
+    <title><%= page.title %></title>
+
+    <link href="/assets/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,600,800' rel='stylesheet' type='text/css'>
+    <link href="/assets/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/assets/css/style.css" rel="stylesheet">
+    <link href="/assets/css/responsive.css" rel="stylesheet">
+	<link rel="stylesheet" href="/assets/css/datepicker.css" />
+    <link href="/assets/css/tooltipster.css" rel="stylesheet">
+	
+	<script src="/assets/js/jquery.min.js"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?sensor=false&&libraries=geometry,places" ></script>
+	
+	<script>
+	function initialize_autocomplete() {
+
+	var input = document.getElementById('landmark');
+	var autocomplete = new google.maps.places.Autocomplete(input);
+	autocomplete.addListener('place_changed', function() {
+		//infowindow.close();
+		var place = autocomplete.getPlace();
+		 if($("#km_distance").val() =="")
+		 {
+			$("#km_distance").val("1");
+		 }
+		if (place.geometry) {
+			$("#lat").val(place.geometry.location.lat());
+			$("#lon").val(place.geometry.location.lng());
+            //console.log(place.geometry.location.lat());
+			//console.log(place.geometry.location.lng());
+            return;
+         }
+		
+		
+		 
+	});
+	}
+	function initialize_address() {
+
+	var input = document.getElementById('address');
+	var autocomplete = new google.maps.places.Autocomplete(input);
+	autocomplete.addListener('place_changed', function() {
+		var place = autocomplete.getPlace();
+		if (place.geometry) {
+			codeAddress();
+            //return;
+         }
+	});
+	}
+	</script>
+    <!--[if IE]>
+      <link rel="stylesheet" type="text/css" href="/assets/css/all-ie-only.css" />
+    <![endif]-->
+	

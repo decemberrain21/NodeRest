@@ -1,0 +1,530 @@
+
+<div class="row">
+	<div class="col-xs-12">
+		<form class="form-horizontal" role="form" id="user_form">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="clearfix errlabel">
+					
+				</div>
+				<div class="space"></div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="to"> To </label>
+					<div class="col-xs-12  col-sm-10">
+						<input type="radio" class="to" name="togri"  value="0" checked /> Group
+						<input type="radio" class="to" name="togri"  value="1" /> Individual
+					</div>
+				</div>				
+				<div class="form-group group_con">
+					<label class="col-sm-2 control-label" for="group_id"> * Group </label>
+					<div class="col-xs-12  col-sm-10">
+						<select class="col-xs-12 col-sm-4 col-md-4" id="group_id" name="group_id"  data-placeholder="Choose a group..." required>	
+							<option value="">Choose a Group</option>
+							<% for(var i=0; i < group_list[0].length; i++) { %>
+							   <option value="<%= group_list[0][i].group_id %>" <%= msg_group_id ==group_list[0][i].group_id?"selected":"" %> > <%= group_list[0][i].group_name %></option>
+							<% } %>
+						</select>
+					</div>
+				</div>
+				<div class="form-group hide individual_con">
+					<label class="col-sm-2 control-label" for="to"> * Individual </label>
+					<div class="col-xs-12  col-sm-10">						
+						<select multiple class="col-xs-12 col-sm-4 col-md-4" id="to" name="to"  data-placeholder="Choose ..." required>	
+							<option value="">Choose</option>
+							<% for(var i=0; i < group_list[1].length; i++) { %>
+							   <option value="<%= group_list[1][i].user_id %>" <%= msg_group_id ==group_list[1][i].user_id?"selected":"" %> > <%= group_list[1][i].email %></option>
+							<% } %>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="type">  Type </label>
+					<div class="col-xs-12  col-sm-10">
+						<select class="col-xs-12 col-sm-4 col-md-4" id="type" name="type" >	
+							<option value="" disabled selected hidden>Choose Message Type</option>
+							<option value="link" <%= (msg_type=="link")?"selected":"" %>>Link</option>
+							<option value="image" <%= (msg_type=="image")?"selected":"" %>>Image</option>
+							<option value="video" <%= (msg_type=="video")?"selected":"" %>>Video</option>
+							<option value="audio" <%= (msg_type=="audio")?"selected":"" %>>Audio</option>
+							<option value="file" <%= (msg_type=="file")?"selected":"" %>>File</option>
+							<option value="question" <%= (msg_type=="question")?"selected":"" %>>Question</option>
+							
+						</select>
+						<input type="hidden" name="hidval" id="hidval" value=""/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="title"> * Title </label>
+					<div class="col-xs-12  col-sm-10">
+						<input type="text" id="title" name="title" placeholder="Title" class="col-xs-12 col-sm-4 col-md-4" value="<%= msg_title %>" required />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="msg"> * Message </label>	
+					<div class="col-xs-12  col-sm-10">
+						<textarea id="msg" name="msg" placeholder="Message" class="col-xs-12 col-sm-4 col-md-4 savedata" required>
+						</textarea>
+					</div>
+				</div>
+				
+				<div class="hide type_specific">
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="question"> Question </label>
+					<div class="col-xs-12  col-sm-10">
+						<textarea id="question" name="question" placeholder="Question" class="col-xs-12 col-sm-4 col-md-4 savedata" required>
+						</textarea>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="ans_type"> Answer Type </label>
+					<div class="col-xs-12  col-sm-10">
+						<select class="col-xs-12 col-sm-4 col-md-4" id="ans_type" name="ans_type" required>
+							<option value="" disabled selected hidden>Choose Answer Type</option>
+							<option value="radio">Radio Buttons</option>
+							<option value="checkbox">Checkboxes</option>
+							<option value="rating">Rating</option>
+							<option value="textbox">Textbox</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group hide ans_opt_div">
+				<label class="col-sm-2 control-label" for="ans_opt">  </label>
+				<div class="col-xs-12  col-sm-10">
+					<span style="color:red;" class="msg_options hide">Please enter something here!</span><br/>
+					<input type="text" id="opt_text" placeholder="Options" class="col-xs-12 col-sm-4 col-md-4" />&nbsp;&nbsp;<button class="btn btn-xs btn-success btnadd"><i class="icon-plus"></i>Add</button>
+				</div>
+				</div>
+				<div class="form-group opt_div">
+					<label class="col-sm-2 control-label" for="showopt"></label>
+					<div class="col-xs-12  col-sm-10 ">
+						<div class="col-xs-12 col-sm-4 col-md-4 show_sample">
+						</div>
+					</div>
+				</div>
+		</div>
+		</form>
+		<div class="row">
+			<div class="col-xs-12 hide divdropzone">
+				<div id="dropzone">
+					<form action="/admin/message/upload_file" method="post" id="images_form" class="dropzone" enctype="multipart/form-data">						
+						<div class="fallback">
+							<input name="displayImage" type="file" multiple="" />
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+					<label class="col-sm-2 control-label">  </label>
+					<div class="col-xs-12  col-sm-10">
+						<button class="btn btn-sm btn-success btnsave">
+							<i class="icon-ok"></i>
+							Send
+						</button>
+						<button class="btn btn-sm btngrab" data-link="/admin/message/compose/">
+							<i class="icon-ban-circle align-top bigger-125"></i>
+							Cancel
+						</button>	
+							
+						
+						
+					</div>
+				</div>
+	</div>
+</div>
+<script src="/assets/js/jquery.gritter.min.js"></script>
+<!-- <script src="/assets/js/dropzone.min.js"></script>
+<script src="/js/typeahead.bundle.js"></script> -->
+
+<script>
+jQuery(function($){
+			$('#to').chosen();
+			try {
+			  $(".dropzone").dropzone({
+			  
+			    paramName: "file", // The name that will be used to transfer the file
+			    maxFilesize: 5, // MB
+				autoProcessQueue: false,
+				parallelUploads: 6,
+				maxFiles: 6,
+				maxfilesexceeded: function(file) {
+					//this.removeAllFiles();
+					this.removeFile(file);
+					alert("Max file limit exceed");
+				},
+				//acceptedFiles: filetype,
+				addRemoveLinks : true,
+				dictDefaultMessage :
+				'<span class="bigger-150 bolder"><i class="icon-caret-right red"></i> Drop files</span> to upload \
+				<span class="smaller-80 grey">(or click)</span> <br /> \
+				<i class="upload-icon icon-cloud-upload blue icon-3x"></i>',
+				dictResponseError: 'Error while uploading file!',
+				
+				//change the previewTemplate to use Bootstrap progress bars
+				previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class=\"progress progress-small progress-striped active\"><div class=\"progress-bar progress-bar-success\" data-dz-uploadprogress></div></div>\n  <div class=\"dz-success-mark\"><span></span></div>\n  <div class=\"dz-error-mark\"><span></span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>",
+				//start
+				
+			  init: function() {
+			  myDropzone = this; 
+			  myDropzone.options.dictRemoveFile = "Delete";
+				/*var submitButton = document.querySelector("#submit-all");
+					myDropzone = this; // closure
+
+				submitButton.addEventListener("click", function() {
+				  myDropzone.processQueue(); // Tell Dropzone to process all queued files.
+				  
+				});*/
+				
+				// You might want to show the submit button only when 
+				// files are dropped here:
+				
+				/**/
+				myDropzone.on("processing", function(file) { // was processingfile
+				  this.options.url = $('#images_form').attr('action')+'/'+$('#type').val();
+				}); 
+				myDropzone.on("complete", function(file) { // was processingfile
+				if(this.getUploadingFiles().length ===0 && this.getQueuedFiles().length === 0)
+				{
+					var data = [];
+					$('#images_form .dz-filename').each(function(index){  
+						data.push($(this).text());
+					});
+					$.post('/admin/message/set_files', {'names': data, 'id': $('#hidval').val() }, function(data) {
+						console.log(data);
+					});
+				}
+				
+				});
+				myDropzone.on("addedfile", function(file) {
+				    var _this = this;
+				    var uploadtype = $("#type").val();
+					var filetype = file.type;
+					
+					if(uploadtype == "video"){
+						if(filetype != "video/mp4"){			
+							_this.removeFile(file);
+						}
+					} 
+					
+					if( uploadtype == "audio"){
+						if(filetype != "audio/mp3"){
+							_this.removeFile(file);
+						}
+					} 
+					
+					if( uploadtype == "file" ||  uploadtype == "image" ){
+						var imagetype = filetype.split("/")[0];
+						if(filetype != "application/pdf"  && imagetype != "image"){
+							_this.removeFile(file);
+						}
+					}
+				  
+				});
+				// On removing file
+				myDropzone.on("removedfile", function(file) {
+					/*var id = $("#hidval").val();
+					$.ajax({
+						url: '/admin/property/upload_photo/' +id+ '/' + file.name,
+						type: 'DELETE',
+						cache: false,
+						success: function(result) {
+						    //console.log(result);
+						}
+					});*/
+				});
+			  },  
+			  accept: function(file, done) 
+			   {
+					
+					var uploadtype = $("#type").val();
+					var filetype = file.type;
+					
+					if(uploadtype == "video"){
+						if(filetype == "video/mp4"){			
+							done();
+						}else{
+							alert("Error: The uploaded file type is wrong. The file type should be pdf or image/jpeg. ");		
+						}
+					} 
+					
+					if( uploadtype == "audio"){
+						if(filetype == "audio/mp3"){
+							done();
+						}else{
+							alert("Error: The uploaded file type is wrong. The file type should be pdf or image/jpeg. ");
+						}
+					} 
+					
+					if( uploadtype == "file" ||  uploadtype == "image" ){
+						var imagetype = filetype.split("/")[0];
+						if(filetype == "application/pdf"  || imagetype == "image"){
+							done();
+						}
+						else{
+							alert("Error: The uploaded file type is wrong. The file type should be pdf or image/jpeg. ");
+							
+						}
+					}
+					
+				}
+				//end
+			  });
+			} catch(e) {
+			  alert('Dropzone.js does not support older browsers!');
+			}
+			
+			});
+/*$(document).on("change",'#file_upload',function(){
+
+	var obj = new FormData();
+	var uploadtype = $("#type").val();
+	var filetype = document.getElementById('file_upload').files[0].type;
+	
+	if(uploadtype == "video"){
+		if(filetype == "video/mp4"){			
+			uploading();
+		}else{
+			alert("Error: The uploaded file type is wrong. The file type should be pdf or image/jpeg. ");		
+		}
+	} 
+	
+	if( uploadtype == "audio"){
+		if(filetype == "audio/mp3"){
+			uploading();
+		}else{
+			alert("Error: The uploaded file type is wrong. The file type should be pdf or image/jpeg. ");	
+		}
+	} 
+	
+	if( uploadtype == "file"){
+		var imagetype = filetype.split("/")[0];
+		if(filetype == "application/pdf"  || imagetype == "image"){
+		   uploading();
+		}
+		else{
+			alert("Error: The uploaded file type is wrong. The file type should be pdf or image/jpeg. ");		
+		}
+	}
+
+	function uploading(){
+		obj.append('file', document.getElementById('file_upload').files[0]);
+		var i = $('#type').val();
+		uploadphoto("/admin/message/upload/"+i, obj,function (cc,dd,oo) {	
+				//console.log("hide");
+				//console.log(res);
+				//var dataStr = JSON.stringify(res);
+				//console.log(dataStr);
+		
+		});
+	}
+});*/
+$(document).on("change",'#ans_type',function(){
+	if($('#ans_type').val() == "rating"){
+		var str ="";
+		for(var i=0; i< 5 ; i++)
+		{	
+			str += '<i class="icon-star"></i>';
+		}
+		$('.ans_opt_div').addClass('hide');
+		$('.show_sample').html(str);		
+	}else if($('#ans_type').val() == "textbox"){
+		$('.ans_opt_div').addClass('hide');
+		$(".show_sample").html("");
+	}else{
+		$('.ans_opt_div').removeClass('hide');
+		$(".show_sample").html("");
+	}
+});
+$(document).on("click",'.btnlnkadd',function(e){
+e.preventDefault();
+ if($('#url').val() != "" && $('#text').val() != "")
+ {
+	var deleteclass = $('.deleteclass').length;
+	//console.log(deleteclass + " >>>>>>>>>>>>>>>>>>>>>> deleteclass");
+	$('.link_sample').html($('.link_sample').html()+'<span class = "col-xs-12 col-sm-12 col-md-12 deleteclass deleteclass_'+deleteclass+'" style="padding-left: 5px;"><a class="lnkurl" href="'+$('#url').val()+'">'+$('#text').val()+'</a>&nbsp;&nbsp;&nbsp;<a href="#" id="close" data-count="'+deleteclass+'" class="lnkred closeaddedlink" >&#10006</a></span>');
+	$('#url').val('');
+	$('#text').val('');
+ }
+ 
+});
+$(document).on("click",'.closeaddedlink',function(e){
+	
+	var count = $(this).attr('data-count');
+	$('.deleteclass_'+count).remove();
+    return false;
+});
+
+$(document).on("click",'.btnadd',function(e){
+e.preventDefault();
+ if($('#opt_text').val() != "")
+ {	
+	var deleteclass = $('.deleteclass').length;
+	//console.log(deleteclass + " >>>>>>>>>>>>>>>>>>>>>> deleteclass");
+	if($('#ans_type').val() == "radio")
+	{
+		$('.show_sample').html($('.show_sample').html()+"<span class = ' deleteclass deleteclass_"+deleteclass+"'><label class='rdo_"+$('#opt_text').val()+"'><input type='radio' name='rdosample' /> <label class='qtext'>"+$('#opt_text').val()+"</label>&nbsp;&nbsp;<a href='#' id='close' data-count='"+ deleteclass +"' class='lnkred closeaddedlink' >&#10006</a></label></span>");
+	}
+	else if($('#ans_type').val() == "checkbox")
+	{
+		$('.show_sample').html($('.show_sample').html()+"<span class = ' deleteclass deleteclass_"+deleteclass+"'><label class='chk_"+$('#opt_text').val()+"'><input type='checkbox' name='chksample'  /><label class='qtext'>"+$('#opt_text').val()+"</label>&nbsp;&nbsp;&nbsp;<a href='#' id='close' data-count='"+deleteclass+"' class='lnkred closeaddedlink' >&#10006</a></label></span>");
+	}
+	else if($('#ans_type').val() == "rating")
+	{	
+		/*if($('.show_sample').html() == "")
+		{
+			$('.show_sample').html("<span class = ' deleteclass deleteclass_"+deleteclass+"'><label class='firstrate rate_"+$('#opt_text').val()+"'><i class='icon-circle'></i><label class='qtext'>"+$('#opt_text').val()+"</label>&nbsp;&nbsp;&nbsp;<a href='#' id='close' data-count='"+deleteclass+"' class='lnkred closeaddedlink' >&#10006</a></label></span>");
+		}
+		else
+		{
+			$('.show_sample').html($('.show_sample').html()+"<span class = ' deleteclass deleteclass_"+deleteclass+"'><label class='rate_"+$('#opt_text').val()+"'><i class='icon-circle'></i><label class='qtext'>"+$('#opt_text').val()+"</label>&nbsp;&nbsp;&nbsp;<a href='#' id='close' data-count='"+deleteclass+"' class='lnkred closeaddedlink' >&#10006</a></label></span>");
+		}*/
+		//var str = '<i class="icon-star"></i>';
+		//$('.show_sample').html(str);
+		
+	}
+	$('#opt_text').val('');
+ }
+ 
+});
+$(document).on("click",'.btnremove',function(e){
+e.preventDefault();
+ if($('#opt_text').val() != "")
+ {
+	if($('#ans_type').val() == "radio")
+	{
+		var element = ".rdo_"+$('#opt_text').val();
+		$(element).remove();
+	}
+	else if($('#ans_type').val() == "checkbox")
+	{
+		var element = ".chk_"+$('#opt_text').val();
+		$(element).remove();
+	}
+	else if($('#ans_type').val() == "rating")
+	{
+		var element = ".rate_"+$('#opt_text').val();
+		$(element).remove();
+	}
+ }
+ 
+});
+$(document).ready(function(){
+	
+	$("#type").change(function(){		
+		var html = "";
+		if($(this).val() == "link")
+		{
+			html +='<div class="form-group"><label class="col-sm-2 control-label" for="url"> * Url </label><div class="col-xs-12  col-sm-10"><input type="text" id="url" placeholder="Url" class="col-xs-12 col-sm-4 col-md-4 savedata" /></div></div>';
+			html +='<div class="form-group"><label class="col-sm-2 control-label" for="text"> * Text </label><div class="col-xs-12  col-sm-10">	<input type="text" id="text" placeholder="Text" class="col-xs-12 col-sm-4 col-md-4 savedata" />	</div></div>';
+			html +='<div class="form-group"><label class="col-sm-2 control-label" for="url"> </label><div class="col-xs-12  col-sm-10"><button class="btn btn-xs btn-success btnlnkadd"><i class="icon-plus"></i>Add</button></div></div>';
+			html +='<div class="form-group"><label class="col-sm-2 control-label"></label><div class="col-xs-12  col-sm-10 "><div class="col-xs-12 col-sm-4 col-md-4 link_sample" style="padding-left: 5px;"></div></div></div>';
+			$(".type_specific").removeClass('hide');
+			$(".type_specific").html(html);	
+			$(".divdropzone").addClass('hide');			
+		}
+		else if($(this).val() == "image" || $(this).val() == "video" || $(this).val() == "audio" || $(this).val() == "file")
+		{
+			$(".type_specific").addClass('hide');
+			$(".divdropzone").removeClass('hide');
+			//html +='<div class="form-group"><label class="col-sm-2 control-label" for="file"> * File </label><div class="col-xs-12  col-sm-10">	<input type="file" id="file_upload" name="file_upload" value="" required/><input type="hidden" id="filename" name="filename" value="" class="savedata"/></div></div>';
+			//html +='<div class="form_group"><div id="dropzone"><form action="/admin/property/upload_photo" method="post" id="images_form" class="dropzone" enctype="multipart/form-data"><div class="fallback"><input name="displayImage" type="file" multiple="" /></div></form></div></div>';
+		}
+				
+				
+		
+	});
+	
+	$('input[type=radio][name=togri]').change(function() {	
+		if($(this).val() == "0"){
+			$(".group_con").removeClass('hide');
+			$(".individual_con").addClass(' hide');
+		}else{
+			$(".individual_con").removeClass('hide');
+			$(".group_con").addClass(' hide');			
+			$("#to").next("div").css("width", "365px");			
+		}
+	});
+});
+
+
+
+$('.btnsave').on('click', function(e) {
+	e.preventDefault();
+	//test = '{"firstname":"Jesper","surname":"Aaberg","phone":["555-0100","555-0120"]}';
+	var post_data = '{"message":"'+$('#msg').val().trim()+'"';
+	if($('#type').val() == "link")
+	{
+		var link_url = "";
+		$(".lnkurl").each(function() {		
+			link_url += (link_url == "")? $(this).text()+"|"+$(this).attr('href') :  ";;"+$(this).text()+"|"+$(this).attr('href');
+		});
+		post_data += ',"links":"'+link_url+'"';
+	}
+	if($('#question').val() != "" && $('.show_sample').html().trim() !="")
+	{
+		var qtext = "";
+		$(".qtext").each(function() {		
+			qtext += (qtext == "")? $(this).text() :  ";;"+$(this).text();
+		});	
+		post_data += ',"qa":"'+$('#question').val().trim()+'","ans_type":"'+$('#ans_type').val()+'","options":"'+qtext+'"';
+	}else if($('#question').val() != "" && $('#ans_type').val() == "textbox" ){
+		post_data += ',"qa":"'+$('#question').val().trim()+'","ans_type":"'+$('#ans_type').val()+'"';
+	}
+	post_data +='}';
+	//console.log(JSON.parse(post_data));
+	//var myobj = $('#user_form').serializeObject();
+	
+	//e.preventDefault();   
+    var validation_result = $('#user_form').valid();
+	if($(".show_sample").html() == ""){
+		validation_result = false;
+		$(".msg_options").removeClass("hide");
+	}else{		
+		$(".msg_options").addClass("hide");
+	}
+	if($('input[name=togri]:checked').val() == 1 && $("#to").val() == null ){
+		$("#to_chosen").parent().append('<label for="title" class="error chosenerr">This field is required.</label>');
+		
+		validation_result = false;
+	}else{
+		$("#chosenerr").remove();
+	}
+	
+	validation_result = true;
+	if(validation_result  === true)
+	{
+		$.ajax({
+			url	 		: "/admin/message/compose_save",
+			type 		: "POST",
+			cache: false,
+			data		: {to:$('#to').val(),group_id:$('#group_id').val(),g_i:$('input[type=radio][name=togri]').val(),type:$('#type').val(),title:$('#title').val().trim(),postdata:post_data},
+			success		: function(res){
+				console.log(res);
+				if(res.status == "1")
+				{
+					$('#hidval').val(res.msg_id);
+					myDropzone.processQueue();
+				}
+				/*if(res.code == "1")
+				{
+					bootbox.alert(res.error, function(result) {
+		
+					});
+					
+				}
+				else 
+				{
+					
+					bootbox.alert("Changes Saved!", function(result) {
+						location.href="/admin/user/list";
+					});
+				}*/
+			}
+		});
+	}
+	
+});
+
+</script>
+

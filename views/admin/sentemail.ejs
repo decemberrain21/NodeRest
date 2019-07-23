@@ -1,0 +1,113 @@
+<br/>
+<div class="row">
+	<div class="col-xs-12">
+		<input type="hidden" id="hidsortedCol" value="<%= sortedCol%>">
+		<input type="hidden" id="hidsortedDir" value="<%= sortedDir%>">
+		<input type="hidden" id="hiddisplay" value="<%= display%>">
+		<input type="hidden" id="hidstart" value="<%= start%>">
+		<input type="hidden" id="hidsearch" value="<%= search%>">
+		<div class="table-responsive">
+			<table id="sentEmailtable" class="table table-striped table-bordered table-hover" style="width:100%">
+				<thead>
+					<tr>
+																					
+					</tr>
+				</thead>
+				<tbody>
+					
+				</tbody>
+			</table>
+		</div>
+	
+	</div>
+</div> 	
+
+<script>
+		
+	jQuery(function($){
+		oTable1="";
+		oTable1 = $('#sentEmailtable').dataTable( {
+		"bProcessing": true,
+		"bServerSide": true,				
+		"iDisplayLength": $("#hiddisplay").val(),
+		"iDisplayStart": $("#hidstart").val(),
+		"sAjaxSource": '/admin/message/sentemaillist',
+		"aaSorting": [[ $('#hidsortedCol').val(), $('#hidsortedDir').val() ]],
+		"oSearch": {"sSearch": $("#hidsearch").val()},
+		//"sPaginationType": "two_button",
+		"aoColumnDefs": [            
+				/*{
+					"bSearchable": false,
+					"bVisible": false, 
+					"aTargets": [ 0 ]
+				},*/
+				{
+					"sTitle" : "ID",
+					"sWidth": "10%",
+					"aTargets": [0],
+					
+				},
+				{
+					"sTitle" : "Type",
+					"sWidth": "10%",
+					"aTargets": [1],
+					
+				},	
+				{
+					//"bSortable": false,
+					"sTitle" : "Title",
+					"sWidth": "50%",
+					"aTargets": [2],
+					"mData": null,
+					//"sClass":((inArray("MODIFY", permission)||inArray("DELETE", permission)!=false) ? "" : " hide" ),
+					"mRender": function (data, type, full) {
+						var str = full[2];
+						
+						var icon ="";
+						if(full[1]){
+							icon = '&nbsp;&nbsp;&nbsp;<i class="icon-paperclip"></i>';
+						}
+						str = str + icon;
+						return str;
+					}
+				},
+				{
+					//"bSortable": false,
+					"sTitle" : "Date",
+					"sWidth": "30%",
+					"aTargets": [3],
+					
+				},
+			],
+			"fnDrawCallback": function () {
+					$('#sentEmailtable tbody tr').click(function () {
+						//console.log($('#sentEmailtable').dataTable().fnSettings());//;sSearch
+						//return false;
+						// get position of the selected row
+						var position = oTable1.fnGetPosition(this);
+
+						// value of the first column (can be hidden)
+						var id = oTable1.fnGetData(position)[0];
+						var sortedCol = $('#sentEmailtable').dataTable().fnSettings().aaSorting[0][0];
+						var sortedDir = $('#sentEmailtable').dataTable().fnSettings().aaSorting[0][1];
+						var page_length = $('#sentEmailtable').dataTable().fnSettings()._iDisplayLength;
+						var page_start = $('#sentEmailtable').dataTable().fnSettings()._iDisplayStart;
+						var page_search = $('.dataTables_filter input').val();
+						var qs = '?sortedCol='+sortedCol+'&sortedDir='+sortedDir+'&display='+page_length+'&start='+page_start+'&search='+page_search;
+						var current_url = location.href.substr(0,location.href.indexOf('?'));
+						history.pushState({}, "STC", current_url+qs);
+						location.href = "/admin/message/sentemailbyId/" + id;						
+						
+					  });
+					},	
+		});
+
+		if($("#hidsearch").val())
+		{
+			$('.dataTables_filter input').val($("#hidsearch").val());
+			//$('.dataTables_filter input').keyup();
+			
+		}
+	});
+
+</script>

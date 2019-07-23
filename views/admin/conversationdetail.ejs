@@ -1,0 +1,690 @@
+<style>
+	.black{
+		    background-color: silver;
+	}
+	.white{
+		    background-color: #504d4d;
+	}
+</style>
+<link rel="stylesheet" href="/assets/css/conversation.css" />
+<!--  start -->
+
+<div class="row">
+	<div class="col-xs-9">
+		<div class="menu">
+            <div class="back"><a href="#" id="lnkback"><i class="icon-angle-left"></i> </a></div>  
+			<div class="name"><%= page.conversation[0].subject%> </div>
+        </div>
+		
+		<div style="overflow:auto; height: 400px;" id="divcontainer">
+			<ol class="chat">
+			<% 
+		
+			var messagebody;
+			var each_json;
+			for(var r=(page.c_message.length)-1;r>=0;r--){
+				messagebody = JSON.stringify(page.c_message[r]);
+				each_json = JSON.parse(messagebody);
+				if(each_json["sender"] == "user"){
+			%>
+				<li class="other">
+					<div class="avatar"><img src="/assets/upload/users/<%= page.conversation[0].is_anonymous == "0"?(page.conversation[0].photo?page.conversation[0].photo:"defaultprofile.jpg"):"profile_questionmark.png" %>" draggable="false"/></div>
+			<%
+				}else{
+			%>
+				<li class="self">
+					<div class="avatar"><img src="/assets/img/profile.png" draggable="false"/></div>
+				<% 
+					}
+				%>
+					<div class="msg">
+						<% 
+							var showfiles = JSON.parse(each_json["data"]);
+							var reporttype = each_json["type"];
+							if(showfiles.message)
+							{
+						%>
+								<p><%= showfiles.message %></p>
+						<% }
+							if(typeof showfiles.files != "undefined")
+							{	
+								var imagesdata = showfiles.files.split(",");
+								console.log(imagesdata);
+								for(var k = 0; k<imagesdata.length; k++){
+									if(reporttype == "image")
+									{
+							%>
+							<img class="conversation_msg" src="/assets/upload/image/<%=imagesdata[k]%>" draggable="false"/><br>
+							<%
+							}else{%>
+							<a href="#" class="fancybox fancybox-media" data-href="/assets/upload/video/<%= imagesdata[k] %>" ><%= imagesdata[k] %></a>
+							<%}
+							
+							}}
+						%>
+						
+						<time><%= each_json["date"]%></time>
+					</div>
+				</li>
+			<%  }// for loop end   %>
+			</ol>
+		</div>
+		<div class="row">
+			<div class="col-sm-12">
+				<input class="textarea sendtext col-sm-10" type="text" placeholder="Type here!" />
+				<button class="btn-info btn col-sm-2" style="height: 50px;" id="btnsend">Send</button>
+				<div class="emojis" id="attachImage" >  <!-- data-toggle="modal" data-target="#myModal" -->
+					<i class="icon-paperclip"></i>
+				</div>
+				
+			</div>
+			
+		</div>
+		<input type="hidden" name="hidval" id="hidval" value=""/>
+		<input type="hidden" name="hidmax" id="hidmax" value="<%= page.maxid %>"/>
+		<input type="hidden" id="c_id" value="<%= page.conversation[0].c_id %>" />
+	</div> <!-- end of col-xs-6 -->
+	
+	<div class="col-xs-3" style="text-align:center;">
+		<img src="/assets/upload/users/<%= page.conversation[0].is_anonymous == "0"?(page.conversation[0].photo?page.conversation[0].photo:"defaultprofile.jpg"):"profile_questionmark.png" %>" style="width:200px;" draggable="false"> <br><br>
+		<b><%= page.conversation[0].is_anonymous == "0"?page.conversation[0].user_email:"Anonymous" %>  </b> <br>
+		<%= page.conversation[0].is_anonymous == "0"?page.conversation[0].rank:"" %> <br>
+		<%= page.conversation[0].is_anonymous == "0"?page.conversation[0].department:"" %> <br>
+		
+		<br>
+	</div>
+	
+</div> <!-- end of row -->
+<!-- end -->
+<!-- <div id="myModal" class="modal" tabindex="-1"> -->
+<!-- begin:modal-images -->
+    <div class="modal fade" id="modal-images" tabindex="-1" role="dialog" aria-labelledby="modal-images" aria-hidden="true">
+      <div class="modal-dialog modal-md">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Attached files</h4>
+          </div>
+          <div class="modal-body">
+            <form action="/admin/message/upload_file" method="post" id="images_form" class="dropzone" enctype="multipart/form-data">						
+				<div class="fallback">
+					<input name="displayImage" type="file" multiple="" />
+				</div>
+			</form>
+			
+          </div>
+		  <div class="modal-footer">
+				<button class="btn-info btn " style="height: 50px;" id="btnupload" >Send</button>
+		  </div>
+		  
+        </div>
+      </div>
+    </div>
+    <!-- end:modal-images -->
+<!-- </div> -->
+<script src="/assets/js/jquery.gritter.min.js"></script>
+<link rel="stylesheet" href="/magnific_popup/magnific-popup.css">
+<!-- Magnific Popup core JS file -->
+<script src="/magnific_popup/jquery.magnific-popup.js"></script>
+<script>
+	
+	function conversationRefresh(){
+		var url = "/admin/message/conversationRefreshdata/" + $('#c_id').val()+"/"+$('#hidmax').val();
+			$.ajax({
+			url	 		: url,
+			type 		: "GET",
+			cache		: false,
+			//data		: data, 
+			success		: function(res){
+				if(parseInt(res.max) >parseInt($("#hidmax").val()))
+				{
+					$("#hidmax").val(res.max);
+					//console.log(res.conversation);
+					var htmlcode="";
+					for(var r=0;r<res.conversation.length;r++){
+					
+						
+						if(res.conversation[r].sender == "user"){
+					
+							htmlcode += '<li class="other">';
+							htmlcode += '<div class="avatar"><img src="/assets/upload/users/<%= page.conversation[0].is_anonymous == "0"?(page.conversation[0].photo?page.conversation[0].photo:"defaultprofile.jpg"):"profile_questionmark.png" %>" draggable="false"/></div>'
+						
+						}else{
+							
+							htmlcode += '<li class="self">';							
+							htmlcode += '<div class="avatar"><img src="/assets/img/profile.png" draggable="false"/></div>'
+							 
+						}
+						htmlcode += '<div class="msg">';
+						var showfiles = JSON.parse(res.conversation[r].data);
+						var reporttype = res.conversation[r].type;
+						if(showfiles.message)
+						{
+							htmlcode += '<p>'+showfiles.message+'</p>';
+						}
+						if(typeof showfiles.files != "undefined")
+						{	
+							var imagesdata = showfiles.files.split(",");							
+							for(var k = 0; k<imagesdata.length; k++){	
+								if(reporttype=="video"){
+									htmlcode += '<a href="#" class="fancybox fancybox-media" data-href="/assets/upload/video/'+imagesdata[k]+'" >'+imagesdata[k]+'</a>';
+
+								}else{
+									htmlcode += '<img class="conversation_msg" src="/assets/upload/image/'+imagesdata[k]+'" draggable="false"/>';						
+								}
+							}
+						}
+							htmlcode += '<time>'+ res.conversation[r].date+'</time>';
+							htmlcode += '</div>';
+							htmlcode += '</li>';						
+					}
+					//console.log(htmlcode);
+					$("ol").append(htmlcode);
+					$("#divcontainer").animate({ scrollTop: $('#divcontainer').prop("scrollHeight")}, 1000);
+				}
+				/*var htmlcode="";
+				for(var r=(res.c_message.length)-1;r>=0;r--){
+					messagebody = JSON.stringify(res.c_message[r]);
+					each_json = JSON.parse(messagebody);
+					
+					if(each_json["sender"] == "user"){
+					
+						htmlcode += '<li class="other">';
+						htmlcode += '<div class="avatar"><img src="/assets/upload/users/<%= page.conversation[0].is_anonymous == "0"?(page.conversation[0].photo?page.conversation[0].photo:"defaultprofile.jpg"):"profile_questionmark.png" %>" draggable="false"/></div>'
+						
+					}else{
+						
+						htmlcode += '<li class="self">'
+						
+						htmlcode += '<div class="avatar"><img src="/assets/img/profile.png" draggable="false"/></div>'
+						 
+					}
+						
+					htmlcode += '<div class="msg">'
+						
+					var showfiles = JSON.parse(each_json["data"]);
+					var reporttype = each_json["type"];
+						if(showfiles.message)
+						{
+							htmlcode += '<p>'+showfiles.message+'</p>';
+						}
+							if(typeof showfiles.files != "undefined")
+							{	var imagesdata = showfiles.files.split(",");
+								console.log(res.c_message);
+								for(var k = 0; k<imagesdata.length; k++){	
+									if(reporttype=="video"){
+										htmlcode += '<a href="#" class="fancybox fancybox-media" data-href="/assets/upload/video/'+imagesdata[k]+'" >'+imagesdata[k]+'</a>';
+
+									}else{
+										htmlcode += '<img class="conversation_msg" src="/assets/upload/image/'+imagesdata[k]+'" draggable="false"/>';						
+									}
+								}
+							}							
+							
+							htmlcode += '<time>'+ each_json["date"]+'</time>';
+							htmlcode += '</div>';
+							htmlcode += '</li>';
+						
+				} 
+				$("ol").empty();
+				$("ol").append(htmlcode);
+				$("#divcontainer").animate({ scrollTop: $('#divcontainer').prop("scrollHeight")}, 1000);*/
+				$('.conversation_msg').each(function(i, obj) {
+					var cmsg = $(this);
+					$(this).magnificPopup({		
+					items: {
+						src: cmsg.attr('src'),
+					  },
+					type:'image'
+				});
+				});
+				//
+				/*if(res.code == "1")
+				{
+					bootbox.alert(res.error, function(result) {
+		
+					});
+					
+				}
+				else 
+				{
+					
+					bootbox.alert("Changes Saved!", function(result) {
+						location.href="/admin/user/list";
+					});
+				}*/
+			}
+		}).done(function( data ) {
+				
+				/*if(result.status == "1"){
+					location.reload();		
+				}*/
+				
+				//location.href = "/admin/message/conversation/";
+		});
+	};
+	setInterval(function() {
+	  conversationRefresh()
+	}, 10000); 
+	jQuery(function($){
+		
+		///$.each('.conversation_msg',function(i,v){
+		$("#divcontainer").animate({ scrollTop: $('#divcontainer').prop("scrollHeight")}, 1000);
+		$('.conversation_msg').each(function(i, obj) {
+			var cmsg = $(this);
+			$(this).magnificPopup({		
+			items: {
+				src: cmsg.attr('src'),
+			  },
+			type:'image'
+		});
+		});
+		
+		/*$('.conversation_msg').magnificPopup({		
+			items: {
+				src: $('.conversation_msg').attr('src'),
+			  },
+			type:'image'
+		});*/
+		//var uploadfilenames = [];
+				try {
+			  $(".dropzone").dropzone({
+			  
+			    paramName: "file", // The name that will be used to transfer the file
+			    //maxFilesize: 20, // MB
+				autoProcessQueue: false,
+				parallelUploads: 6,
+				maxFiles: 6,
+				maxfilesexceeded: function(file) {
+					//this.removeAllFiles();
+					this.removeFile(file);
+					alert("Max file limit exceed");
+				},
+				//acceptedFiles: filetype,
+				acceptedFiles: "image/jpeg,image/png",
+				addRemoveLinks : true,
+				dictDefaultMessage :
+				'<span class="bigger-150 bolder"><i class="icon-caret-right red"></i> Drop files</span> to upload \
+				<span class="smaller-80 grey">(or click)</span> <br /> \
+				<i class="upload-icon icon-cloud-upload blue icon-3x"></i>',
+				dictResponseError: 'Error while uploading file!',
+				
+				//change the previewTemplate to use Bootstrap progress bars
+				previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class=\"progress progress-small progress-striped active\"><div class=\"progress-bar progress-bar-success\" data-dz-uploadprogress></div></div>\n  <div class=\"dz-success-mark\"><span></span></div>\n  <div class=\"dz-error-mark\"><span></span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>",
+				//start
+				
+			  init: function() {
+				uploadfilenames=[];
+			  myDropzone = this; 
+			  myDropzone.options.dictRemoveFile = "Delete";
+				/*var submitButton = document.querySelector("#submit-all");
+					myDropzone = this; // closure
+
+				submitButton.addEventListener("click", function() {
+				  myDropzone.processQueue(); // Tell Dropzone to process all queued files.
+				  
+				});*/
+				
+				// You might want to show the submit button only when 
+				// files are dropped here:
+				
+				/**/
+				
+				myDropzone.on("processing", function(file) { // was processingfile
+				  this.options.url = $('#images_form').attr('action')+'/image/current';
+				});
+				myDropzone.on("error", function(file) { // file size error error
+					console.log(this);
+					 
+					alert("Error: file size is too big. It allows less than 15 MB.");
+					this.removeFile(file);
+				});				
+				myDropzone.on("complete", function(file) { // was processingfile
+					
+					if(this.getUploadingFiles().length ===0 && this.getQueuedFiles().length === 0)
+					{						
+						var post_data = '{"message":"'+esc_chars($('.sendtext').val().trim())+'","files":"'+uploadfilenames.join()+'"}';		
+		
+						var data ={
+							c_id :$('#c_id').val(),
+							type : "image",
+							postdata:post_data
+						};
+						$.ajax({
+							url	 		: "/admin/message/saveHrReplyMessage",
+							type 		: "POST",
+							cache		: false,
+							data		: data, 
+							success		: function(res){
+							
+								
+								if(res.status == "1")
+								{	
+									//uploadfilenames=[];
+									$('#hidval').val(res.msg_id);
+									
+									$('.sendtext').val('');
+								}
+								
+							}
+						}).done(function( data ) {
+							bootbox.alert("Message has been sent");
+								conversationRefresh();
+								myDropzone.removeAllFiles(true);	
+								$(".divdropzone").addClass('hide');		
+								uploadfilenames=[];	
+								$('#modal-images').modal('hide');
+						});
+						/*$.post('/admin/message/conversationDetailFiles', {'names': uploadfilenames, 'id': $('#hidval').val() }, function(result) {
+							if(result.status == "1"){
+								conversationRefresh();
+								myDropzone.removeAllFiles(true);	
+								$(".divdropzone").addClass('hide');		
+								uploadfilenames=[];	
+								$('#modal-images').modal('hide');
+							}
+						});*/
+					}
+				
+				});
+				
+
+				myDropzone.on("addedfile", function(file) {
+				    var _this = this;
+				    var uploadtype = "image";
+					var filetype = file.type;
+					
+					if(uploadtype == "video"){
+						if(filetype != "video/mp4"){			
+							_this.removeFile(file);
+						}
+					} 
+					
+					if( uploadtype == "audio"){
+						if(filetype != "audio/mp3"){
+							_this.removeFile(file);
+						}
+					} 
+					
+					if( uploadtype == "file" ||  uploadtype == "image" ){
+						var imagetype = filetype.split("/")[0];
+						if(filetype != "application/pdf"  && imagetype != "image"){
+							_this.removeFile(file);
+						}
+					}
+				  
+				});
+				// On removing file
+				myDropzone.on("removedfile", function(file) {
+					/*var id = $("#hidval").val();
+					$.ajax({
+						url: '/admin/property/upload_photo/' +id+ '/' + file.name,
+						type: 'DELETE',
+						cache: false,
+						success: function(result) {
+						    //console.log(result);
+						}
+					});*/
+				});
+				myDropzone.on('success', function(file, responseText) {
+				  //console.log(responseText);
+				  uploadfilenames.push(responseText.data);
+				
+				  //console.log(responseText.data);
+				});
+			  },  
+			 /* accept: function(file, done) 
+			   {
+					
+					var uploadtype = "image";
+					var filetype = file.type;
+					
+					if(uploadtype == "video"){
+						if(filetype == "video/mp4"){			
+							done();
+						}else{
+							alert("Error: The uploaded file type is wrong. The file type should be pdf or image/jpeg. ");		
+						}
+					} 
+					
+					if( uploadtype == "audio"){
+						if(filetype == "audio/mp3"){
+							done();
+						}else{
+							alert("Error: The uploaded file type is wrong. The file type should be pdf or image/jpeg. ");
+						}
+					} 
+					
+					if( uploadtype == "file" ||  uploadtype == "image" ){
+						var imagetype = filetype.split("/")[0];
+						if(filetype == "application/pdf"  || imagetype == "image"){
+							done();
+						}
+						else{
+							alert("Error: The uploaded file type is wrong. The file type should be pdf or image/jpeg. ");
+							
+						}
+					}
+					
+				}*/
+				//end
+			  });
+			} catch(e) {
+			  alert('Dropzone.js does not support older browsers!');
+			}
+			
+
+	
+
+	
+	$(document).ready(function(){	
+		$('.fancybox').fancybox();
+		
+
+			/*
+			 *  Different effects
+			 */
+
+			// Change title type, overlay closing speed
+			$(".fancybox-effects-a").fancybox({
+				helpers: {
+					title : {
+						type : 'outside'
+					},
+					overlay : {
+						speedOut : 0
+					}
+				}
+			});
+
+			// Disable opening and closing animations, change title type
+			$(".fancybox-effects-b").fancybox({
+				openEffect  : 'none',
+				closeEffect	: 'none',
+
+				helpers : {
+					title : {
+						type : 'over'
+					}
+				}
+			});
+
+			// Set custom style, close if clicked, change title type and overlay color
+			$(".fancybox-effects-c").fancybox({
+				wrapCSS    : 'fancybox-custom',
+				closeClick : true,
+
+				openEffect : 'none',
+
+				helpers : {
+					title : {
+						type : 'inside'
+					},
+					overlay : {
+						css : {
+							'background' : 'rgba(238,238,238,0.85)'
+						}
+					}
+				}
+			});
+
+			// Remove padding, set opening and closing animations, close if clicked and disable overlay
+			$(".fancybox-effects-d").fancybox({
+				padding: 0,
+
+				openEffect : 'elastic',
+				openSpeed  : 150,
+
+				closeEffect : 'elastic',
+				closeSpeed  : 150,
+
+				closeClick : true,
+
+				helpers : {
+					overlay : null
+				}
+			});
+
+			/*
+			 *  Button helper. Disable animations, hide close button, change title type and content
+			 */
+
+
+
+			
+
+			/*
+			 *  Media helper. Group items, disable animations, hide arrows, enable media and button helpers.
+			*/
+			$('.fancybox-media')
+				
+				.fancybox({
+					autoScale: false,
+					type: 'iframe',
+					openEffect : 'none',
+					closeEffect : 'none',
+					prevEffect : 'none',
+					nextEffect : 'none',
+					closeClick: false,
+					arrows : true,
+					helpers : {
+						/*media : {},
+						buttons : {}*/
+					},
+					beforeLoad: function () {
+						 var url= $(this.element).data("href");
+						 this.href = url;
+
+					}
+				});
+
+			/*
+			 *  Open manually
+			 */
+
+			$("#fancybox-manual-a").click(function() {
+				//$.fancybox.open('1_b.jpg');
+			});
+
+			$("#fancybox-manual-b").click(function() {
+				$.fancybox.open({
+					href : 'iframe.html',
+					type : 'iframe',
+					padding : 5
+				});
+			});
+
+
+
+		$('#attachImage').click(function(){
+			//$('#myModal').modal('show');
+			$(".divdropzone").removeClass('hide');
+		});	
+	});
+	
+$(".sendtext").keyup(function(event){
+	if(event.keyCode == 13 ){
+		$('#btnsend').click();
+	}
+	
+});
+$("#attachImage").click(function()
+{
+	$('#modal-images').modal('show');
+});
+$('#btnupload').click(function(e) {
+	e.preventDefault();
+	
+	//return false;
+	requiredData();
+});
+function esc_chars(objdata)
+{
+	var esc_data = objdata.replace(/[\\]/g, '\\\\')
+    .replace(/[\"]/g, '\\\"')
+   // .replace(/[\']/g, '\\\'')
+    .replace(/[\/]/g, '\\/')
+    .replace(/[\b]/g, '\\b')
+    .replace(/[\f]/g, '\\f')
+    .replace(/[\n]/g, '\\n')
+    .replace(/[\r]/g, '\\r')
+    .replace(/[\t]/g, '\\t');
+	return esc_data;
+}
+$('#btnsend ').click(function(e) {
+	e.preventDefault();	
+	requiredData();
+});
+	
+	function requiredData(){
+		//start 
+		if(myDropzone.getQueuedFiles().length >0)
+		{				
+			myDropzone.processQueue();
+		}
+		else{
+		//
+			var post_data = '{"message":"'+esc_chars($('.sendtext').val().trim())+'"}';		//esc_chars
+		//console.log(post_data);return false;
+						var data ={
+							c_id :$('#c_id').val(),
+							type : "image",
+							postdata:post_data
+						};
+						$.ajax({
+							url	 		: "/admin/message/saveHrReplyMessage",
+							type 		: "POST",
+							cache		: false,
+							data		: data, 
+							success		: function(res){
+							
+								
+								if(res.status == "1")
+								{	
+									//uploadfilenames=[];
+									$('#hidval').val(res.msg_id);
+									
+									$('.sendtext').val('');
+								}
+								
+							}
+						}).done(function( data ) {
+							bootbox.alert("Message has been sent");
+								conversationRefresh();
+								myDropzone.removeAllFiles(true);	
+								$(".divdropzone").addClass('hide');		
+								uploadfilenames=[];	
+								
+								$('#modal-images').modal('hide');
+						});
+			//conversationRefresh();
+		}
+		//end
+		
+	}
+	});
+	$(document).on("click", '#lnkback', function(e){	
+		e.preventDefault();
+		window.history.back();
+	});	
+	</script>

@@ -1,0 +1,59 @@
+.page-content
+{
+	padding:0px 20px 50px 20px;		
+}
+.acc-channel
+{
+	font-size:10px;
+}
+
+.res-table
+{
+	/*overflow-x: auto;*/
+	display: block;
+}
+
+.duplicate_name {
+	color: red !important;
+	background-color: yellow !important;
+}
+
+.saving
+{
+	font-size:10px;
+	color:red;
+	float: right;
+}
+
+.res-table  tbody>tr>td,.res-table  tbody>tr>th{
+	 border-top: 1px solid transparent !important;
+}
+
+.res-width
+{
+	width:100px;
+}
+
+.res2-width
+{
+	width:70px;
+}
+
+@media (min-width: 992px)
+{
+	.textwidth
+	{
+		width:240.25px;
+	}
+	.input-sm-cur
+	{
+		width:14.8999%;
+	}
+}
+label.error{
+	color:red;
+}
+#property_table .hover
+{
+	 background-color:yellow;
+}

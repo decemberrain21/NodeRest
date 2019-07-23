@@ -1,0 +1,262 @@
+<br/>
+	<style type="text/css">
+		.fancybox-custom .fancybox-skin {
+			box-shadow: 0 0 50px #222;
+		}
+		body{
+			line-height: 2;
+		}
+		hr{
+			border-top: 1px solid #d0c5c5;
+		}
+	</style>
+	
+<div class="row">
+	<div class="col-xs-12">			
+				<div class="clearfix errlabel">
+				</div>
+				<h3><%= page.answer[0].subject%></h3>
+				
+				<hr/>	
+				<div class="row group_con col-sm-offset-1">
+					<label class="col-sm-2 control-label" for="group_id">Email:</label>
+					<div class="col-xs-12  col-sm-10">
+						<label><%= page.answer[0].user_id%>		</label>
+					</div>
+				</div>
+				
+				
+				<div class="hide type_specific col-sm-offset-1">
+				</div>
+				<div class="row col-sm-offset-1">
+					<label class="col-sm-2 control-label" for="type"> QUESTION: </label>
+					<div class="col-xs-12  col-sm-10">
+						<label id="question" name="question" class=" control-label"  ><%= page.answer[0].question%></label>						
+						<label class="hide"><%= page.answer[0].msg_id%>	</label>					
+					</div>
+				</div>
+				<div class="row col-sm-offset-1">
+					<label class="col-sm-2 control-label" for="type"> ANSWER: </label>
+					
+					<div class="col-xs-12  col-sm-10">
+						<%	var ans_type = page.answer[0].ans_type;
+							
+							if(ans_type == "rating")
+							{
+								var answer =page.answer[0].answer;	
+								for(var i=0; i< answer ; i++)
+								{
+							%>	
+								<i class="icon-star"></i>
+							<%	}
+							}else{
+								%>
+								<label id="answer" name="answer" class=" control-label"  ><%= page.answer[0].answer%></label>
+								<%
+							}
+						%>
+					</div>
+				</div>
+				<div class="row col-sm-offset-1">
+					<label class="col-sm-2 control-label" for="type"> ANSWERED DATE: </label>
+					<div class="col-xs-12  col-sm-10">
+						<label id="question" name="question" class=" control-label"  ><%= page.answer[0].date%></label>	
+					</div>
+				</div>
+	
+				<br>				
+				<hr/>
+			
+			<div class="row" style="max-height: 50px;">
+				<div class="col-sm-2">
+					<button class="btn btn-sm btn-primary btnback" data-link="/admin/message/answer">
+						<i class="icon-angle-left"></i>
+						Back
+					</button>
+			</div>
+			</div>
+		
+</div>
+
+
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			/*
+			 *  Simple image gallery. Uses default settings	
+			 
+			
+			 */
+			
+			$('.fancybox').fancybox();
+		
+
+			/*
+			 *  Different effects
+			 */
+
+			// Change title type, overlay closing speed
+			$(".fancybox-effects-a").fancybox({
+				helpers: {
+					title : {
+						type : 'outside'
+					},
+					overlay : {
+						speedOut : 0
+					}
+				}
+			});
+
+			// Disable opening and closing animations, change title type
+			$(".fancybox-effects-b").fancybox({
+				openEffect  : 'none',
+				closeEffect	: 'none',
+
+				helpers : {
+					title : {
+						type : 'over'
+					}
+				}
+			});
+
+			// Set custom style, close if clicked, change title type and overlay color
+			$(".fancybox-effects-c").fancybox({
+				wrapCSS    : 'fancybox-custom',
+				closeClick : true,
+
+				openEffect : 'none',
+
+				helpers : {
+					title : {
+						type : 'inside'
+					},
+					overlay : {
+						css : {
+							'background' : 'rgba(238,238,238,0.85)'
+						}
+					}
+				}
+			});
+
+			// Remove padding, set opening and closing animations, close if clicked and disable overlay
+			$(".fancybox-effects-d").fancybox({
+				padding: 0,
+
+				openEffect : 'elastic',
+				openSpeed  : 150,
+
+				closeEffect : 'elastic',
+				closeSpeed  : 150,
+
+				closeClick : true,
+
+				helpers : {
+					overlay : null
+				}
+			});
+
+			/*
+			 *  Button helper. Disable animations, hide close button, change title type and content
+			 */
+
+
+
+			/*
+			 *  Thumbnail helper. Disable animations, hide close button, arrows and slide to next gallery item if clicked
+			 */
+
+			$('.fancybox-thumbs').fancybox({
+				
+				type:'image',
+				prevEffect : 'none',
+				nextEffect : 'none',
+
+				closeBtn  : true,
+				arrows    : true,
+				nextClick : true,
+
+				helpers : {
+						thumbs : {
+						width  : 50,
+						height : 50
+					}
+				},
+				beforeLoad: function () {
+						 var url= $(this.element).data("href");
+						 this.href = url;
+					
+					},
+				afterClose: function () { // USE THIS IT IS YOUR ANSWER THE KEY WORD IS "afterClose"
+					//$.fancybox.update();
+					}
+			});
+
+			/*
+			 *  Media helper. Group items, disable animations, hide arrows, enable media and button helpers.
+			*/
+			$('.fancybox-media')
+				
+				.fancybox({
+					autoScale: false,
+					type: 'iframe',
+					openEffect : 'none',
+					closeEffect : 'none',
+					prevEffect : 'none',
+					nextEffect : 'none',
+					closeClick: false,
+					arrows : true,
+					helpers : {
+						/*media : {},
+						buttons : {}*/
+					},
+					beforeLoad: function () {
+						 var url= $(this.element).data("href");
+						 this.href = url;
+
+					}
+				});
+
+			/*
+			 *  Open manually
+			 */
+
+			$("#fancybox-manual-a").click(function() {
+				//$.fancybox.open('1_b.jpg');
+			});
+
+			$("#fancybox-manual-b").click(function() {
+				$.fancybox.open({
+					href : 'iframe.html',
+					type : 'iframe',
+					padding : 5
+				});
+			});
+
+		/*	$("#fancybox-manual-c").click(function() {
+				$.fancybox.open([
+					{
+						href : '1_b.jpg',
+						title : 'My title'
+					}, {
+						href : '2_b.jpg',
+						title : '2nd title'
+					}, {
+						href : '3_b.jpg'
+					}
+				], {
+					helpers : {
+						thumbs : {
+							width: 75,
+							height: 50
+						}
+					}
+				});
+			});*/
+
+
+		});
+		$(document).on("click",'.btnback',function(e){
+			//location.href = $(this).attr('data-link');
+			window.history.back();
+		});
+	</script>

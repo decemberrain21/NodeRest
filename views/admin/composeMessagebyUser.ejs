@@ -1,0 +1,398 @@
+<html>
+	<head>
+		<title>STC Inbox</title>
+		 <style type="text/css">
+		.container {
+			width: 500px;
+			clear: both;
+			text-align: right;
+			line-height: 2.5;
+		}
+		.container input {
+			width: 50%;
+			clear: both;
+		}
+
+		</style>
+	</head>
+	<body>
+		
+		<div class="row">
+		<div class="col-xs-12">
+		<form class="form-horizontal" role="form" id="user_form">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="clearfix errlabel">
+					
+				</div>
+				<div class="space"></div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="to"> user id:(user_id)</label>
+					<div class="col-xs-12  col-sm-10">
+						 <input type="text" id="userid">
+					
+					<input type="hidden" name="hidval" id="hidval" value=""/></div>
+				</div>			
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="to"> Subject(subject)</label>
+					<div class="col-xs-12  col-sm-10">
+						 <input type="text" id="_subject">
+					</div>
+				</div>				
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="to"></label>
+					<div class="col-xs-12  col-sm-10">
+						 <input type='checkbox' name='anonymous' id="anonymous" />Anonymous(anonymous)
+					</div>
+				</div>	
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="type">  Type (type)</label>
+					<div class="col-xs-12  col-sm-10">
+						<select class="col-xs-12 col-sm-4 col-md-4" id="type" name="type" >	
+							<option value="" disabled selected hidden>Choose Message Type</option>
+							<option value="link">Link</option>
+							<option value="image" >Image</option>
+							<option value="video">Video</option>
+							<option value="audio">Audio</option>
+							<option value="file">File</option>
+							
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="title"> * Title(title) </label>
+					<div class="col-xs-12  col-sm-10">
+						<input type="text" id="title" name="title" placeholder="Title" class="col-xs-12 col-sm-4 col-md-4" value="" required />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="msg"> * Message(message) </label>	
+					<div class="col-xs-12  col-sm-10">
+						<textarea id="msg" name="msg" placeholder="Message" class="col-xs-12 col-sm-4 col-md-4 savedata" required>
+						</textarea>
+					</div>
+				</div>
+				
+				<div class="hide type_specific">
+				</div>
+				
+
+		</div>
+		</form>
+		<div class="row">
+			<div class="col-xs-12 hide divdropzone">
+				<div id="dropzone">
+					<form action="/admin/message/upload_file" method="post" id="images_form" class="dropzone" enctype="multipart/form-data">						
+						<div class="fallback">
+							<input name="displayImage" type="file" multiple="" />
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+					<button id="btnsubmit">Submit</button>
+		</div>
+		<div id="resultdata">	
+			
+		</div>	
+	</div>
+</div>
+		
+	</body>
+	<script src="/assets/js/jquery.min.js"></script>
+	<script src="/assets/js/jquery.gritter.min.js"></script>
+	<script src="/assets/js/dropzone.min.js"></script>
+	<script>
+	jQuery(function($){
+	
+		try {
+			  $(".dropzone").dropzone({
+			  
+			    paramName: "file", // The name that will be used to transfer the file
+			   // maxFilesize: 20, // MB
+				autoProcessQueue: false,
+				parallelUploads: 6,
+				maxFiles: 6,
+				maxfilesexceeded: function(file) {
+					//this.removeAllFiles();
+					this.removeFile(file);
+					alert("Max file limit exceed");
+				},
+				//acceptedFiles: filetype,
+				addRemoveLinks : true,
+				dictDefaultMessage :
+				'<span class="bigger-150 bolder"><i class="icon-caret-right red"></i> Drop files</span> to upload \
+				<span class="smaller-80 grey">(or click)</span> <br /> \
+				<i class="upload-icon icon-cloud-upload blue icon-3x"></i>',
+				dictResponseError: 'Error while uploading file!',
+				
+				//change the previewTemplate to use Bootstrap progress bars
+				previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class=\"progress progress-small progress-striped active\"><div class=\"progress-bar progress-bar-success\" data-dz-uploadprogress></div></div>\n  <div class=\"dz-success-mark\"><span></span></div>\n  <div class=\"dz-error-mark\"><span></span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>",
+				//start
+				
+			  init: function() {
+			  myDropzone = this; 
+			  myDropzone.options.dictRemoveFile = "Delete";
+				/*var submitButton = document.querySelector("#submit-all");
+					myDropzone = this; // closure
+
+				submitButton.addEventListener("click", function() {
+				  myDropzone.processQueue(); // Tell Dropzone to process all queued files.
+				  
+				});*/
+				
+				// You might want to show the submit button only when 
+				// files are dropped here:
+				
+				/**/
+				myDropzone.on("processing", function(file) { // was processingfile
+				  this.options.url = $('#images_form').attr('action')+'/'+$('#type').val();
+				}); 
+				myDropzone.on("error", function(file) { // file size error error
+					console.log(this);
+					 
+					alert("Error: file size is too big. It allows less than 15 MB.");
+					this.removeFile(file);
+				});
+				myDropzone.on("complete", function(file) { // was processingfile
+				if(this.getUploadingFiles().length ===0 && this.getQueuedFiles().length === 0)
+				{
+					var data = [];
+					$('#images_form .dz-filename').each(function(index){  
+						data.push($(this).text());
+					});
+					$.post('/api/api_set_files', {'names': data, 'id': $('#hidval').val() }, function(data) {
+						console.log(data);
+					});
+				}
+				
+				});
+				
+
+				myDropzone.on("addedfile", function(file) {
+				    var _this = this;
+				    var uploadtype = $("#type").val();
+					var filetype = file.type;
+					
+					if(uploadtype == "video"){
+						if(filetype != "video/mp4"){			
+							_this.removeFile(file);
+						}
+					} 
+					
+					if( uploadtype == "audio"){
+						if(filetype != "audio/mp3"){
+							_this.removeFile(file);
+						}
+					} 
+					
+					if( uploadtype == "file" ||  uploadtype == "image" ){
+						var imagetype = filetype.split("/")[0];
+						if(filetype != "application/pdf"  && imagetype != "image"){
+							_this.removeFile(file);
+						}
+					}
+				  
+				});
+				// On removing file
+				myDropzone.on("removedfile", function(file) {
+			
+				});
+			  },  
+			  accept: function(file, done) 
+			   {
+					
+					var uploadtype = $("#type").val();
+					var filetype = file.type;
+					
+					if(uploadtype == "video"){
+						if(filetype == "video/mp4"){			
+							done();
+						}else{
+							alert("Error: The uploaded file type is wrong. The file type should be pdf or image/jpeg. ");		
+						}
+					} 
+					
+					if( uploadtype == "audio"){
+						if(filetype == "audio/mp3"){
+							done();
+						}else{
+							alert("Error: The uploaded file type is wrong. The file type should be pdf or image/jpeg. ");
+						}
+					} 
+					
+					if( uploadtype == "file" ||  uploadtype == "image" ){
+						var imagetype = filetype.split("/")[0];
+						if(filetype == "application/pdf"  || imagetype == "image"){
+							done();
+						}
+						else{
+							alert("Error: The uploaded file type is wrong. The file type should be pdf or image/jpeg. ");
+							
+						}
+					}
+					
+				}
+				//end
+			  });
+			} catch(e) {
+			  alert('Dropzone.js does not support older browsers!');
+			}
+			
+			
+			});
+/*$(document).on("change",'#file_upload',function(){
+
+	var obj = new FormData();
+	var uploadtype = $("#type").val();
+	var filetype = document.getElementById('file_upload').files[0].type;
+	
+	if(uploadtype == "video"){
+		if(filetype == "video/mp4"){			
+			uploading();
+		}else{
+			alert("Error: The uploaded file type is wrong. The file type should be pdf or image/jpeg. ");		
+		}
+	} 
+	
+	if( uploadtype == "audio"){
+		if(filetype == "audio/mp3"){
+			uploading();
+		}else{
+			alert("Error: The uploaded file type is wrong. The file type should be pdf or image/jpeg. ");	
+		}
+	} 
+	
+	if( uploadtype == "file"){
+		var imagetype = filetype.split("/")[0];
+		if(filetype == "application/pdf"  || imagetype == "image"){
+		   uploading();
+		}
+		else{
+			alert("Error: The uploaded file type is wrong. The file type should be pdf or image/jpeg. ");		
+		}
+	}
+
+	function uploading(){
+		obj.append('file', document.getElementById('file_upload').files[0]);
+		var i = $('#type').val();
+		uploadphoto("/admin/message/upload/"+i, obj,function (cc,dd,oo) {	
+				//console.log("hide");
+				//console.log(res);
+				//var dataStr = JSON.stringify(res);
+				//console.log(dataStr);
+		
+		});
+	}
+});*/
+
+$(document).on("click",'.btnlnkadd',function(e){
+e.preventDefault();
+ if($('#url').val() != "" && $('#text').val() != "")
+ {
+	var deleteclass = $('.deleteclass').length;
+	//console.log(deleteclass + " >>>>>>>>>>>>>>>>>>>>>> deleteclass");
+	$('.link_sample').html($('.link_sample').html()+'<span class = "col-xs-12 col-sm-12 col-md-12 deleteclass deleteclass_'+deleteclass+'" style="padding-left: 5px;"><a class="lnkurl" href="'+$('#url').val()+'">'+$('#text').val()+'</a>&nbsp;&nbsp;&nbsp;<a href="#" id="close" data-count="'+deleteclass+'" class="lnkred closeaddedlink" >&#10006</a></span>');
+	$('#url').val('');
+	$('#text').val('');
+ }
+ 
+});
+$(document).on("click",'.closeaddedlink',function(e){
+	
+	var count = $(this).attr('data-count');
+	$('.deleteclass_'+count).remove();
+    return false;
+});
+
+
+
+$(document).ready(function(){
+	
+	$("#type").change(function(){
+		var html = "";
+		if($(this).val() == "link")
+		{
+			html +='<div class="form-group"><label class="col-sm-2 control-label" for="url"> * Url </label><div class="col-xs-12  col-sm-10"><input type="text" id="url" placeholder="Url" class="col-xs-12 col-sm-4 col-md-4 savedata" /></div></div>';
+			html +='<div class="form-group"><label class="col-sm-2 control-label" for="text"> * Text </label><div class="col-xs-12  col-sm-10">	<input type="text" id="text" placeholder="Text" class="col-xs-12 col-sm-4 col-md-4 savedata" />	</div></div>';
+			html +='<div class="form-group"><label class="col-sm-2 control-label" for="url"> </label><div class="col-xs-12  col-sm-10"><button class="btn btn-xs btn-success btnlnkadd"><i class="icon-plus"></i>Add</button></div></div>';
+			html +='<div class="form-group"><label class="col-sm-2 control-label"></label><div class="col-xs-12  col-sm-10 "><div class="col-xs-12 col-sm-4 col-md-4 link_sample" style="padding-left: 5px;"></div></div></div>';
+			$(".type_specific").removeClass('hide');
+			$(".type_specific").html(html);	
+			$(".divdropzone").addClass('hide');			
+		}
+		else if($(this).val() == "image" || $(this).val() == "video" || $(this).val() == "audio" || $(this).val() == "file")
+		{
+			$(".divdropzone").removeClass('hide');
+			//html +='<div class="form-group"><label class="col-sm-2 control-label" for="file"> * File </label><div class="col-xs-12  col-sm-10">	<input type="file" id="file_upload" name="file_upload" value="" required/><input type="hidden" id="filename" name="filename" value="" class="savedata"/></div></div>';
+			//html +='<div class="form_group"><div id="dropzone"><form action="/admin/property/upload_photo" method="post" id="images_form" class="dropzone" enctype="multipart/form-data"><div class="fallback"><input name="displayImage" type="file" multiple="" /></div></form></div></div>';
+		}
+				
+				
+		
+	});
+	
+});
+
+
+
+$('#btnsubmit').on('click', function(e) {
+	e.preventDefault();
+	//test = '{"firstname":"Jesper","surname":"Aaberg","phone":["555-0100","555-0120"]}';
+	var post_data = '{"message":"'+$('#msg').val().trim()+'"';
+	if($('#type').val() == "link")
+	{
+		var link_url = "";
+		$(".lnkurl").each(function() {		
+			link_url += (link_url == "")? $(this).text()+"|"+$(this).attr('href') :  ";;"+$(this).text()+"|"+$(this).attr('href');
+		});
+		post_data += ',"links":"'+link_url+'"';
+	}
+	
+	post_data +='}';
+	//console.log(JSON.parse(post_data));
+	//var myobj = $('#user_form').serializeObject();
+	
+	//e.preventDefault();   
+    var validation_result = true;
+		var anonymous = document.getElementById('anonymous').checked;
+	
+	if(validation_result  === true)
+	{
+		$.ajax({
+			url	 		: "/api/savingcomposemessage",
+			type 		: "POST",
+			cache: false,
+			data		: {anonymous:anonymous,user_id:$('#userid').val(),subject:$('#_subject').val(),type:$('#type').val(),postdata:post_data},
+			success		: function(res){
+				console.log(res);
+				if(res.status == "1")
+				{	
+					//var data = res.description;
+					$('#hidval').val(res.msg_id);
+					myDropzone.processQueue();
+				}
+				/*if(res.code == "1")
+				{
+					bootbox.alert(res.error, function(result) {
+		
+					});
+					
+				}
+				else 
+				{
+					
+					bootbox.alert("Changes Saved!", function(result) {
+						location.href="/admin/user/list";
+					});
+				}*/
+			}
+		}).done(function( data ) {
+					$('#resultdata').append(data);
+				});
+	}
+	
+});
+	</script>
+</html>

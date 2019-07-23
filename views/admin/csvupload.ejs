@@ -1,0 +1,115 @@
+<div >
+<br>
+<div class="row col-sm-12 col-md-12 col-xs-12">
+	<label class="col-md-offset-3 col-md-1 col-xs-12 col-sm-3 " > File: </label>		
+	<div class="col-md-5 col-xs-12 col-sm-9" style="width: 402px;">											
+			<input type="file" name="attachment" id="attachment" accept=".csv" />
+	</div>
+
+<div class="row col-md-offset-4" >
+	<button class="btn btn-sm btn-info" id="upload_file">Upload</button>
+
+<div class="row col-md-offset-4 hide working_div" >
+	<button class="btn btn-sm btn-info  " id="working">Working</button>
+	<i class="icon-spinner  icon-spin orange bigger-125"></i>
+</div>
+<div class="row col-md-offset-4 hide refresh_div" >
+	<button class="btn btn-sm btn-info  " id="refresh">Back</button>
+</div>
+</div>
+
+</div>
+<div class="response_data"></div>
+<br>
+<div class="row col-sm-12 col-md-12 col-xs-12">
+	<a href="/download/usertemplate_20161205.csv" download="usertemplate.csv" >Download sample template here: </a>		
+	
+
+</div>
+</div>
+
+<script>
+
+jQuery(function($){
+	$('#attachment').ace_file_input({
+		no_file:'Choose  File ...',
+		btn_choose : 'Choose',
+		btn_change: 'Change',
+		droppable: true,
+		thumbnail: 'middle',
+		//allowExt: ['csv'],
+		before_remove: function() {
+					if(upload_in_progress)
+						return false;//if we are in the middle of uploading a file, don't allow resetting file input
+					return true;
+				},
+		before_change: function(files, dropped) {
+			var file = files[0];
+			if(typeof file == "string") {//files is just a file name here (in browsers that don't support FileReader API)
+				//console.log((/\.(csv)$/i).test(file));
+				if(! (/\.(csv)$/i).test(file) ) {
+					alert('Please select a csv file!');
+					return false;
+				}
+			}
+			else {
+				var type = $.trim(file.type);
+				if( type.length > 0 && type != "application/vnd.ms-excel" )
+						//|| ( type.length == 0 && ! (/\.(csv)$/i).test(file.name) )//for android's default browser!
+					{
+						alert('Please select a csv file!');
+						return false;
+					}
+				
+			}
+
+			return true;
+		}
+	});
+	$('#upload_file').click(function(){
+					var error = 0;
+					//var i=$('#language').val();
+					if ( $('#attachment').val() == "" ) {
+						console.log("here");
+						error = 1;
+						alert('You should select file first.');			
+					}
+					if (error) {
+						return false;
+					} else {
+						
+						$("#upload_file").attr('class','hide');
+						$(".working_div").attr('class','show working_div ');
+						document.getElementById("working").disabled = true;
+						var obj = new FormData();					
+						if($('#attachment').val() != "")
+						{
+							obj.append('file', document.getElementById('attachment').files[0]);	
+						} 
+						csvupload("/admin/user/uploaduserwithcsv/", obj,function (e) {	
+							
+							var res = JSON.parse(e);
+							//var dataStr = JSON.stringify(res);
+							//console.log(dataStr.message);
+							
+							if(res.status == "1"){
+								alert(res.user +" users imported");
+								location.href="/admin/user/usercsvupload";
+							}else{		
+								//console.log(e);
+								$(".response_data").append(res.description);
+								$(".working_div").attr('class','hide  ');
+								$(".refresh_div").attr('class','show refresh_div  ');
+								
+							}
+						
+						});
+					}
+					
+		
+			});
+			$('#refresh').click(function(){
+					 location.reload();
+				});
+});
+</script>

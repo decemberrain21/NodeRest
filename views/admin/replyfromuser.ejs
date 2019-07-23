@@ -1,0 +1,59 @@
+<html>
+	<head>
+		<title>STC Inbox</title>
+		 <style type="text/css">
+		.container {
+			width: 500px;
+			clear: both;
+			text-align: right;
+			line-height: 2.5;
+		}
+		.container input {
+			width: 50%;
+			clear: both;
+		}
+
+		</style>
+	</head>
+	
+	<body>
+		<div class="container">
+			c_id:(c_id)<input type="text" id="c_id"/><br>
+			user id:(userid)<input type="text" id="userid"/><br>
+			offset:(offset)<input type="date" id="offset"/><br>
+			limit:(limit)<input type="date" id="limit"/><br>
+		
+		<br>
+		<button id="btnsubmit">Submit</button>
+		</div>
+		<div id="resultdata">	
+			
+		</div>
+	</body>
+	<script src="/assets/js/jquery.min.js"></script>
+	<script>
+	jQuery(function($){
+		$("#btnsubmit").click(function() {
+			
+			var data ={
+				userid : $('#userid').val(), 
+				c_id : $('#c_id').val(), 
+				offset : $('#offset').val(), 
+				limit : $('#limit').val()
+			}
+			$.ajax({
+				  url: "/admin/message/search_replyfromuser",
+				  dataType: 'json',
+				  data : data,
+				  method: "POST",	
+				  /*beforeSend: function( xhr ) {
+					xhr.overrideMimeType( "text/plain; charset=x-user-defined" );
+				  }*/
+				})
+				.done(function( data ) {
+					$('#resultdata').append(data);
+				});
+		});
+	});
+	</script>
+</html>

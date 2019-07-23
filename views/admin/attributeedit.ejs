@@ -1,0 +1,82 @@
+
+<br/>
+<div class="row">
+	<div class="col-xs-12">
+		<form class="form-horizontal" role="form" id="user_form">
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="space">
+				
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="attr_id"> Attribute</label>
+						<div class="col-xs-12  col-sm-10">
+							<input type="text" id="attr_id" name="attr_id" value="<%= page.attribute[0].attr_name %>" class="col-xs-12 col-sm-4 col-md-4"  disabled/>
+							<input type="hidden" id="attribute_id" value="<%= page.attribute[0].id%>"/>
+							<input type="hidden" id="attr_id" value="<%= page.attribute[0].attr_id %>"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for=""> Attribute Value</label>
+						<div class="col-xs-12  col-sm-10">
+							<input type="text" id="attribute_value" name="attribute_value" class="col-xs-12 col-sm-4 col-md-4" value="<%= page.attribute[0].attr_value %>" />
+						</div>
+					</div>					
+					
+					<div class="form-group">
+						
+						<div class="col-xs-12  col-sm-offset-2 ">
+							<button class="btn btn-sm btn-success btnsave">
+								<i class="icon-ok"></i>
+								Save
+							</button>
+							<button class="btn btn-sm btncancel" data-link="">
+								<i class="icon-ban-circle align-top bigger-125"></i>
+								Cancel
+							</button>					
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<script>
+
+jQuery(function($){
+		//$('#attribute_id').chosen();
+	});
+$('.btnsave').on('click', function(e) {
+	e.preventDefault();
+			
+		var data={
+			id : $('#attribute_id').val(),
+			attr_id : $('#attr_id').text(),
+			name : $('#attribute_value').val()
+		}
+		$.post("/admin/user/updateAttribute", data, function (e) {	
+			var data = JSON.parse(e);
+			console.log(data);					
+			if(data.message == "success")
+			{
+				location.href="/admin/user/attribute";
+			}
+			else
+			{
+				$("#error").html("<span id='msg' class='red'> "+ data.message +" </span>");
+				//setTimeout(function(){  $('#msg').fadeOut('slow');}, 2000);
+			}
+		});			
+	
+
+});
+
+$('.btncancel').click(function(e){
+e.preventDefault();
+location.href="/admin/user/attribute/";
+});
+
+
+</script>
+

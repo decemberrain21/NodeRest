@@ -1,0 +1,456 @@
+
+	<div class="col-xs-12">
+		<div class="col-lg-2 col-md-2 col-sm-12">
+			<a href="/admin/user/newuser" class="btnadd" style="color: white; text-decoration: none;">
+			<button class="btn btn-sm btn-primary btnadd">
+			<i class="icon-plus"></i>Add User
+			</button>
+			</a>
+			</br>
+			</br>
+		</div>
+	</div>
+	<input type="hidden" id="viewmember" value="<%= groupID%>">
+	<input type="hidden" id="hidkeyword" value="<%= keyword%>">
+	<input type="hidden" id="hidbiz_sector" value="<%= biz_sector%>">
+	<input type="hidden" id="hidcompany" value="<%= company%>">
+	<input type="hidden" id="hiddepartment" value="<%= department%>">
+	<input type="hidden" id="hidgender" value="<%= gender%>">
+	<input type="hidden" id="hidsite_location" value="<%= site_location%>">
+	<input type="hidden" id="hidprobation_permanent" value="<%= probation_permanent%>">
+	<input type="hidden" id="hidnationality" value="<%= nationality%>">
+	<input type="hidden" id="hidtype_of_contract" value="<%= type_of_contract%>">
+	<input type="hidden" id="hidrank" value="<%= rank%>">
+	<input type="hidden" id="hidrank_new" value="<%= rank_new%>">
+	<input type="hidden" id="hidrole_new" value="<%= role_new%>">
+	<input type="hidden" id="hidrole_old" value="<%= role_old%>">
+	<input type="hidden" id="hidsortedCol" value="<%= sortedCol%>">
+	<input type="hidden" id="hidsortedDir" value="<%= sortedDir%>">
+	<input type="hidden" id="hiddisplay" value="<%= display%>">
+	<input type="hidden" id="hidstart" value="<%= start%>">
+	<div class="col-xs-12">
+		<div class="col-lg-2 col-md-2 col-sm-12">
+			<select multiple class="form-control"  id="group_id" name="group_id"  data-placeholder="Choose a group...">	
+				<option value="" disabled>Choose a Group</option>
+				<% for(var i=0; i < group_list[0].length; i++) { %>
+				   <option value="<%= group_list[0][i].id %>"  > <%= group_list[0][i].title %></option>
+				<% } %>
+			</select>
+		</div>
+		
+		<div class="col-lg-2 col-md-2 col-sm-12">
+			<select  class="form-control"  id="nationality" name="nationality"  data-placeholder="Choose a nationality...">	
+				<option value="" >Choose a nationality</option>
+				<% for(var i=0; i < group_list[7].length; i++) { %>
+				   <option value="<%= group_list[7][i].title %>"  > <%= group_list[7][i].title %></option>
+				<% } %>
+			</select>
+		</div>
+		<div class="col-lg-2 col-md-2 col-sm-12">
+			<select  class="form-control"  id="rank" name="rank"  data-placeholder="Choose a rank old...">	
+				<option value="" >Choose a rank(old)</option>
+				<% for(var i=0; i < group_list[9].length; i++) { %>
+				   <option value="<%= group_list[9][i].title %>"  > <%= group_list[9][i].title %></option>
+				<% } %>
+			</select>
+		</div>
+		<div class="col-lg-2 col-md-2 col-sm-12">
+			<select  class="form-control" id="rank_new" name="rank_new"  data-placeholder="Choose a rank new...">	
+				<option value="" >Choose a rank(new)</option>
+				<% for(var i=0; i < group_list[10].length; i++) { %>
+				   <option value="<%= group_list[10][i].title %>"  > <%= group_list[10][i].title %></option>
+				<% } %>
+			</select>
+		</div>
+		<div class="col-lg-2 col-md-2 col-sm-12">
+			<select  class="form-control" id="role_old" name="role_old"  data-placeholder="Choose a role old...">	
+				<option value="" >Choose a role(old)</option>
+				<% for(var i=0; i < group_list[11].length; i++) { %>
+				   <option value="<%= group_list[11][i].title %>"  > <%= group_list[11][i].title %></option>
+				<% } %>
+			</select>
+		</div>
+		<div class="col-lg-2 col-md-2 col-sm-12">
+			<select  class="form-control" id="role_new" name="role_new"  data-placeholder="Choose a role new...">	
+				<option value="" >Choose a role(new)</option>
+				<% for(var i=0; i < group_list[12].length; i++) { %>
+				   <option value="<%= group_list[12][i].title %>"  > <%= group_list[12][i].title %></option>
+				<% } %>
+			</select>
+		</div>
+		
+		
+	</div> 
+	<div class="col-xs-12">
+		<br>
+		<div class="col-lg-2 col-md-2 col-sm-12">
+			<select  class="form-control"  id="biz_sector" name="biz_sector"  data-placeholder="Choose a biz sector...">	
+				<option value="" >Choose a bussiness sector</option>
+				<% for(var i=0; i < group_list[1].length; i++) { %>
+				   <option value="<%= group_list[1][i].title %>"  > <%= group_list[1][i].title %></option>
+				<% } %>
+			</select>
+		</div>
+		<div class="col-lg-2 col-md-2 col-sm-12">
+			<select  class="form-control"  id="company" name="company"  data-placeholder="Choose a company...">	
+				<option value="" >Choose a company</option>
+				<% for(var i=0; i < group_list[2].length; i++) { %>
+				   <option value="<%= group_list[2][i].title %>"  > <%= group_list[2][i].title %></option>
+				<% } %>
+			</select>
+		</div>
+		<div class="col-lg-2 col-md-2 col-sm-12">
+			<select  class="form-control"  id="type_of_contract" name="type_of_contract"  data-placeholder="Choose...">	
+				<option value="" >Choose a type of contract</option>
+				<% for(var i=0; i < group_list[8].length; i++) { %>
+				   <option value="<%= group_list[8][i].title %>"  > <%= group_list[8][i].title %></option>
+				<% } %>
+			</select>
+		</div>
+		<div class="col-lg-2 col-md-2 col-sm-12">
+			<select  class="form-control"  id="department" name="department"  data-placeholder="Choose a department...">	
+				<option value="" >Choose a department</option>
+				<% for(var i=0; i < group_list[3].length; i++) { %>
+				   <option value="<%= group_list[3][i].title %>"  > <%= group_list[3][i].title %></option>
+				<% } %>
+			</select>
+		</div>
+		<div class="col-lg-2 col-md-2 col-sm-12">
+			<select  class="form-control"  id="gender" name="gender"  data-placeholder="Choose a gender...">	
+				<option value="" >Choose a gender</option>
+				<% for(var i=0; i < group_list[4].length; i++) { %>
+				   <option value="<%= group_list[4][i].title %>"  > <%= group_list[4][i].title %></option>
+				<% } %>
+			</select>
+		</div>
+		<div class="col-lg-2 col-md-2 col-sm-12">
+			<select  class="form-control"  id="site_location" name="site_location"  data-placeholder="Choose a site location...">	
+				<option value="" >Choose a site location</option>
+				<% for(var i=0; i < group_list[5].length; i++) { %>
+				   <option value="<%= group_list[5][i].title %>"  > <%= group_list[5][i].title %></option>
+				<% } %>
+			</select>
+		</div>
+		
+		
+	</div>
+	<div class="col-xs-12">
+		<br>		
+		
+		<div class="col-lg-2 col-md-2 col-sm-12">
+			<select  class="form-control"  id="probation_permanent" name="probation_permanent"  data-placeholder="Choose a type of contract...">	
+				<option value="" >Choose a probation/permanent</option>
+				<% for(var i=0; i < group_list[6].length; i++) { %>
+				   <option value="<%= group_list[6][i].title %>"  > <%= group_list[6][i].title %></option>
+				<% } %>
+			</select>
+		</div>
+		<div class="col-lg-2 col-md-2 col-sm-12">
+			<input type="text" id="keyword" name="keyword" placeholder="Keyword" class="form-control">
+		</div>
+		<div class="col-lg-2 col-md-2 col-sm-12">
+			<button class="btn btn-sm btn-primary btnsearch">
+				<i class="icon-search"></i>
+				Search
+			</button>
+		</div>
+		
+	</div>
+	
+	<div class="col-xs-12">
+	<br/>
+	<br/>
+		<button class="btn btn-sm btn-primary btndownload">
+		<i class="icon-download"></i>
+		Export to CSV
+		</button>
+	</div>
+	<div class="col-xs-12">
+		<div class="table-responsive">
+			
+			<table id="userTable" class="table table-striped table-bordered table-hover" style="width:100%">
+				<thead>
+					<tr>
+						<th>Employee ID</th>
+						<th>Login Name</th>
+						<th>Name</th>
+						<th>Point</th>
+						<th>Status</th>
+						<th>CMS-ACCESS</th>
+						<th>Business Sector</th>
+						<th>Company</th>
+						<th>Department</th>
+						<th>Role(New)</th>
+						<th>Site Location</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					
+				</tbody>
+			</table>
+		</div>
+	
+	</div>
+
+<script>
+	
+	jQuery(function($){
+		//location.href = location.href.substr(0,location.href.indexOf('?'));
+		
+		if($('#viewmember').val()){
+			$('#group_id').val( $('#viewmember').val());
+		}
+		if($('#hidkeyword').val()){
+			$('#keyword').val( $('#hidkeyword').val());
+		}
+		if($('#hidbiz_sector').val()){
+			$('#biz_sector').val( $('#hidbiz_sector').val());
+		}
+		if($('#hidcompany').val()){
+			$('#company').val( $('#hidcompany').val());
+		}
+		if($('#hiddepartment').val()){
+			$('#department').val( $('#hiddepartment').val());
+		}
+		if($('#hidgender').val()){
+			$('#gender').val( $('#hidgender').val());
+		}
+		if($('#hidsite_location').val()){
+			$('#site_location').val( $('#hidsite_location').val());
+		}
+		if($('#hidprobation_permanent').val()){
+			$('#probation_permanent').val( $('#hidprobation_permanent').val());
+		}
+		if($('#hidnationality').val()){
+			$('#nationality').val( $('#hidnationality').val());
+		}
+		if($('#hidtype_of_contract').val()){
+			$('#type_of_contract').val( $('#hidtype_of_contract').val());
+		}
+		if($('#hidrank').val()){
+			$('#rank').val( $('#hidrank').val());
+		}
+		if($('#hidrank_new').val()){
+			$('#rank_new').val( $('#hidrank_new').val());
+		}
+		if($('#hidrole_new').val()){
+			$('#role_new').val( $('#hidrole_new').val());
+		}
+		if($('#hidrole_old').val()){
+			$('#role_old').val( $('#hidrole_old').val());
+		}
+		
+		$('#group_id').chosen();
+		$('#biz_sector').chosen();
+		$('#company').chosen();
+		$('#department').chosen();
+		$('#gender').chosen();
+		$('#site_location').chosen();
+		$('#probation_permanent').chosen();
+		$('#nationality').chosen();
+		$('#type_of_contract').chosen();
+		$('#rank').chosen();
+		$('#rank_new').chosen();
+		$('#role_old').chosen();
+		$('#role_new').chosen();
+		
+	//console.log(refresh_link);
+		
+		oTable1="";
+		oTable1 = $('#userTable').dataTable( {
+		"bProcessing": true,
+		"bServerSide": true,				
+		"iDisplayLength": $("#hiddisplay").val(),
+		"iDisplayStart": $("#hidstart").val(),
+		"bFilter" : false,	
+		"sAjaxSource": '/admin/user/userlist?group='+$('#group_id').val()+'&keyword='+$('#keyword').val()+'&biz_sector='+ ($('#biz_sector').val()?encodeURIComponent($('#biz_sector  option:selected').text().trim()):"") +'&company='+($('#company').val()?encodeURIComponent($('#company  option:selected').text().trim()):"") +'&department='+($('#department').val()?encodeURIComponent($('#department  option:selected').text().trim()):"") +'&gender='+($('#gender').val()?encodeURIComponent($('#gender  option:selected').text().trim()):"") +'&site_location='+($('#site_location').val()?encodeURIComponent($('#site_location  option:selected').text().trim()):"") +'&probation_permanent='+($('#probation_permanent').val()?encodeURIComponent($('#probation_permanent  option:selected').text().trim()):"") +'&type_of_contract='+($('#type_of_contract').val()?encodeURIComponent($('#type_of_contract  option:selected').text().trim()):"")  +'&nationality='+($('#nationality').val()?encodeURIComponent($('#nationality  option:selected').text().trim()):"")+'&rank='+($('#rank').val()?encodeURIComponent($('#rank  option:selected').text().trim()):"")+'&rank_new='+($('#rank_new').val()?encodeURIComponent($('#rank_new  option:selected').text().trim()):"")+'&role_old='+($('#role_old').val()?encodeURIComponent($('#role_old  option:selected').text().trim()):"")+'&role_new='+($('#role_new').val()?encodeURIComponent($('#role_new  option:selected').text().trim()):""),
+		"aaSorting": [[ $('#hidsortedCol').val(), $('#hidsortedDir').val() ]],
+		//"sPaginationType": "two_button",
+		"aoColumnDefs": [    
+				 {
+					
+					"aTargets": [4],
+					"mData": null,
+					"sClass": "hidden-480",
+					"mRender": function (data, type, full) {
+						if(full[4]==1)
+						{
+							return '<span class="label label-sm label-success">Active</span>';
+						}
+						else
+						{
+							return '<span class="label label-sm label-warning">InActive</span>';
+						}
+					},
+					 
+				},
+				{
+					
+					"aTargets": [5],
+					"mData": null,
+					
+					"sClass": "hidden-480",
+					"mRender": function (data, type, full) {
+						if(full[5]==1)
+						{
+							return '<span class="label label-sm label-success">Yes</span>';
+						}
+						else
+						{
+							return '<span class="label label-sm label-warning">No</span>';
+						}
+					},
+					 
+				},
+				{
+					"bSortable": false,
+					"aTargets": [-1],
+					"mData": null,
+					//"sClass":((inArray("MODIFY", permission)||inArray("DELETE", permission)!=false) ? "" : " hide" ),
+					"mRender": function (data, type, full) {								
+						var str = '<a href="/admin/user/useredit/'+full[0]+'" class="goedit"><i class="icon-pencil bigger-130"></i></a>';
+						//str += '<a class="red delete" data-id="'+full[0]+'"><i class=" icon-trash bigger-130"></i></a>';
+						return str;
+					}
+				}
+			],
+			
+		});
+
+		$('.btnsearch').click(function(){
+		
+			//console.log(refresh_link);
+			oTable1.fnReloadAjax('/admin/user/userlist?group='+$('#group_id').val()+'&keyword='+$('#keyword').val()+'&biz_sector='+ ($('#biz_sector').val()?encodeURIComponent($('#biz_sector  option:selected').text().trim()):"") +'&company='+($('#company').val()?encodeURIComponent($('#company  option:selected').text().trim()):"") +'&department='+($('#department').val()?encodeURIComponent($('#department  option:selected').text().trim()):"") +'&gender='+($('#gender').val()?encodeURIComponent($('#gender  option:selected').text().trim()):"") +'&site_location='+($('#site_location').val()?encodeURIComponent($('#site_location  option:selected').text().trim()):"") +'&probation_permanent='+($('#probation_permanent').val()?encodeURIComponent($('#probation_permanent  option:selected').text().trim()):"") +'&type_of_contract='+($('#type_of_contract').val()?encodeURIComponent($('#type_of_contract  option:selected').text().trim()):"")  +'&nationality='+($('#nationality').val()?encodeURIComponent($('#nationality  option:selected').text().trim()):"")+'&rank='+($('#rank').val()?encodeURIComponent($('#rank  option:selected').text().trim()):"")+'&rank_new='+($('#rank_new').val()?encodeURIComponent($('#rank_new  option:selected').text().trim()):"")+'&role_old='+($('#role_old').val()?encodeURIComponent($('#role_old  option:selected').text().trim()):"")+'&role_new='+($('#role_new').val()?encodeURIComponent($('#role_new  option:selected').text().trim()):""));
+		});
+		$('.btndownload').click(function(){
+		
+		if($('#userTable tbody tr').length >0)
+		{
+			var sortedCol = $('#userTable').dataTable().fnSettings().aaSorting[0][0];
+			var sortedDir = $('#userTable').dataTable().fnSettings().aaSorting[0][1];
+			//console.log(sortedCol);
+			//console.log(sortedDir);
+			if($('.imgloading').length == 0)
+			{
+				$.ajax({
+				url 		: '/admin/user/alluserlist?group='+$('#group_id').val()+'&keyword='+$('#keyword').val()+'&biz_sector='+ ($('#biz_sector').val()?encodeURIComponent($('#biz_sector  option:selected').text().trim()):"") +'&company='+($('#company').val()?encodeURIComponent($('#company  option:selected').text().trim()):"") +'&department='+($('#department').val()?encodeURIComponent($('#department  option:selected').text().trim()):"") +'&gender='+($('#gender').val()?encodeURIComponent($('#gender  option:selected').text().trim()):"") +'&site_location='+($('#site_location').val()?encodeURIComponent($('#site_location  option:selected').text().trim()):"") +'&probation_permanent='+($('#probation_permanent').val()?encodeURIComponent($('#probation_permanent  option:selected').text().trim()):"")  +'&nationality='+($('#nationality').val()?encodeURIComponent($('#nationality  option:selected').text().trim()):"")+'&type_of_contract='+($('#type_of_contract').val()?encodeURIComponent($('#type_of_contract  option:selected').text().trim()):"")+'&rank='+($('#rank').val()?encodeURIComponent($('#rank  option:selected').text().trim()):"")+'&rank_new='+($('#rank_new').val()?encodeURIComponent($('#rank_new  option:selected').text().trim()):"")+'&role_new='+($('#role_new').val()?encodeURIComponent($('#role_new  option:selected').text().trim()):"")+'&role_old='+($('#role_old').val()?encodeURIComponent($('#role_old  option:selected').text().trim()):"")+'&sortedCol='+sortedCol+'&sortedDir='+sortedDir,
+				dataType	:"json",
+				processData : false,
+				cache		: false,
+				timeout: 500000,
+				beforeSend: function( xhr ) {
+					$('.btndownload').html('<img class="imgloading" src="/assets/img/ajax-loader.gif" />');
+				 },
+				success		:function(res){
+					$('.btndownload').html('<i class="icon-download"></i>Export to CSV');
+					if(res.code == "0")
+					{
+						bootbox.alert(res.error,function(result){
+						});
+						// end bootbox function
+					}
+					// end if
+					else
+					{
+						/*bootbox.alert("Changes Saved!", function(result){
+							location.href="/admin/adminuser";
+						});*/
+						//console.log(res);
+						
+						//var CSV = "Name: "+$('#fromdt').val()+ '\r\n'+"End Date: "+$('#todt').val()+ '\r\n'+($("#ans_type").val()!=""?"Answer Type: "+$("#ans_type option:selected").text()+ '\r\n':"");
+						//console.log(CSV);
+						//return false;
+						
+						var CSV = 'Sr.,employee_code,employee_id,name,Display,login_name,gender,nationality,rank_old,rank_new,role_old,role_new,biz_sector,company,site_location,department,date_of_employment,date_of_birth,probation_permanent,type_of_contract,direct_report_to,contact_number,corporate_sim_card'+ '\r\n';   
+						
+						var a = res.results;
+																																																																																																																							
+						 for(var i=0;i<a.length;i++)
+						 {
+							
+							CSV += JSON.stringify(a[i].Sr) +','+JSON.stringify(a[i].e_code)+','+JSON.stringify(a[i].e_id) +','+JSON.stringify(a[i].name) +','+JSON.stringify(a[i].employee_id)+','+JSON.stringify(a[i].email)+','+JSON.stringify(a[i].gender)+','+JSON.stringify(a[i].nationality)+','+JSON.stringify(a[i].rank)+','+JSON.stringify(a[i].rank_new)+','+JSON.stringify(a[i].role_old)+','+JSON.stringify(a[i].role_new)+','+JSON.stringify(a[i].biz_sector)+','+JSON.stringify(a[i].company)+','+JSON.stringify(a[i].site_location)+','+JSON.stringify(a[i].department)+','+JSON.stringify(a[i].date_of_employment)+','+JSON.stringify(a[i].date_of_birth)+','+JSON.stringify(a[i].probation_permanent)+','+JSON.stringify(a[i].type_of_contract)+','+JSON.stringify(a[i].direct_report_to)+','+JSON.stringify(a[i].contact_number)+','+JSON.stringify(a[i].corporate_sim_card)+ '\r\n';
+						 }
+						if (a.length == 0) {        
+							alert("Invalid data");
+							return;
+						}
+						//Generate a file name
+						var date = new Date();
+						var str = date.getFullYear().toString() + (date.getMonth() + 1).toString() + date.getDate().toString() +date.getHours().toString() + date.getMinutes().toString()+ date.getSeconds().toString();
+						var fileName = "users_"+str;
+						//this will remove the blank-spaces from the title and replace it with an underscore
+						
+						
+						//Initialize file format you want csv or xls
+						var uri = 'data:text/csv;charset=utf-8,' + encodeURIComponent(CSV);//escape(CSV);
+						
+						// Now the little tricky part.
+						// you can use either>> window.open(uri);
+						// but this will not work in some browsers
+						// or you will not get the correct file extension    
+						
+						//this trick will generate a temp <a /> tag
+						
+						var link = document.createElement("a");    
+						link.href = uri;
+						
+						//set the visibility hidden so it will not effect on your web-layout
+						link.style = "visibility:hidden";
+						link.download = fileName + ".csv";      
+						//this part will append the anchor tag and remove it after automatic click
+						document.body.appendChild(link);
+						link.click();
+						document.body.removeChild(link);
+					}
+					// end else
+
+				}
+			});
+			}
+		}
+		
+		
+	});	
+		$(document).on("click", '.delete', function(e){	
+			$('#userModal').modal();
+			var obj = $(this);
+			var id = $(this).data("id");					
+			$("#delete_user").click(function(){						
+				$.post("/admin/user/delete_user", {id : id }, function (e) {	
+					var data = JSON.parse(e);							
+					if(data.message == "success")
+					{
+						$('#userModal').modal("hide");
+						oTable1.fnReloadAjax();
+					}							
+				});
+			});
+			e.preventDefault();
+		});	
+		$(document).on("click", '.goedit', function(e){				
+			e.preventDefault();
+			var sortedCol = $('#userTable').dataTable().fnSettings().aaSorting[0][0];
+			var sortedDir = $('#userTable').dataTable().fnSettings().aaSorting[0][1];
+			var page_length = $('#userTable').dataTable().fnSettings()._iDisplayLength;
+			var page_start = $('#userTable').dataTable().fnSettings()._iDisplayStart;
+			var qs = '?group='+$('#group_id').val()+'&keyword='+$('#keyword').val()+'&biz_sector='+ ($('#biz_sector').val()?encodeURIComponent($('#biz_sector  option:selected').text().trim()):"") +'&company='+($('#company').val()?encodeURIComponent($('#company  option:selected').text().trim()):"") +'&department='+($('#department').val()?encodeURIComponent($('#department  option:selected').text().trim()):"") +'&gender='+($('#gender').val()?encodeURIComponent($('#gender  option:selected').text().trim()):"") +'&site_location='+($('#site_location').val()?encodeURIComponent($('#site_location  option:selected').text().trim()):"") +'&probation_permanent='+($('#probation_permanent').val()?encodeURIComponent($('#probation_permanent  option:selected').text().trim()):"")  +'&nationality='+($('#nationality').val()?encodeURIComponent($('#nationality  option:selected').text().trim()):"")+'&type_of_contract='+($('#type_of_contract').val()?encodeURIComponent($('#type_of_contract  option:selected').text().trim()):"")+'&rank='+($('#rank').val()?encodeURIComponent($('#rank  option:selected').text().trim()):"")+'&rank_new='+($('#rank_new').val()?encodeURIComponent($('#rank_new  option:selected').text().trim()):"")+'&role_new='+($('#role_new').val()?encodeURIComponent($('#role_new  option:selected').text().trim()):"")+'&role_old='+($('#role_old').val()?encodeURIComponent($('#role_old  option:selected').text().trim()):"")+'&sortedCol='+sortedCol+'&sortedDir='+sortedDir+'&display='+page_length+'&start='+page_start;
+			var current_url = location.href.substr(0,location.href.indexOf('?'));
+			history.pushState("cur", "STC", current_url+qs);
+			location.href = $(this).attr('href');
+		});
+		$(document).on("click", '.btnadd', function(e){				
+			e.preventDefault();
+			var sortedCol = $('#userTable').dataTable().fnSettings().aaSorting[0][0];
+			var sortedDir = $('#userTable').dataTable().fnSettings().aaSorting[0][1];
+			var page_length = $('#userTable').dataTable().fnSettings()._iDisplayLength;
+			var page_start = $('#userTable').dataTable().fnSettings()._iDisplayStart;
+			var qs = '?group='+$('#group_id').val()+'&keyword='+$('#keyword').val()+'&biz_sector='+ ($('#biz_sector').val()?encodeURIComponent($('#biz_sector  option:selected').text().trim()):"") +'&company='+($('#company').val()?encodeURIComponent($('#company  option:selected').text().trim()):"") +'&department='+($('#department').val()?encodeURIComponent($('#department  option:selected').text().trim()):"") +'&gender='+($('#gender').val()?encodeURIComponent($('#gender  option:selected').text().trim()):"") +'&site_location='+($('#site_location').val()?encodeURIComponent($('#site_location  option:selected').text().trim()):"") +'&probation_permanent='+($('#probation_permanent').val()?encodeURIComponent($('#probation_permanent  option:selected').text().trim()):"")  +'&nationality='+($('#nationality').val()?encodeURIComponent($('#nationality  option:selected').text().trim()):"")+'&type_of_contract='+($('#type_of_contract').val()?encodeURIComponent($('#type_of_contract  option:selected').text().trim()):"")+'&rank='+($('#rank').val()?encodeURIComponent($('#rank  option:selected').text().trim()):"")+'&rank_new='+($('#rank_new').val()?encodeURIComponent($('#rank_new  option:selected').text().trim()):"")+'&role_new='+($('#role_new').val()?encodeURIComponent($('#role_new  option:selected').text().trim()):"")+'&role_old='+($('#role_old').val()?encodeURIComponent($('#role_old  option:selected').text().trim()):"")+'&sortedCol='+sortedCol+'&sortedDir='+sortedDir+'&display='+page_length+'&start='+page_start;
+			var current_url = location.href.substr(0,location.href.indexOf('?'));
+			history.pushState("cur", "STC", current_url+qs);
+			location.href = $(this).attr('href');
+		});	
+	
+	});
+
+</script>

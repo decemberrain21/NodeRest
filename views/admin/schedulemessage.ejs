@@ -1,0 +1,152 @@
+<br/>
+<style type="text/css">
+	.trash {
+		margin-left: 15%;
+		cursor: pointer;
+		/*padding-left: 5%; 
+		padding-right: 5%; */
+	}
+	.edit {
+		cursor: pointer;
+	}
+</style>
+<div class="modal " id="groupDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h5 class="blue bigger">Are you sure to delete this schedule message?</h5>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-sm" data-dismiss="modal">
+					<i class="icon-remove"></i>
+					Cancel
+				</button>
+
+				<button class="btn btn-sm btn-primary" name="save" id="deleteGroup">
+					<i class="icon-ok"></i>
+					Delete
+				</button>
+			</div>					
+		</div>
+	  </div>
+</div>	
+<div class="row">
+	<div class="col-xs-12">
+		<div class="table-responsive">
+			<table id="draftsTable" class="table table-striped table-bordered table-hover" style="width:100%">
+				<thead>
+					<tr>
+
+																				
+					</tr>
+				</thead>
+				<tbody>
+					
+				</tbody>
+			</table>
+		</div>
+	
+	</div>
+</div> 	
+
+<script>
+		
+	jQuery(function($){
+		oTable1="";
+		oTable1 = $('#draftsTable').dataTable( {
+		"bProcessing": true,
+		"bServerSide": true,				
+		"iDisplayLength": 10,
+		"sAjaxSource": '/admin/message/schedulelist',
+		"aaSorting": [[ 0, "desc" ]],
+		//"sPaginationType": "two_button",
+		
+		"aoColumnDefs": [
+			        
+				/*{
+					"bSearchable": false,
+					"bVisible": false, 
+					"aTargets": [ 0 ]
+				},*/
+				/* {
+					//"bSortable": false,
+					"aTargets": [2],
+					"mData": null,
+					"sClass":((inArray("MODIFY", permission)||inArray("DELETE", permission)!=false) ? "" : " hide" ),
+					"mRender": function (data, type, full) {
+						var str = full[2];
+						
+						var icon ="";
+						if(full[1]){
+							icon = '&nbsp;&nbsp;&nbsp;<i class="icon-paperclip"></i>';
+						}
+						str = str + icon;
+						return str;
+					}
+				}, */
+				{
+					"sTitle" : "ID",
+					"sWidth": "10%",
+					"aTargets": [0],
+					
+				},
+				{
+					"sTitle" : "Type",
+					"sWidth": "10%",
+					"aTargets": [1],
+				},	
+				{
+					"sTitle" : "Title",
+					"sWidth": "30%",
+					"aTargets": [2],
+				},
+				{
+					"sTitle" : "Date",
+					"sWidth": "25%",
+					"aTargets": [3],
+					
+					
+				},
+				{
+					"sTitle" : "Action",
+					"sWidth": "15%",
+					"mData": null,
+					"aTargets": [4],
+					"mRender": function (data, type, full) {
+					var str = '<a class="edit" data-id="'+full[0]+'"><i class="icon-pencil bigger-130"></i></a><a class="trash red delete" data-id="'+full[0]+'"><i class=" icon-trash bigger-130"></i></a> ';
+
+								return str;
+					},
+				},
+			],
+			
+		});
+
+	$(document).on("click", '.edit', function(){		
+		var id = $(this).data("id");
+		location.href = "/admin/message/compose/schedule/" + id;
+	});
+					
+		$(document).on("click", '.delete', function(e){	
+			e.preventDefault();
+			$('#groupDeleteModal').modal();
+			var obj = $(this);
+			var id = $(this).data("id");					
+			$("#deleteGroup").click(function(){						
+				$.post("/admin/message/deleteSchedule", {id : id }, function (e) {	
+					var data = JSON.parse(e);							
+					if(data.message == "success")
+					{
+						$('#groupDeleteModal').modal("hide");
+						oTable1.fnReloadAjax();
+					}							
+				});
+			});
+			
+		});	
+
+		
+	});
+
+</script>

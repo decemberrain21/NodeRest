@@ -1,0 +1,258 @@
+<br/>
+<div class="row">
+	<div class="col-lg-2 col-md-2 col-sm-12">
+		<input type="text" id="fromdt" name="fromdt" placeholder="Start Date" class="form-control datepicker">
+	</div>
+	<div class="col-lg-2 col-md-2 col-sm-12">
+		<input type="text" id="todt" name="todt" placeholder="End Date" class="form-control datepicker">
+	</div>
+	<div class="col-lg-3 col-md-2 col-sm-12">
+		<input type="hidden" id="hidfromdt" value="<%= fromdt%>">
+		<input type="hidden" id="hidtodt" value="<%= todt%>">
+		<input type="hidden" id="hidans_type" value="<%= ans_type%>">
+		<input type="hidden" id="hidkeyword" value="<%= keyword%>">
+		<input type="hidden" id="hidsortedCol" value="<%= sortedCol%>">
+		<input type="hidden" id="hidsortedDir" value="<%= sortedDir%>">
+		<input type="hidden" id="hiddisplay" value="<%= display%>">
+		<input type="hidden" id="hidstart" value="<%= start%>">
+		<select id="ans_type" class="form-control">
+		    <option value=""  selected >Choose Answer Type</option>
+			<option value="radio">Single Choice</option>
+			<option value="checkbox">Multi Choice</option>
+			<option value="rating">Rating</option>
+			<option value="textbox">Freetext</option>
+		</select>
+	</div>
+	<div class="col-lg-3 col-md-3 col-sm-12">
+		<input type="text" id="keyword" name="keyword" placeholder="Keyword" class="form-control">
+	</div>
+	<div class="col-lg-2 col-md-2 col-sm-12">
+		<button class="btn btn-sm btn-primary btnsearch">
+			<i class="icon-search"></i>
+			Search
+		</button>
+		<br/>
+		<br/>
+	</div>
+	<div class="col-xs-12">
+		<button class="btn btn-sm btn-primary btndownload">
+		<i class="icon-download"></i>
+		Export to CSV
+		</button>
+		<br/>
+		<br/>
+		<div class="table-responsive">
+			<table id="answerTable" class="table table-striped table-bordered table-hover" style="width:100%">
+				<thead>
+					<tr>
+																					
+					</tr>
+				</thead>
+				<tbody>
+					
+				</tbody>
+			</table>
+		</div>
+	
+	</div>
+</div> 	
+
+<script>
+		
+	jQuery(function($){
+		if($('#hidkeyword').val()){
+			$('#keyword').val( $('#hidkeyword').val());
+		}
+		if($('#hidans_type').val()){
+			$('#ans_type').val( $('#hidans_type').val());
+		}
+		if($('#hidtodt').val()){
+			$('#todt').val( $('#hidtodt').val());
+		}
+		if($('#hidfromdt').val()){
+			$('#fromdt').val( $('#hidfromdt').val());
+		}
+		$('.datepicker').datepicker({ format: 'yyyy-mm-dd'});
+		oTable1="";
+		oTable1 = $('#answerTable').dataTable( {
+		"bProcessing": true,
+		"bServerSide": true,	
+		"bFilter" : false,		
+		"iDisplayLength": $("#hiddisplay").val(),
+		"iDisplayStart": $("#hidstart").val(),
+		"sAjaxSource": '/admin/message/answerlist?ans_type='+$('#ans_type').val()+'&from='+$('#fromdt').val()+'&to='+$('#todt').val()+'&keyword='+$('#keyword').val(),
+		"aaSorting": [[ $('#hidsortedCol').val(), $('#hidsortedDir').val() ]],
+		"aoColumnDefs": [ 
+				
+				{
+					"sTitle" : "Answer ID",
+					"sWidth": "8%",
+					"aTargets": [ 0 ]
+				},{
+					"sTitle" : "Employee ID",
+					"sWidth": "9%",
+					"aTargets": [ 1]
+				},{
+					"sTitle" : "Login Name",
+					"sWidth": "9%",
+					"aTargets": [ 2]
+				},
+				{
+					"sTitle" : "Name",
+					"sWidth": "13%",
+					"aTargets": [ 3 ]
+				},
+				{
+					"sTitle" : "Business Sector",
+					"sWidth": "13%",
+					"aTargets": [ 4 ]
+				},{
+					"sTitle" : "Subject",
+					"sWidth": "18%",
+					"aTargets": [ 5 ]
+				},{
+					"sTitle" : "Question",
+					"sWidth": "12%",
+					"aTargets": [ 6 ]
+				},
+				{
+					"sTitle" : "Answer",
+					"sWidth": "8%",
+					"aTargets": [7],
+					"mData": null,
+					"mRender": function (data, type, full) {
+						if(full[8] == "rating"){
+							return full[7] + "  star";
+						}else return full[7];
+					},
+					 
+				},
+				{
+					"sTitle" : "A Type",
+					"sWidth": "2%",
+					"bSearchable": false,
+					//"bVisible": false, 
+					"sClass" : "hide",
+					"aTargets": [ 8 ]
+				},
+				{
+					"sTitle" : "Date",
+					"sWidth": "8%",
+					"aTargets": [ 9 ]
+				},
+		],
+		"fnDrawCallback": function () {
+					$('#answerTable tbody tr').click(function () {
+
+						// get position of the selected row
+						var position = oTable1.fnGetPosition(this);
+
+						// value of the first column (can be hidden)
+						var id = oTable1.fnGetData(position)[0];
+						var sortedCol = $('#answerTable').dataTable().fnSettings().aaSorting[0][0];
+						var sortedDir = $('#answerTable').dataTable().fnSettings().aaSorting[0][1];
+						var page_length = $('#answerTable').dataTable().fnSettings()._iDisplayLength;
+						var page_start = $('#answerTable').dataTable().fnSettings()._iDisplayStart;
+						//var page_search = $('.dataTables_filter input').val();
+						var qs = '?ans_type='+$('#ans_type').val()+'&from='+$('#fromdt').val()+'&to='+$('#todt').val()+'&keyword='+$('#keyword').val()+'&sortedCol='+sortedCol+'&sortedDir='+sortedDir+'&display='+page_length+'&start='+page_start;
+						var current_url = location.href.substr(0,location.href.indexOf('?'));
+						history.pushState({}, "STC", current_url+qs);
+						location.href = "/admin/message/answerbyId/" + id;
+						
+					  });
+					},
+		
+		});
+	$('.btnsearch').click(function(){
+	 oTable1.fnReloadAjax('/admin/message/answerlist?ans_type='+$('#ans_type').val()+'&from='+$('#fromdt').val()+'&to='+$('#todt').val()+'&keyword='+$('#keyword').val());
+	});
+	$('.btndownload').click(function(){
+		if($('#answerTable tbody tr').length >0)
+		{
+			var sortedCol = $('#answerTable').dataTable().fnSettings().aaSorting[0][0];
+			var sortedDir = $('#answerTable').dataTable().fnSettings().aaSorting[0][1];
+			//console.log(sortedCol);
+			//console.log(sortedDir);
+			if($('.imgloading').length == 0)
+			{
+				$.ajax({
+				url 		: '/admin/message/get_ansdata?ans_type='+$('#ans_type').val()+'&from='+$('#fromdt').val()+'&to='+$('#todt').val()+'&keyword='+$('#keyword').val()+'&sortedCol='+sortedCol+'&sortedDir='+sortedDir,
+				dataType	:"json",
+				processData : false,
+				cache		: false,
+				timeout: 500000,
+				beforeSend: function( xhr ) {
+					$('.btndownload').html('<img class="imgloading" src="/assets/img/ajax-loader.gif" />');
+				 },
+				success		:function(res){
+					$('.btndownload').html('<i class="icon-download"></i>Export to CSV');
+					if(res.code == "0")
+					{
+						bootbox.alert(res.error,function(result){
+						});
+						// end bootbox function
+					}
+					// end if
+					else
+					{
+						/*bootbox.alert("Changes Saved!", function(result){
+							location.href="/admin/adminuser";
+						});*/
+						//console.log(res);
+						
+						var CSV = "Start Date: "+$('#fromdt').val()+ '\r\n'+"End Date: "+$('#todt').val()+ '\r\n'+($("#ans_type").val()!=""?"Answer Type: "+$("#ans_type option:selected").text()+ '\r\n':"");
+						//console.log(CSV);
+						//return false;
+						
+						CSV += 'UserId,Subject,Question,Answer,Answer Date'+ '\r\n';   
+						
+						var a = res.results;
+						
+						 for(var i=0;i<a.length;i++)
+						 {
+							CSV += JSON.stringify(a[i].user_id) +','+JSON.stringify(a[i].subject)+','+JSON.stringify(a[i].question)+','+JSON.stringify(a[i].answer)+','+JSON.stringify(a[i].date) + '\r\n';
+						 }
+						if (CSV == '') {        
+							alert("Invalid data");
+							return;
+						}
+						//Generate a file name
+						var date = new Date();
+						var str = date.getFullYear().toString() + (date.getMonth() + 1).toString() + date.getDate().toString() +date.getHours().toString() + date.getMinutes().toString()+ date.getSeconds().toString();
+						var fileName = "answers_"+str;
+						//this will remove the blank-spaces from the title and replace it with an underscore
+						
+						
+						//Initialize file format you want csv or xls
+						var uri = 'data:text/csv;charset=utf-8,' + encodeURIComponent(CSV);//escape(CSV);
+						
+						// Now the little tricky part.
+						// you can use either>> window.open(uri);
+						// but this will not work in some browsers
+						// or you will not get the correct file extension    
+						
+						//this trick will generate a temp <a /> tag
+						
+						var link = document.createElement("a");    
+						link.href = uri;
+						
+						//set the visibility hidden so it will not effect on your web-layout
+						link.style = "visibility:hidden";
+						link.download = fileName + ".csv";      
+						//this part will append the anchor tag and remove it after automatic click
+						document.body.appendChild(link);
+						link.click();
+						document.body.removeChild(link);
+					}
+					// end else
+
+				}
+			});
+			}
+		}
+		
+		
+	});	
+	});
+
+</script>

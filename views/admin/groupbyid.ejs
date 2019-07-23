@@ -1,0 +1,100 @@
+
+<br/>
+<div class="row">
+	<div class="col-xs-12">
+	<form class="form-horizontal" role="form" id="group_form">
+		<div class="form-group">			
+			<label class="col-sm-2 control-label" for="title"> * Title </label>
+			<div class="col-xs-12  col-sm-10">
+				<input type="text" id="title" value="<%= page.group[0].title%>" placeholder="Title" class="col-xs-12 col-sm-4 col-md-4" value="" required />
+				<input type="hidden" id="groupid" value="<%= page.group[0].id %>" />
+				<input type="hidden" id="filtered_by" value="<%= page.group[0].filtered_by %>" />
+			</div>
+		</div>
+		
+		<% 
+			var firstData = page.group[0].filtered_by;	
+			var eachData = firstData.split("|").filter(Boolean);
+		
+			for(var i=0; i<eachData.length  ; i++){
+				
+				var eachAttr = eachData[i].split(";");
+				var attrName = eachAttr[0];
+				var attrType = eachAttr[1];
+				var attrText = eachAttr[2];
+		%>		
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label" id="attribute<%= i %>" for="type<%= i %>" >  <%= attrName %> </label>
+			<div class="col-xs-12  col-sm-10">
+				<select  class="col-xs-6 col-sm-4 col-md-4"  id="type<%= i %>" name="type<%= i %>"  data-placeholder="Choose ..." required>	
+					<option value="" >Choose Type</option>
+					<option value="ignored" <%= attrType=="ignored"?"selected":"" %> >Ignored</option>
+					<option value="equalto"  <%= attrType=="equalto"?"selected":"" %>>Equal to</option>
+					<option value="notequalto" <%= attrType=="notequalto"?"selected":"" %>>Not equal to</option>
+				</select>
+				<div class="col-xs-6 col-sm-4  col-md-4" >
+					<input type="text" class="col-xs-12 col-sm-12 col-md-12" id="textdata<%= i %>" value="<%= attrText %>"/>
+				</div>	
+			</div>			
+		</div>
+		<%}%>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">  </label>
+			<div class="col-xs-12  col-sm-10">
+				<button class="btn btn-sm btn-success" id="update">
+					<i class="icon-ok"></i>
+					Update
+				</button>
+				<button class="btn btn-sm btncancel" data-link="/admin/group/groupdata/">
+					<i class="icon-ban-circle align-top bigger-125"></i>
+					Cancel
+				</button>	
+			</div>
+		</div>
+		
+		</form>
+	</div>
+</div>
+
+	<script type="text/javascript">
+		jQuery(function($){
+			$('#update').on('click', function(e){
+			var attribute = $('#filtered_by').val();
+			var next = attribute.split("|").filter(Boolean);
+			var postdata ="";
+			for(var i=0; i<next.length ; i++){
+				if(i < next.length){
+					if(postdata !="")
+					{
+						postdata += "|";
+					}
+				}
+				postdata +=  $('#attribute'+i).text()+";"+$('#type'+i).val()+";"+$('#textdata'+i).val();
+				
+			}
+			
+				var data = {
+					title : $('#title').val(),
+					filtered_by : postdata,
+					id : $('#groupid').val(),	
+				}
+				
+				//console.log(data);
+				$.post('/admin/group/saveUpdate',data,function(res){
+					
+					if(res.status == "1"){					
+						location.href="/admin/group/groupdata";
+					}else{
+						alert("Error");
+					}
+					
+				});
+			});
+		});
+		$(document).on("click",'.btncancel',function(e){
+			e.preventDefault();
+			location.href = $(this).attr('data-link');
+		});
+	</script>
+

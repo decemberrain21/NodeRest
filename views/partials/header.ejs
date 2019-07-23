@@ -1,0 +1,134 @@
+﻿	<!-- begin:topbar -->
+    <div class="topbar hide">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <ul class="topbar-nav topbar-left">
+              <li class="disabled"><a href="#"><i class="fa fa-envelope"></i> info@lalahome.sg</a></li>
+              <li class="disabled"><a href="#"><i class="fa fa-phone"></i> (+65) - 6655 8888</a></li>
+            </ul>
+            <ul class="topbar-nav topbar-right hidden-xs">
+			<% if(typeof session.frontuser !=="undefined"){ %>
+					
+					<li class="disabled"><a>Welcome <%= session.frontuser.name%> !</a></li>
+			<% } %>
+				 <!--<li><a href="#"><i class="fa fa-facebook"></i></a></li>
+				<li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+				<li><a href="#"><i class="fa fa-instagram"></i></a></li>
+              <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+              
+              <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+              <li><a href="#"><i class="fa fa-youtube"></i></a></li>
+               -->
+			   
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end:topbar -->
+
+    <!-- begin:navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-top">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/"><img src="/assets/img/logo.png" alt="lalahome"><!-- <span>lalahome</span> --></a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="navbar-top">
+          <ul class="nav navbar-nav navbar-right">
+<!--             <li class="active"><a href="home.html">Home</a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Property <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="search.html">Search (Grid View)</a></li>
+                <li><a href="search_list.html">Search (List View)</a></li>
+                <li><a href="category.html">Category (Grid View)</a></li>
+                <li><a href="category_list.html">Category (List View)</a></li>
+                <li><a href="single.html">Single page</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Pages <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="blog.html">Blog Archive</a></li>
+                <li><a href="blog_single.html">Blog Single</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+              </ul>
+            </li> -->
+			<% var session_val = typeof session !=="undefined"?session:{} %>	
+            <li>
+			<% if(typeof session_val.frontuser !== "undefined"){%>
+			
+			<a class="signin headheart" href="/myaccount/wishlist" title="My Favourites"><span id="myfavcount"><%= parseInt(session.frontuser.my_fav)>0?session.frontuser.my_fav:"" %></span><i class="fa fa-heart fa-2x"></i></a>
+			</li>
+			<li>
+			<% if(session_val.frontuser.type !== "user"){ %>
+			<a href="/myaccount/list" class="signin headhome" title="Post Your Property">Post Your Property <i class="fa fa-home fa-2x"></i></a>
+			<% }else{ %>
+			<a class="signin headhome" id="lnk_unauthorized" href="#" title="Post Your Property">Post Your Property <i class="fa fa-home fa-2x"></i></a>
+			<% }
+			}else{
+				
+			%>
+			<a href="#modal-signin" class="signin headhome" data-toggle="modal" data-target="#modal-signin" title="Post Your Property">Post Property</a>
+			
+			<% } %>
+			</li>
+			<% if(typeof session_val.frontuser !== "undefined"){%>
+			<li class="dropdown nav-dropdown-toggle">
+                <a id="myaccount" href="#" class="dropdown-toggle signin circle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> 
+                <span><%= session_val.frontuser.name[0].toUpperCase() %></span>
+            </a>
+				<ul id="myaccountnav" class="dropdown-menu" aria-labelledby="drop4"> 
+				<li>
+					<a href="/myaccount/profile" class="myanchor">My Profile</a>
+				</li>
+				
+				<li>
+					<a href="/myaccount/password" class="myanchor">Change Password</a>
+				</li>
+				<% if(session_val.frontuser.type !== "user"){%>
+				<li>
+					<a href="/myaccount/myproperty" class="myanchor">My Properties</a>
+				</li> 
+				<% } %>
+				<li>
+					<a href="/myaccount/wishlist" class="myanchor">My Favourites</a>
+				</li>
+				<li>
+				<a href="/myaccount/new_alert" class="myanchor">My Alerts</a>
+				</li>
+				<li role="separator" class="divider">
+				</li>
+				<li><a href="/logout" class="myanchor" id="lnklogout">Sign Out</a></li> </ul>
+             </li>
+			<% }
+			else{
+			%>
+			<li>
+			<a href="#" class="signup" data-toggle="modal" data-target="#modal-signin" onclick="focusUserName('Username')">Sign In/Register</a>
+			</li>
+			<% } %>
+			
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container -->
+    </nav>
+    <!-- end:navbar -->
+	
+	<script>
+	function focusUserName(inputname){
+  setTimeout( function(){ $("input[name='"+inputname+"']").focus() } , 1000);
+  return true;
+}
+	</script>
